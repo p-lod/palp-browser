@@ -71,7 +71,7 @@ def palp_page_navbar(r, html_dom):
       # feature request: suppress a link when displaying the page it links to.
       with header():
         with nav(cls="navbar navbar-expand-md navbar-dark fixed-top bg-dark"):
-           a("PALP", href="#", cls="navbar-brand")
+           a("PALP", href="/browse/pompeii", cls="navbar-brand")
            if r.label:
             span(r.label, cls="navbar-brand")
            elif r.identifier:
