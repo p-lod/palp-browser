@@ -347,14 +347,15 @@ def artwork_render(r,html_dom):
 def concept_render(r,html_dom):
 
   with html_dom:
+    with main(cls="container", role="main"):
 
-    if r.geojson:
-      with div(id="geojson"):
-        r.geojson[0:20]
+      if r.geojson:
+        with div(id="geojson"):
+          r.geojson[0:20]
 
-    with div(id="depicted_where"):
-      span("Depicted in the following Pompeian spaces: ")
-      palp_depicted_where(r)
+      with div(id="depicted_where"):
+        span("Depicted in the following Pompeian spaces: ")
+        palp_depicted_where(r)
 
 
 def street_render(r,html_dom):
