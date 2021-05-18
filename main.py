@@ -84,13 +84,14 @@ def palp_page_navbar(r, html_dom):
 def palp_page_footer(r, doc):
     with doc:
       with footer(cls="footer"):
-        span("The Pompeii Artistic Landscape Project (PALP) is hosted at the University of Massachusetts-Amherst. PALP is funded by the Getty Foundation.")
-        if r.identifier:
-          a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
-        if r.p_in_p_url:
-            a(" [p-in-p]", href=r.p_in_p_url, target = "_new")
-        if r.wikidata_url:
-            a(" [wikidata]", href=r.wikidata_url, target = "_new")
+        with span():
+          small("PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation.")
+          if r.identifier:
+            a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
+          if r.p_in_p_url:
+              a(" [p-in-p]", href=r.p_in_p_url, target = "_new")
+          if r.wikidata_url:
+              a(" [wikidata]", href=r.wikidata_url, target = "_new")
 
 
 # convenience functions
@@ -204,140 +205,127 @@ def palp_depicted_where(r):
 def city_render(r,html_dom):
 
   with html_dom:
-        if r.geojson:
-          with div(id="geojson"):
-            palp_geojson(r)
-        
-        with div(id="spatial_children"):
-          span("Regions and Streets Within:")
-          palp_spatial_children(r)
+    with main(cls="container", role="main"):
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)
+      
+      with div(id="spatial_children"):
+        span("Regions and Streets Within:")
+        palp_spatial_children(r)
 
-        with div(id="depicts_concepts"):
-          span("Depicts Concepts: ")
-          palp_depicts_concepts(r)
+      with div(id="depicts_concepts"):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
           
 
 
 def region_render(r,html_dom):
 
   with html_dom:
+    with main(cls="container", role="main"):
 
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
+      with div(id="spatial_hierarchy"):
+        span("Spatial Hierarchy: ")
+        palp_spatial_hierarchy(r)
 
-    with div(id="spatial_children"):
-      span("Insula and Streets Within: ")
-      palp_spatial_children(r)
+      with div(id="spatial_children"):
+        span("Insula and Streets Within: ")
+        palp_spatial_children(r)
 
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
 
 def insula_render(r,html_dom):
 
   with html_dom:
+    with main(cls="container", role="main"):
 
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
+      with div(id="spatial_hierarchy"):
+        span("Spatial Hierarchy: ")
+        palp_spatial_hierarchy(r)
 
-    with div(id="spatial_children"):
-      span("Properties Within: ")
-      palp_spatial_children(r)
+      with div(id="spatial_children"):
+        span("Properties Within: ")
+        palp_spatial_children(r)
 
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
 
 def property_render(r,html_dom):
 
   with html_dom:
+    with main(cls="container", role="main"):
 
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
+      with div(id="spatial_hierarchy"):
+        span("Spatial Hierarchy: ")
+        palp_spatial_hierarchy(r)
 
-    with div(id="spatial_children"):
-      span("Spaces (aka 'Rooms') Within: ")
-      palp_spatial_children(r)
+      with div(id="spatial_children"):
+        span("Spaces (aka 'Rooms') Within: ")
+        palp_spatial_children(r)
 
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
 
 def space_render(r,html_dom):
 
-  with html_dom:
+    with html_dom:
+      with main(cls="container", role="main"):
 
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)
+        if r.geojson:
+          with div(id="geojson"):
+            palp_geojson(r)
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
+        with div(id="spatial_hierarchy"):
+          span("Spatial Hierarchy: ")
+          palp_spatial_hierarchy(r)
 
-    with div(id="spatial_children"):
-      span("Features Within: ")
-      palp_spatial_children(r)
+        with div(id="spatial_children"):
+          span("Features Within: ")
+          palp_spatial_children(r)
 
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
+        with div(id="depicts_concepts: "):
+          span("Depicts Concepts: ")
+          palp_depicts_concepts(r)
 
 
 def feature_render(r,html_dom):
 
   with html_dom:
-    ar = r.identifier
- 
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)[0:20]
+    with main(cls="container", role="main"):
+      ar = r.identifier
+   
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)[0:20]
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
+      with div(id="spatial_hierarchy"):
+        span("Spatial Hierarchy: ")
+        palp_spatial_hierarchy(r)
 
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
-def property_render(r,html_dom):
-
-  with html_dom:
-
-    if r.geojson:
-      with div(id="geojson"):
-        palp_geojson(r)
-
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      palp_spatial_hierarchy(r)
-
-    with div(id="spatial_children"):
-      span("Spaces (aka 'Rooms') Within: ")
-      palp_spatial_children(r)
-
-    with div(id="depicts_concepts: "):
-      span("Depicts Concepts: ")
-      palp_depicts_concepts(r)
 
 def artwork_render(r,html_dom):
 
@@ -400,9 +388,7 @@ def palp_html_document(r,renderer):
   html_dom.body
   palp_page_navbar(r,html_dom)
 
-  with main(cls="container", role="main"):
-    #with div(id="container-fluid"):
-    renderer(r, html_dom)
+  renderer(r, html_dom)
 
   palp_page_footer(r, html_dom)
 
@@ -418,7 +404,7 @@ def palp_start():
 
   palp_html_head(r, html_dom)
   html_dom.body
-  palp_page_banner(r,html_dom)
+  palp_page_navbar(r,html_dom)
 
   with html_dom:
     with div(id="page-content-wrapper"):
