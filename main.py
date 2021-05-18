@@ -61,49 +61,36 @@ def palp_html_head(r, html_dom):
     html_dom.head += script(src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==", crossorigin="")
     html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js")
     html_dom.head += link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css")
-    html_dom.head += link(rel="stylesheet", href="/static/css/style.css")
-    html_dom.head += style("body { padding-top: 60px; }")
+    html_dom.head += link(rel="stylesheet", href="/static/css/tree_style.css")
+    html_dom.head += link(rel="stylesheet", href="/static/css/sticky-footer-navbar.css")
     html_dom.head += meta(name="DC.title",lang="en",content=r.identifier )
     html_dom.head += meta(name="DC.identifier", content=f"urn:p-lod:id:{r.identifier}" )
 
-def palp_page_banner(r, html_dom):
+def palp_page_navbar(r, html_dom):
     with html_dom:
-      with div(cls="jumbotron text-center"):
+      # feature request: suppress a link when displaying the page it links to.
+      with header():
+        with nav(cls="navbar navbar-expand-md navbar-dark fixed-top bg-dark"):
+           a("PALP", href="#", cls="navbar-brand")
+           if r.label:
+            span(r.label, cls="navbar-brand")
+           elif r.identifier:
+            span(r.identifier, cls="navbar-brand")
+           else:
+            span("There should be a title here. What went wrong??", cls="navbar-brand")
+        
 
-        # internal navigation links
-        with div(style="margin-top:1em"):
-          # feature request: suppress a link when displaying the page it links to.
-          a("[start]", href="/start")
-          a("[map]", href="/map")
-          a("[search]", href="/search")
-
-
-        div("Pompeii Artistic Landscape Project (PALP)")
-
-        # p-lod label and identifier
-        if r.label:
-          div(r.label)
-        with div():
-          if r.identifier:
-            span(r.identifier, style="font-size:smaller")
-
-          if r.rdf_type:
-            span(f" a {r.rdf_type}", style="font-size:smaller; color:gray")
-
-        # external links
-        with div(style="margin-top:1em"):
-          if r.p_in_p_url:
-            a("[p-in-p]", href=r.p_in_p_url, target = "_new")
-          if r.wikidata_url:
-            a("[wikidata]", href=r.wikidata_url, target = "_new")
-
-
+        
 def palp_page_footer(r, doc):
     with doc:
-      with div():
+      with footer(cls="footer"):
         span("The Pompeii Artistic Landscape Project (PALP) is hosted at the University of Massachusetts-Amherst. PALP is funded by the Getty Foundation.")
         if r.identifier:
           a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
+        if r.p_in_p_url:
+            a(" [p-in-p]", href=r.p_in_p_url, target = "_new")
+        if r.wikidata_url:
+            a(" [wikidata]", href=r.wikidata_url, target = "_new")
 
 
 # convenience functions
@@ -332,7 +319,7 @@ def feature_render(r,html_dom):
       span("Depicts Concepts: ")
       palp_depicts_concepts(r)
 
- def property_render(r,html_dom):
+def property_render(r,html_dom):
 
   with html_dom:
 
@@ -411,11 +398,11 @@ def palp_html_document(r,renderer):
 
   palp_html_head(r, html_dom)
   html_dom.body
-  palp_page_banner(r,html_dom)
+  palp_page_navbar(r,html_dom)
 
-  with div(id="page-content-wrapper"):
-    with div(id="container-fluid"):
-      renderer(r, html_dom)
+  with main(cls="container", role="main"):
+    #with div(id="container-fluid"):
+    renderer(r, html_dom)
 
   palp_page_footer(r, html_dom)
 
