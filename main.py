@@ -31,14 +31,7 @@ from rdflib.plugins.stores import sparqlstore
 # install with python3 -m pip install git+https://github.com/p-lod/plodlib
 import plodlib
 
-#import boxsdk
-#import json
-#from datetime import datetime
-#import glob
-#import sentry_sdk
-#from sentry_sdk.integrations.flask import FlaskIntegration
-#from markupsafe import escape
-
+import json
 
 ns = {"dcterms" : "http://purl.org/dc/terms/",
       "owl"     : "http://www.w3.org/2002/07/owl#",
@@ -87,7 +80,7 @@ def palp_page_banner(r, html_dom):
 
         div("Pompeii Artistic Landscape Project (PALP)")
 
-        # p-lod label and identigier
+        # p-lod label and identifier
         if r.label:
           div(r.label)
         with div():
@@ -286,7 +279,7 @@ def property_render(r,html_dom):
 
     if r.geojson:
       with div(id="geojson"):
-        palp_geojson(r)[0:20]
+        palp_geojson(r)
 
     with div(id="spatial_hierarchy"):
       span("Spatial Hierarchy: ")
@@ -307,7 +300,7 @@ def space_render(r,html_dom):
 
     if r.geojson:
       with div(id="geojson"):
-        palp_geojson(r)[0:20]
+        palp_geojson(r)
 
     with div(id="spatial_hierarchy"):
       span("Spatial Hierarchy: ")
@@ -338,7 +331,26 @@ def feature_render(r,html_dom):
     with div(id="depicts_concepts: "):
       span("Depicts Concepts: ")
       palp_depicts_concepts(r)
- 
+
+ def property_render(r,html_dom):
+
+  with html_dom:
+
+    if r.geojson:
+      with div(id="geojson"):
+        palp_geojson(r)
+
+    with div(id="spatial_hierarchy"):
+      span("Spatial Hierarchy: ")
+      palp_spatial_hierarchy(r)
+
+    with div(id="spatial_children"):
+      span("Spaces (aka 'Rooms') Within: ")
+      palp_spatial_children(r)
+
+    with div(id="depicts_concepts: "):
+      span("Depicts Concepts: ")
+      palp_depicts_concepts(r)
 
 def artwork_render(r,html_dom):
 
