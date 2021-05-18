@@ -9,4 +9,4 @@ Jinja2
 Markdown
 pandas
 rdflib==5.0.0
-Werkzeug==1.0.1
+Werkzeug
