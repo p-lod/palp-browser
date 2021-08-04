@@ -1,5 +1,7 @@
 import html
 
+# https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/ is the theme this uses.
+
 # because dominate will stop on html
 pyhtml = html
 
@@ -16,9 +18,6 @@ from dominate.util import raw
 from bs4 import BeautifulSoup
 
 from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request
-# from flask_mysqldb import MySQL
-
-from string import Template
 
 import markdown
 
@@ -77,7 +76,7 @@ def palp_page_navbar(r, html_dom):
            elif r.identifier:
             span(r.identifier, cls="navbar-brand")
            else:
-            span("There should be a title here. What went wrong??", cls="navbar-brand")
+            span("Default Page", cls="navbar-brand")
         
 
         
@@ -109,9 +108,9 @@ def palp_geojson(r):
   with mapdiv:
       innerdiv = div(id="minimap-geojson", style="display:none")
       innerdiv += r.geojson
-      div(id="minimapid", style="width: 50%; height: 200px;display:none")
+      div(id="minimapid", style="float:right; width: 50%; height: 400px;display:none")
       s = script(type='text/javascript')
-      s += """// check if the item-geojson div has content and make a map if it does. 
+      s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
        $('#minimapid').show()
 
@@ -123,9 +122,17 @@ if ($('#minimap-geojson').html().trim()) {
     id: 'mapbox.streets'
   }).addTo(mymap);
 
-       L.geoJSON(JSON.parse($('#minimap-geojson').html())).addTo(mymap)
+       features = L.geoJSON(JSON.parse($('#minimap-geojson').html()), {
+  onEachFeature: function (feature, layer) {
+    var id_no_urn = feature.properties.title
+    id_no_urn = id_no_urn.replace("urn:p-lod:id:","")
+    layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
+  }
+})
+       features.addTo(mymap)
+       mymap.fitBounds(features.getBounds().pad(0.02))
        
-}"""
+}""")
 
   return mapdiv
 
@@ -351,7 +358,7 @@ def concept_render(r,html_dom):
 
       if r.geojson:
         with div(id="geojson"):
-          r.geojson[0:20]
+          palp_geojson(r)
 
       with div(id="depicted_where"):
         span("Depicted in the following Pompeian spaces: ")
