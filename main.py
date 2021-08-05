@@ -47,7 +47,7 @@ store = rdf.plugin.get("SPARQLStore", rdf.store.Store)(endpoint="http://52.170.1
 g = rdf.Graph(store)
 
 
-
+POMPEII = plodlib.PLODResource('pompeii')
 
 def palp_html_head(r, html_dom):
     html_dom.head += meta(charset="utf-8")
@@ -108,6 +108,10 @@ def palp_geojson(r):
   with mapdiv:
       innerdiv = div(id="minimap-geojson", style="display:none")
       innerdiv += r.geojson
+
+      pompeiidiv = div(id="pompeii-geojson", style="display:none")
+      pompeiidiv += POMPEII.geojson
+
       div(id="minimapid", style="float:right; width: 50%; height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
@@ -122,15 +126,23 @@ if ($('#minimap-geojson').html().trim()) {
     id: 'mapbox.streets'
   }).addTo(mymap);
 
+  var pompeii_geojson = L.geoJSON(JSON.parse($('#pompeii-geojson').html()));
+
+  pompeii_geojson.addTo(mymap);
+
        features = L.geoJSON(JSON.parse($('#minimap-geojson').html()), {
+       style: {"color":"red"},
   onEachFeature: function (feature, layer) {
     var id_no_urn = feature.properties.title
     id_no_urn = id_no_urn.replace("urn:p-lod:id:","")
     layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
   }
 })
-       features.addTo(mymap)
-       mymap.fitBounds(features.getBounds().pad(0.02))
+       features.addTo(mymap);
+
+       
+
+       mymap.fitBounds(pompeii_geojson.getBounds());
        
 }""")
 
