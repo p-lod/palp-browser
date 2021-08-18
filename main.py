@@ -465,7 +465,7 @@ def palp_search():
 
 @app.route('/')
 def index():
-    return redirect("/pompeii", code=302)
+    return redirect("/browse/pompeii", code=302)
 
 
 #### SQL AND BOX STUFF
