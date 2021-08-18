@@ -137,6 +137,13 @@ if ($('#minimap-geojson').html().trim()) {
     var id_no_urn = feature.properties.title;
     id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
     layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
+    
+    //layer.on('click', function (e) {
+        //console.log('/browse/'+id_no_urn);
+        //window.open('/browse/'+id_no_urn,"_self");
+    //});
+    
+    layer.bindTooltip(id_no_urn);
   }
 })
        features.addTo(mymap);
@@ -458,7 +465,7 @@ def palp_search():
 
 @app.route('/')
 def index():
-    return redirect("/start", code=302)
+    return redirect("/pompeii", code=302)
 
 
 #### SQL AND BOX STUFF
