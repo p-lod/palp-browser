@@ -207,6 +207,16 @@ def palp_spatial_children(r):
       span(" /", style="color: LightGray")
   return element
 
+def palp_depicted_by_images(r):
+
+  element = span()
+  with element:
+    for i in r.images_luna_labels:
+      # relative_url, label = urn_to_anchor(i[0])
+      a(i, href=f'https://umassamherst.lunaimaging.com/luna/servlet/view/search?search=SUBMIT&cat=0&q={i[0]}&dateRangeStart=&dateRangeEnd=&sort=mediafileName%2Caddress%2Ccreator&QuickSearchA=QuickSearchA')
+      span(" /", style="color: LightGray")
+  return element
+
 def palp_depicts_concepts(r):
 
   element = span()
@@ -349,9 +359,13 @@ def feature_render(r,html_dom):
         span("Spatial Hierarchy: ")
         palp_spatial_hierarchy(r)
 
-      with div(id="depicts_concepts: "):
+      with div(id="depicts_concepts"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+
+      with div(id="images"):
+        span("Images: ")
+        palp_depicted_by_images(r)
 
 
 def artwork_render(r,html_dom):
