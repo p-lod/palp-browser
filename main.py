@@ -211,10 +211,10 @@ def palp_depicted_by_images(r):
 
   element = span()
   with element:
-    for i in r.images_luna_labels:
+    for i in r.images_from_luna:
       # relative_url, label = urn_to_anchor(i[0])
-      a(i, href=f'https://umassamherst.lunaimaging.com/luna/servlet/view/search?search=SUBMIT&cat=0&q={i[0]}&dateRangeStart=&dateRangeEnd=&sort=mediafileName%2Caddress%2Ccreator&QuickSearchA=QuickSearchA')
-      span(" /", style="color: LightGray")
+      img(src=i[1], style="max-width:300px;margin-top:3px")
+      br()
   return element
 
 def palp_depicts_concepts(r):
@@ -365,6 +365,7 @@ def feature_render(r,html_dom):
 
       with div(id="images"):
         span("Images: ")
+        br()
         palp_depicted_by_images(r)
 
 
