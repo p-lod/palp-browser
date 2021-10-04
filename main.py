@@ -157,7 +157,27 @@ if ($('#minimap-geojson').html().trim()) {
   return mapdiv
 
 def palp_spatial_hierarchy(r):
-  ditop = div(id="alljstree")
+
+  element = div()
+
+  hier_up = r.spatial_hierarchy_up()
+
+  for i,h in enumerate(hier_up):
+    relative_url, label = urn_to_anchor(h[0])
+
+    if i == 0:
+      span(label)
+    else:
+      a(label, href=relative_url)
+
+    if i < (len(hier_up)-1):
+      if i == 0:
+        span(" is within ")
+      else:
+        span(" → ")
+
+  return element
+
   with ditop:
     di = div(id="jstree")
     # with di:
@@ -195,7 +215,6 @@ def palp_spatial_hierarchy(r):
     #   // 6 create an instance when the DOM is ready
     #   $('#jstree').jstree();
     #   });"""
-  return ditop
 
 def palp_spatial_children(r):
 
@@ -218,7 +237,7 @@ def palp_depicted_by_images(r, first_only = False):
         iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
     else:
       for i in luna_images_l:
-        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="1px", style="border:1px solid black", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
         #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
 
         #img(src=i[1], style="max-width:300px;margin-top:3px")
@@ -276,9 +295,8 @@ def city_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
       
-      with div(id="spatial_children"):
-        span("Regions and Streets Within:")
-        palp_spatial_children(r)
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+        palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts"):
         span("Depicts Concepts: ")
@@ -295,8 +313,7 @@ def region_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy"):
-        span("Spatial Hierarchy: ")
+      with div(id="spatial_hierarchy", style="margin-bottom:.5em"):
         palp_spatial_hierarchy(r)
 
       with div(id="spatial_children"):
@@ -317,8 +334,7 @@ def insula_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy"):
-        span("Spatial Hierarchy: ")
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
       with div(id="spatial_children"):
@@ -339,8 +355,7 @@ def property_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy"):
-        span("Spatial Hierarchy: ")
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
       with div(id="spatial_children"):
@@ -361,8 +376,7 @@ def space_render(r,html_dom):
           with div(id="geojson"):
             palp_geojson(r)
 
-        with div(id="spatial_hierarchy"):
-          span("Spatial Hierarchy: ")
+        with div(id="spatial_hierarchy", style="margin-bottom:1em"):
           palp_spatial_hierarchy(r)
 
         with div(id="spatial_children"):
@@ -384,8 +398,7 @@ def feature_render(r,html_dom):
           with div(id="geojson"):
             palp_geojson(r)
 
-      with div(id="spatial_hierarchy"):
-        span("Spatial Hierarchy: ")
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts"):
@@ -405,8 +418,7 @@ def artwork_render(r,html_dom):
       with div(id="geojson"):
         palp_geojson(r)
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
+    with div(id="spatial_hierarchy", style="margin-bottom:1em"):
       palp_spatial_hierarchy(r)
 
     with div(id="depicts_concepts: "):
@@ -436,12 +448,8 @@ def street_render(r,html_dom):
       with div(id="geojson"):
         r.geojson[0:20]
 
-    with div(id="spatial_hierarchy"):
-      span("Spatial Hierarchy: ")
-      for i in r.spatial_hierarchy_up():
-        relative_url, label = urn_to_anchor(i[0])
-        a(f"{label} / ", href=relative_url)
-
+    with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      palp_spatial_hierarchy(r)
 
 
 def unknown_render(r,html_dom):
