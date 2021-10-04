@@ -245,7 +245,8 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
       with tr():
         with td(style="padding-top:5px"):
           relative_url, label = urn_to_anchor(i[3])
-          a(label, href=relative_url)
+          #a(label, href=relative_url)
+          span(label)
         with td(style="padding-top:5px"):
           relative_url, label = urn_to_anchor(i[0])
           a(label, href=relative_url)
