@@ -239,27 +239,29 @@ def palp_depicts_concepts(r):
 
 def palp_depicted_where(r, level_of_detail = 'feature'):
 
-  element = table()
+  element = div()
   with element:
     for i in r.depicted_where(level_of_detail=level_of_detail):
-      with tr():
-        with td(style="padding-top:5px"):
-          relative_url, label = urn_to_anchor(i[3])
-          #a(label, href=relative_url)
-          span(f'{label} on:')
-        with td(style="padding-top:5px"):
-          relative_url, label = urn_to_anchor(i[0])
-          a(label, href=relative_url)
-        with td(style="padding-top:5px"):
-          relative_url, label = urn_to_anchor(i[0])
-          span('[')
-          a("More images...", href=relative_url)
-          span(']')
-        
-      with tr():
-        with td(colspan=3):
-          get_first_image_of = i[0].replace("urn:p-lod:id:","")
-          palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
+      with table(style="border: 1px solid black;margin-top:5px"):
+        with tr():
+          with td(style="padding-top:5px"):
+            relative_url, label = urn_to_anchor(i[3])
+            #a(label, href=relative_url)
+            with b():
+              span(f'{label} on:')
+          with td(style="padding-top:5px"):
+            relative_url, label = urn_to_anchor(i[0])
+            a(label, href=relative_url)
+          with td(style="padding-top:5px"):
+            relative_url, label = urn_to_anchor(i[0])
+            span('[')
+            a("More images...", href=relative_url)
+            span(']')
+          
+        with tr():
+          with td(colspan=3):
+            get_first_image_of = i[0].replace("urn:p-lod:id:","")
+            palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
   return element
