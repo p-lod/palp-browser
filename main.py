@@ -112,7 +112,7 @@ def palp_geojson(r):
       pompeiidiv = div(id="pompeii-geojson", style="display:none")
       pompeiidiv += POMPEII.geojson
 
-      div(id="minimapid", style="float:right; width: 50%; height: 400px;display:none")
+      div(id="minimapid", style="float:right; width: 40%; height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
@@ -207,17 +207,24 @@ def palp_spatial_children(r):
       span(" /", style="color: LightGray")
   return element
 
-def palp_depicted_by_images(r):
+def palp_depicted_by_images(r, first_only = False):
 
-  element = span()
+  luna_images_l = r.images_from_luna
+
+  element = div()
   with element:
-    for i in r.images_from_luna:
-      # relative_url, label = urn_to_anchor(i[0])
-      iframe(id="widgetPreview", frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
-      #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
+    if first_only:
+      if len(luna_images_l):
+        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+    else:
+      for i in luna_images_l:
+        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+        #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
 
-      #img(src=i[1], style="max-width:300px;margin-top:3px")
-      br()
+        #img(src=i[1], style="max-width:300px;margin-top:3px")
+
+        br()
+
   return element
 
 def palp_depicts_concepts(r):
@@ -236,14 +243,22 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
   with element:
     for i in r.depicted_where(level_of_detail=level_of_detail):
       with tr():
-        with td(style="padding:2px"):
-          relative_url, label = urn_to_anchor(i[0])
-          a(label, href=relative_url)
-        with td(style="padding:2px"):
-          span(" in ")
-        with td(style="padding:2px"):
+        with td(style="padding-top:5px"):
           relative_url, label = urn_to_anchor(i[3])
           a(label, href=relative_url)
+        with td(style="padding-top:5px"):
+          relative_url, label = urn_to_anchor(i[0])
+          a(label, href=relative_url)
+        with td(style="padding-top:5px"):
+          relative_url, label = urn_to_anchor(i[0])
+          span('[')
+          a("More images...", href=relative_url)
+          span(']')
+        
+      with tr():
+        with td(colspan=3):
+          get_first_image_of = i[0].replace("urn:p-lod:id:","")
+          palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
   return element
@@ -361,10 +376,10 @@ def feature_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       ar = r.identifier
-   
+
       if r.geojson:
-        with div(id="geojson"):
-          palp_geojson(r)[0:20]
+          with div(id="geojson"):
+            palp_geojson(r)
 
       with div(id="spatial_hierarchy"):
         span("Spatial Hierarchy: ")
@@ -375,7 +390,6 @@ def feature_render(r,html_dom):
         palp_depicts_concepts(r)
 
       with div(id="images"):
-        span("Images: ")
         br()
         palp_depicted_by_images(r)
 
@@ -407,7 +421,7 @@ def concept_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicted_where"):
-        span("Depicted on these features (with space also shown): ")
+        span(f"'{r.identifier}' depicted in: ")
         palp_depicted_where(r)
 
 
