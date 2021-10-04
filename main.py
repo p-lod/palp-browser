@@ -213,7 +213,10 @@ def palp_depicted_by_images(r):
   with element:
     for i in r.images_from_luna:
       # relative_url, label = urn_to_anchor(i[0])
-      img(src=i[1], style="max-width:300px;margin-top:3px")
+      iframe(id="widgetPreview", frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+      #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
+
+      #img(src=i[1], style="max-width:300px;margin-top:3px")
       br()
   return element
 
@@ -227,14 +230,22 @@ def palp_depicts_concepts(r):
       span(" /", style="color: LightGray")
   return element
 
-def palp_depicted_where(r):
+def palp_depicted_where(r, level_of_detail = 'feature'):
 
-  element = span()
+  element = table()
   with element:
-    for i in r.depicted_where():
-      relative_url, label = urn_to_anchor(i[0])
-      a(label, href=relative_url)
-      span(" /", style="color: LightGray")
+    for i in r.depicted_where(level_of_detail=level_of_detail):
+      with tr():
+        with td(style="padding:2px"):
+          relative_url, label = urn_to_anchor(i[0])
+          a(label, href=relative_url)
+        with td(style="padding:2px"):
+          span(" in ")
+        with td(style="padding:2px"):
+          relative_url, label = urn_to_anchor(i[3])
+          a(label, href=relative_url)
+
+
   return element
 
 
@@ -396,7 +407,7 @@ def concept_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicted_where"):
-        span("Depicted in the following Pompeian spaces: ")
+        span("Depicted on these features (with space also shown): ")
         palp_depicted_where(r)
 
 
