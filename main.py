@@ -234,10 +234,24 @@ def palp_depicted_by_images(r, first_only = False):
   with element:
     if first_only:
       if len(luna_images_l):
-        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+        #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId={luna_images_l[0][1]}",title="Image from Luna", allow="fullscreen")
+        with div(style="width:500px"):
+          span(luna_images_l[0][3])
+          span(' [')
+          a("more info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
+          span("]")
+    
     else:
       for i in luna_images_l:
-        iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="1px", style="border:1px solid black", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
+        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId={i[1]}",title="Image from Luna")
+        with div(style="width:500px; margin-bottom:5px"):
+          span(luna_images_l[0][3])
+          span(' [')
+          a("more info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
+          span("]")
+
+        #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="1px", style="border:1px solid black", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
         #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
 
         #img(src=i[1], style="max-width:300px;margin-top:3px")
@@ -379,13 +393,14 @@ def space_render(r,html_dom):
         with div(id="spatial_hierarchy", style="margin-bottom:1em"):
           palp_spatial_hierarchy(r)
 
+        with div(id="depicts_concepts: "):
+          span("Depicts Concepts: ")
+          palp_depicts_concepts(r)
+
         with div(id="spatial_children"):
           span("Features Within: ")
           palp_spatial_children(r)
 
-        with div(id="depicts_concepts: "):
-          span("Depicts Concepts: ")
-          palp_depicts_concepts(r)
 
 
 def feature_render(r,html_dom):
