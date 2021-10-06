@@ -251,16 +251,16 @@ def palp_depicted_by_images(r, first_only = False):
         with div(style="width:500px"):
           span(luna_images_l[0][3])
           span(' [')
-          a("more info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
+          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
           span("]")
     
     else:
       for i in luna_images_l:
-        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId={i[1]}",title="Image from Luna")
+        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId={i[1]}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px; margin-bottom:5px"):
           span(luna_images_l[0][3])
           span(' [')
-          a("more info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
+          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}")
           span("]")
 
         #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="1px", style="border:1px solid black", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
