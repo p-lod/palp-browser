@@ -291,20 +291,15 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
         with tr():
           with td(style="padding-top:5px"):
             relative_url, label = urn_to_anchor(i[3])
-            #a(label, href=relative_url)
-            with b():
-              span(f'{label} on:')
+            span("Within ")
+            a(label, href=relative_url)
+            span(" on wall or feature:")
           with td(style="padding-top:5px"):
             relative_url, label = urn_to_anchor(i[0])
             a(label, href=relative_url)
-          with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(i[0])
-            span('[')
-            a("More images...", href=relative_url)
-            span(']')
           
         with tr():
-          with td(colspan=3):
+          with td(colspan=2):
             get_first_image_of = i[0].replace("urn:p-lod:id:","")
             palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
@@ -468,8 +463,8 @@ def concept_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicted_where"):
-        span(f"'{r.identifier}' depicted in: ")
-        palp_depicted_where(r)
+          span(raw(f"<b>'{r.identifier}'</b> is depicted"))
+          palp_depicted_where(r)
 
 
 def street_render(r,html_dom):
