@@ -216,14 +216,26 @@ def palp_spatial_hierarchy(r):
     #   $('#jstree').jstree();
     #   });"""
 
-def palp_spatial_children(r):
+def palp_spatial_children(r, images = False):
 
   element = span()
   with element:
-    for i in r.spatial_children():
-      relative_url, label = urn_to_anchor(i[0])
-      a(label, href=relative_url)
-      span(" /", style="color: LightGray")
+    for i,c in enumerate(r.spatial_children()):
+      #relative_url, label = urn_to_anchor(i[0])
+      #a(label, href=relative_url)
+      #span(" /", style="color: LightGray")
+      with table(style="border: 1px solid black;margin-top:5px"):
+        with tr():
+          with td(style="padding-top:5px"):
+            relative_url, label = urn_to_anchor(c[0])
+            a(label, href=relative_url)
+        
+      if (images and (i < 10)):
+        with tr():
+          with td(colspan=3):
+            get_first_image_of = c[0].replace("urn:p-lod:id:","")
+            palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
+  
   return element
 
 def palp_depicted_by_images(r, first_only = False):
@@ -308,13 +320,16 @@ def city_render(r,html_dom):
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
-      
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
-        palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+      
+      with div(id="spatial_children"):
+        span("Insula and Streets Within: ")
+        palp_spatial_children(r, images = False)
+
+
           
 
 
@@ -372,13 +387,15 @@ def property_render(r,html_dom):
       with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
-      with div(id="spatial_children"):
-        span("Spaces (aka 'Rooms') Within: ")
-        palp_spatial_children(r)
-
       with div(id="depicts_concepts: "):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+
+      with div(id="spatial_children"):
+        span("Spaces (aka 'Rooms') Within: ")
+        palp_spatial_children(r, images = False)
+
+
 
 
 def space_render(r,html_dom):
@@ -399,7 +416,7 @@ def space_render(r,html_dom):
 
         with div(id="spatial_children"):
           span("Features Within: ")
-          palp_spatial_children(r)
+          palp_spatial_children(r, images = True)
 
 
 
