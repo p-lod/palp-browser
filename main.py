@@ -340,13 +340,13 @@ def region_render(r,html_dom):
       with div(id="spatial_hierarchy", style="margin-bottom:.5em"):
         palp_spatial_hierarchy(r)
 
-      with div(id="spatial_children"):
-        span("Insula and Streets Within: ")
-        palp_spatial_children(r)
-
       with div(id="depicts_concepts: "):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+
+      with div(id="spatial_children"):
+        span("Insula and Streets Within: ")
+        palp_spatial_children(r)
 
 
 def insula_render(r,html_dom):
