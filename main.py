@@ -259,7 +259,7 @@ def palp_depicted_by_images(r, first_only = False):
       for i in luna_images_l:
         iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{i[1]}~{i[2]}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px; margin-bottom:5px"):
-          span(luna_images_l[0][3])
+          span(luna_images_l[0][4])
           span(' [')
           a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{i[1]}~{i[2]}")
           span("]")
