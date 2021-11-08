@@ -249,10 +249,11 @@ def palp_depicted_by_images(r, first_only = False):
         #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
         iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{luna_images_l[0][1]}~{luna_images_l[0][2]}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px"):
-          #span(luna_images_l[0][3])
+          span(luna_images_l[0][4])
           span(' [')
           a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{luna_images_l[0][1]}~{luna_images_l[0][2]}")
           span("]")
+          
     
     else:
       for i in luna_images_l:
