@@ -112,6 +112,14 @@ def palp_geojson(r):
       pompeiidiv = div(id="pompeii-geojson", style="display:none")
       pompeiidiv += POMPEII.geojson
 
+
+      withindiv = div(id="within-geojson", style="display:none")
+      try:
+        withindiv += r.spatially_within[0][-1]
+      except IndexError:
+        do_nothing = True
+
+
       div(id="minimapid", style="float:right; width: 40%; height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
@@ -127,9 +135,17 @@ if ($('#minimap-geojson').html().trim()) {
   }).addTo(mymap);
 
   var pompeii_geojson = L.geoJSON(JSON.parse($('#pompeii-geojson').html()));
-
   pompeii_geojson.addTo(mymap);
   mymap.fitBounds(pompeii_geojson.getBounds());
+
+
+   if ($('#within-geojson').html().trim()) { 
+    var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
+       style: {"color":"yellow"}});
+    within_geojson.addTo(mymap);
+    mymap.fitBounds(within_geojson.getBounds());
+    }
+
 
        features = L.geoJSON(JSON.parse($('#minimap-geojson').html()), {
        style: {"color":"red"},
@@ -259,7 +275,7 @@ def palp_depicted_by_images(r, first_only = False):
       for i in luna_images_l:
         iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{i[1]}~{i[2]}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px; margin-bottom:5px"):
-          span(luna_images_l[0][4])
+          span(i[4])
           span(' [')
           a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{i[1]}~{i[2]}")
           span("]")
