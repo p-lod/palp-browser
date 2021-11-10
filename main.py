@@ -5,6 +5,7 @@ import html
 # because dominate will stop on html
 pyhtml = html
 
+import json
 import os
 import re
 import sys
@@ -24,13 +25,15 @@ import markdown
 import rdflib as rdf
 from rdflib.plugins.stores import sparqlstore
 
+from shapely.geometry import shape, mapping
+from shapely.affinity import translate
+
+
 #from google.oauth2 import service_account
 #from googleapiclient.discovery import build
 
 # install with python3 -m pip install git+https://github.com/p-lod/plodlib
 import plodlib
-
-import json
 
 ns = {"dcterms" : "http://purl.org/dc/terms/",
       "owl"     : "http://www.w3.org/2002/07/owl#",
@@ -101,6 +104,27 @@ def urn_to_anchor(urn):
 
   return relative_url, label
 
+
+def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
+
+  # offsets
+  xoff = -0.0000075
+  yoff =  0.000037
+
+  g = json.loads(geojson_str)
+  if g['type'] == 'FeatureCollection':
+    for f in g['features']:
+      s =  shape(f['geometry'])
+      f['geometry'] = mapping(translate(s, xoff=xoff, yoff=yoff, zoff=0.0))
+    return json.dumps(g)
+
+  elif g['type'] == 'Feature':
+    s =  shape(g['geometry'])
+    g['geometry'] = mapping(translate(s, xoff=xoff, yoff=yoff, zoff=0.0))
+    return json.dumps(g)
+  else:
+    return geojson_str
+
 # palp page part renderers
 
 def palp_geojson(r):
@@ -108,9 +132,9 @@ def palp_geojson(r):
   with mapdiv:
       innerdiv = div(id="minimap-geojson", style="display:none")
       if bool(r.geojson):
-        innerdiv += r.geojson
+        innerdiv += adjust_geojson(r.geojson)
       elif bool(r.spatially_within):
-        innerdiv += r.spatially_within[0][-1]
+        innerdiv += adjust_geojson(r.spatially_within[0][-1])
       else:
         innerdiv += ''
 
@@ -118,10 +142,8 @@ def palp_geojson(r):
       pompeiidiv += POMPEII.geojson
 
       withindiv = div(id="within-geojson", style="display:none")
-      try:
-        withindiv += r.spatially_within[0][-1]
-      except IndexError:
-        do_nothing = True
+      if bool(r.spatially_within):
+        withindiv += adjust_geojson(r.spatially_within[0][-1])
 
 
       div(id="minimapid", style="float:right; width: 40%; height: 400px;display:none")
