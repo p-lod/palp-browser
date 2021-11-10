@@ -85,8 +85,8 @@ def palp_page_footer(r, doc):
       with footer(cls="footer"):
         with span():
           small("PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation.")
-          if r.identifier:
-            a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
+          #if r.identifier:
+          #  a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
           if r.p_in_p_url:
               a(" [p-in-p]", href=r.p_in_p_url, target = "_new")
           if r.wikidata_url:
@@ -145,7 +145,20 @@ if ($('#minimap-geojson').html().trim()) {
 
    if ($('#within-geojson').html().trim()) { 
     var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
-       style: {"color":"yellow"}});
+       style: {"color":"yellow"},
+  onEachFeature: function (feature, layer) {
+    //var id_no_urn = feature.properties.title;
+    //id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
+    //layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
+    
+    //layer.on('click', function (e) {
+        //console.log('/browse/'+id_no_urn);
+        //window.open('/browse/'+id_no_urn,"_self");
+    //});
+    
+    layer.bindTooltip("Within (identifier and link to come)");
+  }
+       });
     within_geojson.addTo(mymap);
     mymap.fitBounds(within_geojson.getBounds());
     }
