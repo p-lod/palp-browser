@@ -107,11 +107,15 @@ def palp_geojson(r):
   mapdiv = div(id="minimap")
   with mapdiv:
       innerdiv = div(id="minimap-geojson", style="display:none")
-      innerdiv += r.geojson
+      if bool(r.geojson):
+        innerdiv += r.geojson
+      elif bool(r.spatially_within):
+        innerdiv += r.spatially_within[0][-1]
+      else:
+        innerdiv += ''
 
       pompeiidiv = div(id="pompeii-geojson", style="display:none")
       pompeiidiv += POMPEII.geojson
-
 
       withindiv = div(id="within-geojson", style="display:none")
       try:
@@ -438,7 +442,7 @@ def feature_render(r,html_dom):
     with main(cls="container", role="main"):
       ar = r.identifier
 
-      if r.geojson:
+      if r.geojson or r.spatially_within:
           with div(id="geojson"):
             palp_geojson(r)
 
