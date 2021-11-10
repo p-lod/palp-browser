@@ -8,6 +8,6 @@ gunicorn
 Jinja2
 Markdown
 pandas
-rdflib==5.0.0
+rdflib
 shapely
 Werkzeug
