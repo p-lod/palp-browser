@@ -167,7 +167,7 @@ if ($('#minimap-geojson').html().trim()) {
 
    if ($('#within-geojson').html().trim()) { 
     var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
-       style: {"color":"yellow"},
+       style: {"color":"yellow", "opacity":0, "fillOpacity": .2},
   onEachFeature: function (feature, layer) {
     //var id_no_urn = feature.properties.title;
     //id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
