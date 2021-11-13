@@ -150,6 +150,8 @@ def palp_geojson(r):
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
+      // fit to resource starts as true, will get set to false if ther eis within_geojson
+      var fit_to_resource = true;
        $('#minimapid').show()
 
   var mymap = L.map('minimapid').setView([40.75, 14.485], 16);
@@ -167,27 +169,28 @@ if ($('#minimap-geojson').html().trim()) {
 
    if ($('#within-geojson').html().trim()) { 
     var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
-       style: {"color":"yellow", "opacity":0, "fillOpacity": .2},
+       style: {"color":"yellow", "opacity": 0, "fillOpacity": .4},
   onEachFeature: function (feature, layer) {
-    //var id_no_urn = feature.properties.title;
-    //id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
-    //layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
+    var id_no_urn = feature.id;
+    id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
+    layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
     
     //layer.on('click', function (e) {
         //console.log('/browse/'+id_no_urn);
         //window.open('/browse/'+id_no_urn,"_self");
     //});
     
-    layer.bindTooltip("Within (identifier and link to come)");
+    layer.bindTooltip(id_no_urn);
   }
        });
     within_geojson.addTo(mymap);
     mymap.fitBounds(within_geojson.getBounds());
+    fit_to_resource = false;
     }
 
 
        features = L.geoJSON(JSON.parse($('#minimap-geojson').html()), {
-       style: {"color":"red"},
+       style: {"color":"red", "weight": 1, "fillOpacity":.5},
   onEachFeature: function (feature, layer) {
     var id_no_urn = feature.properties.title;
     id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
@@ -202,6 +205,7 @@ if ($('#minimap-geojson').html().trim()) {
   }
 })
        features.addTo(mymap);
+       if (fit_to_resource) { mymap.fitBounds(features.getBounds()); }
 
        
 
