@@ -370,6 +370,7 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
   return element
 
 
+
 # type renderers
 def city_render(r,html_dom):
 
