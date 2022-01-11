@@ -357,10 +357,20 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
           with td(style="padding-top:5px"):
             relative_url, label = urn_to_anchor(i[0])
             a(label, href=relative_url)
-          
+
         with tr():
-          if i[6] != 'None':
-            span(f"HAS BEST IMAGE: {i[6]}")
+          if "luna_img_PALP" in i[6]:
+            with td(colspan=2):
+              # span(f"HAS PALP BEST IMAGE: {[i[6],i[7],i[8],i[9]]}")
+              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{i[7]}~{i[8]}",title="Image from Luna", allow="fullscreen")
+              with div(style="width:500px"):
+                # span(luna_images_l[0][4])
+                span(' [')
+                a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{i[7]}~{i[8]}")
+                span("]")
+          elif i[6] != 'None':
+            with td(colspan=2):
+              span(f"HAS BEST IMAGE: {[i[6],i[7],i[8],i[9]]}")
           else:
             with td(colspan=2):
               get_first_image_of = i[0].replace("urn:p-lod:id:","")
