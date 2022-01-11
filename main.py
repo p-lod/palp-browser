@@ -359,9 +359,12 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
             a(label, href=relative_url)
           
         with tr():
-          with td(colspan=2):
-            get_first_image_of = i[0].replace("urn:p-lod:id:","")
-            palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
+          if i[6] != 'None':
+            span(f"HAS BEST IMAGE: {i[6]}")
+          else:
+            with td(colspan=2):
+              get_first_image_of = i[0].replace("urn:p-lod:id:","")
+              palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
   return element
