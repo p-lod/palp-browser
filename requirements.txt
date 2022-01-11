@@ -1,4 +1,4 @@
--e git+git://github.com/p-lod/plodlib.git#egg=plodlib
+-e git+https://github.com/p-lod/plodlib.git#egg=plodlib
 
 beautifulsoup4
 dominate
