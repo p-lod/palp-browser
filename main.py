@@ -359,19 +359,24 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
             a(label, href=relative_url)
 
         with tr():
-          if "luna_img_PALP" in i[6]:
+          if i[6] != 'None': # Has a best image
+            tilde_val = False
+
+            if i[6].startswith("urn:p-lod:id:luna_img_PALP"):
+              tilde_val = "14"
+
+            if i[6].startswith("urn:p-lod:id:luna_img_PPM"):
+              tilde_val = "16"
+      
             with td(colspan=2):
-              # span(f"HAS PALP BEST IMAGE: {[i[6],i[7],i[8],i[9]]}")
-              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{i[7]}~{i[8]}",title="Image from Luna", allow="fullscreen")
+              
+              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{i[7]}~{i[8]}",title="Image from Luna", allow="fullscreen")
               with div(style="width:500px"):
-                # span(luna_images_l[0][4])
                 span(' [')
-                a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{i[7]}~{i[8]}")
+                a(f"about image {i[6]}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i[7]}~{i[8]}")
                 span("]")
-          elif i[6] != 'None':
-            with td(colspan=2):
-              span(f"HAS BEST IMAGE: {[i[6],i[7],i[8],i[9]]}")
-          else:
+           
+          else: # No best image
             with td(colspan=2):
               get_first_image_of = i[0].replace("urn:p-lod:id:","")
               palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
