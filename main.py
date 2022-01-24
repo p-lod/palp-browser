@@ -623,3 +623,8 @@ def palp_search():
 @app.route('/')
 def index():
     return redirect("/browse/pompeii", code=302)
+
+@app.route('/geojson/<path:identifier>')
+def api_geojson(identifier):
+  return plodlib.PLODResource(identifier).geojson
+
