@@ -104,6 +104,14 @@ def urn_to_anchor(urn):
 
   return relative_url, label
 
+def luna_tilde_val(luna_urn):
+  if luna_urn.startswith("urn:p-lod:id:luna_img_PALP"):
+    tilde_val = "14"
+
+  if luna_urn.startswith("urn:p-lod:id:luna_img_PPM"):
+    tilde_val = "16"
+
+  return tilde_val
 
 def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
 
@@ -299,35 +307,33 @@ def palp_spatial_children(r, images = False):
 
 def palp_depicted_by_images(r, first_only = False):
 
-  luna_images_l = r.images_from_luna
+  luna_images_j = json.loads(r.images_from_luna)
 
   element = div()
   with element:
     if first_only:
-      if len(luna_images_l):
+      if len(luna_images_j):
         #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
-        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{luna_images_l[0][1]}~{luna_images_l[0][2]}",title="Image from Luna", allow="fullscreen")
+        tilde_val = luna_tilde_val(luna_images_j[0]['urn'])
+
+        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{luna_images_j[0]['l_record']}~{luna_images_j[0]['l_media']}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px"):
-          span(luna_images_l[0][4])
+          span(luna_images_j[0]['l_description'])
           span(' [')
-          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{luna_images_l[0][1]}~{luna_images_l[0][2]}")
+          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{luna_images_j[0]['l_record']}~{luna_images_j[0]['l_media']}")
           span("]")
           
     
     else:
-      for i in luna_images_l:
-        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~14~14~{i[1]}~{i[2]}",title="Image from Luna", allow="fullscreen")
+      for i in luna_images_j:
+        tilde_val = luna_tilde_val(i['urn'])
+        
+        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}",title="Image from Luna", allow="fullscreen")
         with div(style="width:500px; margin-bottom:5px"):
           span(i[4])
           span(' [')
-          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~{i[1]}~{i[2]}")
+          a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
           span("]")
-
-        #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="1px", style="border:1px solid black", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{i[1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
-        #<iframe id="widgetPreview",frameBorder="0", width="700px", height="350px", border="0px", style="border:0px solid white", src="https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~14~14~99562~1272567?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
-
-        #img(src=i[1], style="max-width:300px;margin-top:3px")
-
         br()
 
   return element
@@ -346,39 +352,33 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
 
   element = div()
   with element:
-    for i in r.depicted_where(level_of_detail=level_of_detail):
+    for i,row in pd.DataFrame(data = json.loads(r.depicted_where(level_of_detail=level_of_detail))).iterrows():
       with table(style="border: 1px solid black;margin-top:5px"):
         with tr():
           with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(i[3])
+            relative_url, label = urn_to_anchor(row['within'])
             span("Within ")
             a(label, href=relative_url)
             span(" on wall or feature:")
           with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(i[0])
+            relative_url, label = urn_to_anchor(row['id'])
             a(label, href=relative_url)
 
         with tr():
-          if i[6] != 'None': # Has a best image
-            tilde_val = False
-
-            if i[6].startswith("urn:p-lod:id:luna_img_PALP"):
-              tilde_val = "14"
-
-            if i[6].startswith("urn:p-lod:id:luna_img_PPM"):
-              tilde_val = "16"
+          if row['best_image'] != 'None': # Has a best image
+            tilde_val = luna_tilde_val(row['best_image'])
       
             with td(colspan=2):
               
-              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{i[7]}~{i[8]}",title="Image from Luna", allow="fullscreen")
+              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}",title="Image from Luna", allow="fullscreen")
               with div(style="width:500px"):
                 span(' [')
-                a(f"about image {i[6]}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i[7]}~{i[8]}")
+                a(f"about image {row['best_image']}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}")
                 span("]")
            
           else: # No best image
             with td(colspan=2):
-              get_first_image_of = i[0].replace("urn:p-lod:id:","")
+              get_first_image_of = row['id'].replace("urn:p-lod:id:","")
               palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
@@ -561,7 +561,7 @@ def street_render(r,html_dom):
 def unknown_render(r,html_dom):
 
   with html_dom:
-    span(f"Unknown type.")
+    span(f"{r.identifier} Unknown type.")
 
 
 
