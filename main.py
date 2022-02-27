@@ -141,8 +141,8 @@ def palp_geojson(r):
       innerdiv = div(id="minimap-geojson", style="display:none")
       if bool(r.geojson):
         innerdiv += adjust_geojson(r.geojson)
-      elif bool(r.spatially_within):
-        innerdiv += adjust_geojson(r.spatially_within[0][-1])
+      elif bool(json.loads(r.spatially_within)):
+        innerdiv += adjust_geojson(json.loads(r.spatially_within)[0]['geojson'])
       else:
         innerdiv += ''
 
@@ -150,8 +150,8 @@ def palp_geojson(r):
       pompeiidiv += POMPEII.geojson
 
       withindiv = div(id="within-geojson", style="display:none")
-      if bool(r.spatially_within):
-        withindiv += adjust_geojson(r.spatially_within[0][-1])
+      if bool(json.loads(r.spatially_within)):
+        withindiv += adjust_geojson(json.loads(r.spatially_within)[0]['geojson'])
 
 
       div(id="minimapid", style="float:right; width: 40%; height: 400px;display:none")
@@ -227,10 +227,10 @@ def palp_spatial_hierarchy(r):
 
   element = div()
 
-  hier_up = r.spatial_hierarchy_up()
+  hier_up = json.loads(r.spatial_hierarchy_up())
 
   for i,h in enumerate(hier_up):
-    relative_url, label = urn_to_anchor(h[0])
+    relative_url, label = urn_to_anchor(h['urn'])
 
     if i == 0:
       span(label)
@@ -287,20 +287,20 @@ def palp_spatial_children(r, images = False):
 
   element = span()
   with element:
-    for i,c in enumerate(r.spatial_children()):
+    for i,c in enumerate(json.loads(r.spatial_children())):
       #relative_url, label = urn_to_anchor(i[0])
       #a(label, href=relative_url)
       #span(" /", style="color: LightGray")
       with table(style="border: 1px solid black;margin-top:5px"):
         with tr():
           with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(c[0])
+            relative_url, label = urn_to_anchor(c['urn'])
             a(label, href=relative_url)
         
       if (images and (i < 10)):
         with tr():
           with td(colspan=3):
-            get_first_image_of = c[0].replace("urn:p-lod:id:","")
+            get_first_image_of = c['urn'].replace("urn:p-lod:id:","")
             palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
   
   return element
@@ -342,8 +342,8 @@ def palp_depicts_concepts(r):
 
   element = span()
   with element:
-    for i in r.depicts_concepts():
-      relative_url, label = urn_to_anchor(i[0])
+    for i in json.loads(r.depicts_concepts()):
+      relative_url, label = urn_to_anchor(i['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
   return element
@@ -500,7 +500,7 @@ def feature_render(r,html_dom):
     with main(cls="container", role="main"):
       ar = r.identifier
 
-      if r.geojson or r.spatially_within:
+      if r.geojson or json.loads(r.spatially_within):
           with div(id="geojson"):
             palp_geojson(r)
 
