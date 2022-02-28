@@ -10,6 +10,8 @@ import os
 import re
 import sys
 
+from urllib.request import urlopen
+
 import pandas as pd
 
 import dominate
@@ -112,6 +114,25 @@ def luna_tilde_val(luna_urn):
     tilde_val = "16"
 
   return tilde_val
+
+def img_src_from_luna_info(l_collection_id, l_record, l_media):
+  img_src = None #default if no URLs present (probably means LUNA doesn't have image though triplestore thinks it does)
+  luna_json = json.loads(urlopen(f'https://umassamherst.lunaimaging.com/luna/servlet/as/fetchMediaSearch?mid={l_collection_id}~{l_record}~{l_media}').read())
+  
+  if len(luna_json):
+    img_attributes = json.loads(luna_json[0]['attributes'])
+
+    if 'urlSize4' in img_attributes.keys():
+      img_src = img_attributes['urlSize4']
+
+    if 'urlSize2' in img_attributes.keys():
+      img_src = img_attributes['urlSize2']
+    elif 'urlSize3' in img_attributes.keys():
+      img_src = img_attributes['urlSize3']
+    else:
+      img_src = img_attributes['urlSize1']
+
+  return img_src
 
 def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
 
@@ -315,7 +336,10 @@ def palp_depicted_by_images(r, first_only = False):
       if len(luna_images_j):
         tilde_val = luna_tilde_val(luna_images_j[0]['urn'])
 
-        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{luna_images_j[0]['l_record']}~{luna_images_j[0]['l_media']}",title="Image from Luna", allow="fullscreen")
+        img(src=img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
+                                                 l_record = luna_images_j[0]['l_record'],
+                                                 l_media= luna_images_j[0]['l_media']))
+
         with div(style="width:500px"):
           span(luna_images_j[0]['l_description'])
           span(' [')
@@ -327,7 +351,12 @@ def palp_depicted_by_images(r, first_only = False):
       for i in luna_images_j:
         tilde_val = luna_tilde_val(i['urn'])
         
-        iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}",title="Image from Luna", allow="fullscreen")
+        #iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}",title="Image from Luna", allow="fullscreen")
+        img(src=img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
+                                                 l_record = i['l_record'],
+                                                 l_media= i['l_media']))
+
+        
         with div(style="width:500px; margin-bottom:5px"):
           span(i[4])
           span(' [')
@@ -369,7 +398,11 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
       
             with td(colspan=2):
               
-              iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}",title="Image from Luna", allow="fullscreen")
+              #iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}",title="Image from Luna", allow="fullscreen")
+              img(src=img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
+                                                 l_record = row['l_record'],
+                                                 l_media= row['l_media']))
+
               with div(style="width:500px"):
                 span(' [')
                 a(f"about image {row['best_image']}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}")
