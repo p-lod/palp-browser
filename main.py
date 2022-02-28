@@ -313,7 +313,6 @@ def palp_depicted_by_images(r, first_only = False):
   with element:
     if first_only:
       if len(luna_images_j):
-        #iframe(id="widgetPreview", frameBorder="0", width="500px", height="350px", border="0px", style="border:0px solid white", src=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/{luna_images_l[0][1]}?embedded=true&cic=umass%7E14%7E14&widgetFormat=javascript&widgetType=detail&controls=1&nsip=1")
         tilde_val = luna_tilde_val(luna_images_j[0]['urn'])
 
         iframe(width="500px", height="350px", src=f"https://umassamherst.lunaimaging.com/luna/servlet/workspace/handleMediaPlayer?lunaMediaId=umass~{tilde_val}~{tilde_val}~{luna_images_j[0]['l_record']}~{luna_images_j[0]['l_media']}",title="Image from Luna", allow="fullscreen")
@@ -361,7 +360,7 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
             a(label, href=relative_url)
             span(" on wall or feature:")
           with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(row['id'])
+            relative_url, label = urn_to_anchor(row['urn'])
             a(label, href=relative_url)
 
         with tr():
@@ -378,7 +377,7 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
            
           else: # No best image
             with td(colspan=2):
-              get_first_image_of = row['id'].replace("urn:p-lod:id:","")
+              get_first_image_of = row['urn'].replace("urn:p-lod:id:","")
               palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
@@ -495,7 +494,7 @@ def space_render(r,html_dom):
 
 
 def feature_render(r,html_dom):
-
+  
   with html_dom:
     with main(cls="container", role="main"):
       ar = r.identifier
