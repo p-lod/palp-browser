@@ -122,10 +122,10 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
   if len(luna_json):
     img_attributes = json.loads(luna_json[0]['attributes'])
 
-    if 'urlSize4' in img_attributes.keys():
+    if 'urlSize4' in img_attributes.keys(): # use size 4, sure, but only if there's nothing else
       img_src = img_attributes['urlSize4']
 
-    if 'urlSize2' in img_attributes.keys():
+    if 'urlSize2' in img_attributes.keys(): # preferred
       img_src = img_attributes['urlSize2']
     elif 'urlSize3' in img_attributes.keys():
       img_src = img_attributes['urlSize3']
@@ -133,6 +133,7 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
       img_src = img_attributes['urlSize1']
 
   return img_src
+
 
 def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
 
@@ -358,7 +359,7 @@ def palp_depicted_by_images(r, first_only = False):
 
         
         with div(style="width:500px; margin-bottom:5px"):
-          span(i[4])
+          span(i['l_description'])
           span(' [')
           a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
           span("]")
@@ -530,7 +531,6 @@ def feature_render(r,html_dom):
   
   with html_dom:
     with main(cls="container", role="main"):
-      ar = r.identifier
 
       if r.geojson or json.loads(r.spatially_within):
           with div(id="geojson"):
