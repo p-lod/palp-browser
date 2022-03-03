@@ -676,6 +676,10 @@ def index():
     return redirect("/browse/pompeii", code=302)
 
 @app.route('/geojson/<path:identifier>')
-def api_geojson(identifier):
+def web_api_geojson(identifier):
   return plodlib.PLODResource(identifier).geojson
+
+@app.route('/images/<path:identifier>')
+def web_api_images(identifier):
+  return plodlib.PLODResource(identifier).images_from_luna
 
