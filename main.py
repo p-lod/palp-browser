@@ -692,10 +692,10 @@ def test_image_gallery(identifier):
 
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
 
-  r = plodlib.PLODResource(identifier)
+  r = plodlib.PLODResource('ARC_054983')
   r_images = json.loads(r.images)
 
-  palp_html_head(POMPEII, html_dom)
+  palp_html_head(r, html_dom)
   html_dom.body
 
   with html_dom:
