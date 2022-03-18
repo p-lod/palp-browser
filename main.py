@@ -58,11 +58,9 @@ def palp_html_head(r, html_dom):
     html_dom.head += meta(charset="utf-8")
     html_dom.head += meta(http_equiv="X-UA-Compatible", content="IE=edge")
     html_dom.head += meta(name="viewport", content="width=device-width, initial-scale=1")    
-    #html_dom.head += link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.5.0-beta.2/css/lightgallery-bundle.min.css",integrity="sha512-91yJwfiGTCo9TM74ZzlAIAN4Eh5EWHpQJUfvo/XhpH6lzQtiRFkFRW1W+JSg4ch4XW3/xzh+dY4TOw/ILpavQA==",crossorigin="anonymous",referrerpolicy="no-referrer")
-    #html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.5.0-beta.2/lightgallery.umd.min.js", integrity="sha512-e+39qUKXdaNAHHzMx+zHLald62YcdVqJpJGAqs6iIJ6RRWy5/9PKJr1eDAc3SuM/PTpguz9v2d83j6SFgnbTdg==", crossorigin="anonymous", referrerpolicy="no-referrer")
     html_dom.head += link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css", integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2", crossorigin="anonymous")
-    html_dom.head += script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity = "sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
-    html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/galleria.min.js")
+    html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js", integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==", crossorigin="anonymous", referrerpolicy="no-referrer")
+    html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/galleria.min.js", integrity="sha512-vRKUU1GOjCKOTRhNuhQelz4gmhy6NPpB8N41c7a36Cxl5QqKeB9VowP8S7x8Lf3B8vZVURBxGlPpvyiRHh+CKg==",crossorigin="anonymous",referrerpolicy="no-referrer")
     html_dom.head += script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js",integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx",crossorigin="anonymous")
     html_dom.head += link(rel="stylesheet", href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css", integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==", crossorigin="")
     html_dom.head += script(src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==", crossorigin="")
@@ -692,7 +690,7 @@ def test_image_gallery(identifier):
 
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
 
-  r = plodlib.PLODResource('ARC_054983')
+  r = plodlib.PLODResource(identifier)
   r_images = json.loads(r.images)
 
   palp_html_head(r, html_dom)
@@ -706,17 +704,19 @@ def test_image_gallery(identifier):
           img(src = i['l_img_url'])
           h2("", style="color:white")
           with div(_class = "desc"):
+            span('[')
+            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
+            span('] ')
             span(i['l_description'], style="color:white")
-            span(' [')
-            a("View on Luna...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
-            span(']')
  
       #img(src = "http://umassamherst.lunaimaging.com:80/MediaManager/srvr?mediafile=/Size2/umass~14~14/4220/image35009.jpg")
   
     s = script(type="text/javascript")
     s += raw("""(function() {
-                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/themes/classic/galleria.classic.min.js');
-                Galleria.configure({dataConfig: function(img) {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
+                Galleria.configure({imageCrop: false , 
+                                    carousel: true,
+                                    dataConfig: function(img) {
         return {
             title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
             description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
