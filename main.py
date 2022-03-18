@@ -58,8 +58,11 @@ def palp_html_head(r, html_dom):
     html_dom.head += meta(charset="utf-8")
     html_dom.head += meta(http_equiv="X-UA-Compatible", content="IE=edge")
     html_dom.head += meta(name="viewport", content="width=device-width, initial-scale=1")    
+    #html_dom.head += link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.5.0-beta.2/css/lightgallery-bundle.min.css",integrity="sha512-91yJwfiGTCo9TM74ZzlAIAN4Eh5EWHpQJUfvo/XhpH6lzQtiRFkFRW1W+JSg4ch4XW3/xzh+dY4TOw/ILpavQA==",crossorigin="anonymous",referrerpolicy="no-referrer")
+    #html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.5.0-beta.2/lightgallery.umd.min.js", integrity="sha512-e+39qUKXdaNAHHzMx+zHLald62YcdVqJpJGAqs6iIJ6RRWy5/9PKJr1eDAc3SuM/PTpguz9v2d83j6SFgnbTdg==", crossorigin="anonymous", referrerpolicy="no-referrer")
     html_dom.head += link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css", integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2", crossorigin="anonymous")
     html_dom.head += script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity = "sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
+    html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/galleria.min.js")
     html_dom.head += script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js",integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx",crossorigin="anonymous")
     html_dom.head += link(rel="stylesheet", href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css", integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==", crossorigin="")
     html_dom.head += script(src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==", crossorigin="")
@@ -682,4 +685,46 @@ def web_api_geojson(identifier):
 @app.route('/images/<path:identifier>')
 def web_api_images(identifier):
   return plodlib.PLODResource(identifier).images_from_luna
+
+@app.route('/test/image-gallery/<path:identifier>')
+def test_image_gallery(identifier):
+
+
+  html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
+
+  r = plodlib.PLODResource(identifier)
+  r_images = json.loads(r.images)
+
+  palp_html_head(POMPEII, html_dom)
+  html_dom.body
+
+  with html_dom:
+    with div( _class="galleria", style="width: 700px; height: 400px; background: #000"):
+      for i in r_images:
+        tilde_val = luna_tilde_val(i['urn'])
+        with div(_class="image"):
+          img(src = i['l_img_url'])
+          h2("", style="color:white")
+          with div(_class = "desc"):
+            span(i['l_description'], style="color:white")
+            span(' [')
+            a("View on Luna...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
+            span(']')
+ 
+      #img(src = "http://umassamherst.lunaimaging.com:80/MediaManager/srvr?mediafile=/Size2/umass~14~14/4220/image35009.jpg")
+  
+    s = script(type="text/javascript")
+    s += raw("""(function() {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.5.7/themes/classic/galleria.classic.min.js');
+                Galleria.configure({dataConfig: function(img) {
+        return {
+            title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
+            description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
+        };
+    }})
+                Galleria.run('.galleria');
+            }());
+""")
+
+  return html_dom.render()
 
