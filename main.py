@@ -691,10 +691,6 @@ def test_image_gallery(identifier):
 
   r = plodlib.PLODResource(identifier)
 
-  with html_dom:
-    span(str(type(r.images)))
-  return html_dom.render()
-
   r_images = json.loads(r.images)
 
   palp_html_head(r, html_dom)
