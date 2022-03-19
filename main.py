@@ -714,7 +714,7 @@ def test_image_gallery(identifier):
                 Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
                 Galleria.configure({lighgbox: true,
                                     imageCrop: false , 
-                                    carousel: true,
+                                    carousel: false,
                                     dataConfig: function(img) {
         return {
             title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
