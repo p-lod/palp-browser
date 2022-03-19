@@ -1,13 +1,32 @@
 -e git+https://github.com/p-lod/plodlib.git#egg=plodlib
+beautifulsoup4     4.10.0
+branca             0.4.2
+certifi            2021.10.8
+charset-normalizer 2.0.12
+click              8.0.4
+dominate           2.6.0
+Flask              2.0.3
+folium             0.12.1.post1
+gunicorn           20.1.0
+idna               3.3
+importlib-metadata 4.11.3
+isodate            0.6.1
+itsdangerous       2.1.1
+Jinja2             3.0.3
+Markdown           3.3.6
+MarkupSafe         2.1.1
+numpy              1.22.3
+pandas             1.4.1
+pyparsing          3.0.7
+python-dateutil    2.8.2
+pytz               2021.3
+rdflib             6.1.1
+requests           2.27.1
+setuptools         60.5.0
+Shapely            1.8.1.post1
+six                1.16.0
+soupsieve          2.3.1
+urllib3            1.26.9
+Werkzeug           2.0.3
+zipp               3.7.0
 
-beautifulsoup4
-dominate
-Flask
-folium
-gunicorn
-Jinja2
-Markdown
-pandas
-rdflib
-shapely
-Werkzeug
