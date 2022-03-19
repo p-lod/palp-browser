@@ -687,10 +687,14 @@ def web_api_images(identifier):
 @app.route('/test/image-gallery/<path:identifier>')
 def test_image_gallery(identifier):
 
-
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
 
   r = plodlib.PLODResource(identifier)
+
+  with html_dom:
+    span(r.images)
+  return html_dom.render()
+
   r_images = json.loads(r.images)
 
   palp_html_head(r, html_dom)
@@ -709,12 +713,11 @@ def test_image_gallery(identifier):
             span('] ')
             span(i['l_description'], style="color:white")
  
-      #img(src = "http://umassamherst.lunaimaging.com:80/MediaManager/srvr?mediafile=/Size2/umass~14~14/4220/image35009.jpg")
-  
     s = script(type="text/javascript")
     s += raw("""(function() {
                 Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
-                Galleria.configure({imageCrop: false , 
+                Galleria.configure({lighgbox: true,
+                                    imageCrop: false , 
                                     carousel: true,
                                     dataConfig: function(img) {
         return {
