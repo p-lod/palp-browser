@@ -138,7 +138,7 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
         else:
           img_description = f"unrecognized collection {l_collection_id}"
       except:
-        img_description = "Trying to get descriptoin failed"
+        img_description = "Trying to get description failed"
     
 
     if 'urlSize4' in img_attributes.keys(): # use size 4, sure, but only if there's nothing else
@@ -152,6 +152,24 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
 
   return img_src, img_description
 
+def galleria_inline_script():
+  s = script(type="text/javascript")
+  s += raw("""(function() {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
+                Galleria.configure({lighgbox: true,
+                                    imageCrop: false , 
+                                    carousel: false,
+                                    dataConfig: function(img) {
+        return {
+            title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
+            description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
+        };
+    }})
+                Galleria.run('.galleria');
+            }());
+""")
+  return s
+ 
 
 def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
 
@@ -175,6 +193,22 @@ def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N
 
 # palp page part renderers
 
+def palp_image_gallery(r):
+  r_images = json.loads(r.gather_images())
+  with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
+    for i in r_images:
+      if i['l_img_url']:
+        tilde_val = luna_tilde_val(i['urn'])
+        with div(_class="image"):
+          img(src = i['l_img_url'])
+          h2("", style="color:white")
+          with div(_class = "desc"):
+            span('[')
+            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
+            span('] ')
+            span(i['l_description'], style="color:white")
+
+
 def palp_geojson(r):
   mapdiv = div(id="minimap")
   with mapdiv:
@@ -194,7 +228,7 @@ def palp_geojson(r):
         withindiv += adjust_geojson(json.loads(r.spatially_within)[0]['geojson'])
 
 
-      div(id="minimapid", style="float:right; width: 40%; height: 400px;display:none")
+      div(id="minimapid", style=" width: 40%; height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
@@ -552,21 +586,23 @@ def feature_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      if r.geojson or json.loads(r.spatially_within):
-          with div(id="geojson"):
-            palp_geojson(r)
-
       with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
+      if r.geojson or json.loads(r.spatially_within):
+          with div(id="geojson"):
+            palp_geojson(r)
+      
       with div(id="depicts_concepts"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
       with div(id="images"):
-        br()
-        palp_depicted_by_images(r)
-
+        #palp_depicted_by_images(r)
+        palp_image_gallery(r)
+      
+    galleria_inline_script()
+    
 
 def artwork_render(r,html_dom):
 
@@ -593,9 +629,12 @@ def concept_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="depicted_where"):
-          span(raw(f"<b>'{r.identifier}'</b> is depicted"))
-          palp_depicted_where(r)
+      with div(id="images"):
+        #palp_depicted_by_images(r)
+        palp_image_gallery(r)
+
+    galleria_inline_script()
+          
 
 
 def street_render(r,html_dom):
@@ -691,7 +730,7 @@ def test_image_gallery(identifier):
 
   r = plodlib.PLODResource(identifier)
 
-  r_images = json.loads(r.images)
+  r_images = json.loads(r.gather_images())
 
   palp_html_head(r, html_dom)
   html_dom.body
@@ -705,7 +744,7 @@ def test_image_gallery(identifier):
           h2("", style="color:white")
           with div(_class = "desc"):
             span('[')
-            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}")
+            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
             span('] ')
             span(i['l_description'], style="color:white")
  
