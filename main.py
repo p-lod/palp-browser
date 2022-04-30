@@ -165,6 +165,11 @@ def galleria_inline_script():
             description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
         };
     }})
+                Galleria.on('image', function(e) {
+                  $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
+                  Galleria.log($(e.currentTarget).find('.galleria-info-description').html())
+                  });
+
                 Galleria.run('.galleria');
             }());
 """)
@@ -207,6 +212,8 @@ def palp_image_gallery(r):
             a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
             span('] ')
             span(i['l_description'], style="color:white")
+
+
 
 
 def palp_geojson(r):
@@ -408,8 +415,8 @@ def palp_depicted_by_images(r, first_only = False):
         img_src,img_description = img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
                                                  l_record = i['l_record'],
                                                  l_media  = i['l_media'])
-        img(src=img_src)
 
+        img(src=img_src)
         
         with div(style="width:500px; margin-bottom:5px"):
           span(str(img_description))
@@ -600,6 +607,7 @@ def feature_render(r,html_dom):
       with div(id="images"):
         #palp_depicted_by_images(r)
         palp_image_gallery(r)
+        div(id = 'galleria-display', style="background-color:black; width:80%")
       
     galleria_inline_script()
     
@@ -625,13 +633,14 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
+      with div(id="images"):
+        palp_image_gallery(r)
+        div(id = 'galleria-display', style="background-color:black; width:80%; margin-top:2px")
+
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="images"):
-        #palp_depicted_by_images(r)
-        palp_image_gallery(r)
 
     galleria_inline_script()
           
