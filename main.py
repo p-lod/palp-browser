@@ -299,7 +299,7 @@ if ($('#minimap-geojson').html().trim()) {
         //window.open('/browse/'+id_no_urn,"_self");
     //});
     
-    layer.bindTooltip(id_no_urn);
+    //layer.bindTooltip(id_no_urn);
   }
 })
        features.addTo(mymap);
@@ -378,20 +378,21 @@ def palp_spatial_children(r, images = False):
   element = span()
   with element:
     for i,c in enumerate(json.loads(r.spatial_children())):
-      #relative_url, label = urn_to_anchor(i[0])
-      #a(label, href=relative_url)
-      #span(" /", style="color: LightGray")
-      with table(style="border: 1px solid black;margin-top:5px"):
-        with tr():
-          with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(c['urn'])
-            a(label, href=relative_url)
+      relative_url, label = urn_to_anchor(c['urn'])
+      a(label, href=relative_url)
+      span(" /", style="color: LightGray")
+
+      # with table(style="border: 1px solid black;margin-top:5px"):
+      #   with tr():
+      #     with td(style="padding-top:5px"):
+      #       relative_url, label = urn_to_anchor(c['urn'])
+      #       a(label, href=relative_url)
         
-      if (images and (i < 10)):
-        with tr():
-          with td(colspan=3):
-            get_first_image_of = c['urn'].replace("urn:p-lod:id:","")
-            palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
+      # if (images and (i < 10)):
+      #   with tr():
+      #     with td(colspan=3):
+      #       get_first_image_of = c['urn'].replace("urn:p-lod:id:","")
+      #       palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
   
   return element
 
@@ -447,42 +448,49 @@ def palp_depicts_concepts(r):
   return element
 
 def palp_depicted_where(r, level_of_detail = 'feature'):
-
-  element = div()
+  element = span()
   with element:
-    for i,row in pd.DataFrame(data = json.loads(r.depicted_where(level_of_detail=level_of_detail))).iterrows():
-      with table(style="border: 1px solid black;margin-top:5px"):
-        with tr():
-          with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(row['within'])
-            span("Within ")
-            a(label, href=relative_url)
-            span(" on wall or feature:")
-          with td(style="padding-top:5px"):
-            relative_url, label = urn_to_anchor(row['urn'])
-            a(label, href=relative_url)
+    for i,c in enumerate(json.loads(r.depicted_where(level_of_detail=level_of_detail))):
+      relative_url, label = urn_to_anchor(c['urn'])
+      a(label, href=relative_url)
+      span(" /", style="color: LightGray")
 
-        with tr():
-          if row['best_image'] != 'None': # Has a best image
-            tilde_val = luna_tilde_val(row['best_image'])
+
+
+
+    # for i,row in pd.DataFrame(data = json.loads(r.depicted_where(level_of_detail=level_of_detail))).iterrows():
+    #   with table(style="border: 1px solid black;margin-top:5px"):
+    #     with tr():
+    #       with td(style="padding-top:5px"):
+    #         relative_url, label = urn_to_anchor(row['within'])
+    #         span("Within ")
+    #         a(label, href=relative_url)
+    #         span(" on wall or feature:")
+    #       with td(style="padding-top:5px"):
+    #         relative_url, label = urn_to_anchor(row['urn'])
+    #         a(label, href=relative_url)
+
+    #     with tr():
+    #       if row['best_image'] != 'None': # Has a best image
+    #         tilde_val = luna_tilde_val(row['best_image'])
       
-            with td(colspan=2):
+    #         with td(colspan=2):
               
-              img_src,img_description = img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
-                                                 l_record = row['l_record'],
-                                                 l_media  = row['l_media'])
-              img(src=img_src)
+    #           img_src,img_description = img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
+    #                                              l_record = row['l_record'],
+    #                                              l_media  = row['l_media'])
+    #           img(src=img_src)
 
-              with div(style="width:500px"):
-                span(str(img_description))
-                span(' [')
-                a(f"about image {row['best_image']}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}")
-                span("]")
+    #           with div(style="width:500px"):
+    #             span(str(img_description))
+    #             span(' [')
+    #             a(f"about image {row['best_image']}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}")
+    #             span("]")
            
-          else: # No best image
-            with td(colspan=2):
-              get_first_image_of = row['urn'].replace("urn:p-lod:id:","")
-              palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
+    #       else: # No best image
+    #         with td(colspan=2):
+    #           get_first_image_of = row['urn'].replace("urn:p-lod:id:","")
+    #           palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
 
 
   return element
@@ -499,15 +507,13 @@ def city_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicts_concepts"):
-        span("Depicts Concepts: ")
+        span("Depicts the Concepts: ")
         palp_depicts_concepts(r)
       
       with div(id="spatial_children"):
         span("Insula and Streets Within: ")
         palp_spatial_children(r, images = False)
 
-
-          
 
 
 def region_render(r,html_dom):
@@ -597,15 +603,15 @@ def space_render(r,html_dom):
         palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts: "):
-        span("Depicts Concepts: ")
+        span("It depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="images"):
+      with div(id="images", style="margin-top:6px"):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
 
-      with div(id="spatial_children"):
-        span("Features Within: ")
+      with div(id="spatial_children", style="margin-top:6px"):
+        span("It contains features: ")
         palp_spatial_children(r, images = False)
 
     galleria_inline_script()
@@ -654,12 +660,16 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="images"):
+      with div(id="depicted-where", style="margin-top:3px"):
+        span(f"{r.identifier} is depicted in the following rooms or spaces: ")
+        palp_depicted_where(r, level_of_detail='space')
+      
+      with div(id="images", style="margin-top:5px"):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
 
       if r.geojson:
-        with div(id="geojson", style="margin-top:3px"):
+        with div(id="geojson", style="margin-top:5px"):
           palp_geojson(r)
 
 
