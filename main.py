@@ -208,10 +208,19 @@ def palp_image_gallery(r):
           img(src = i['l_img_url'])
           h2("", style="color:white")
           with div(_class = "desc"):
-            span('[')
-            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
-            span('] ')
-            span(i['l_description'], style="color:white")
+            with div():
+              if 'space' in i:
+                relative_url, label = urn_to_anchor(i['space'])
+                span(f"Image within ")
+                a(label,href=relative_url)
+                span(".")
+              
+            div(i['l_description'])
+            with div():
+              span('[')
+              a("Image credits and additional info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
+              span('] ')
+            
 
 
 
@@ -534,6 +543,10 @@ def insula_render(r,html_dom):
       with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
 
+      with div(id="images"):
+        palp_image_gallery(r)
+        div(id = 'galleria-display', style="width:80%")
+
       with div(id="spatial_children"):
         span("Properties Within: ")
         palp_spatial_children(r)
@@ -541,6 +554,7 @@ def insula_render(r,html_dom):
       with div(id="depicts_concepts: "):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+    galleria_inline_script()
 
 
 def property_render(r,html_dom):
@@ -559,34 +573,42 @@ def property_render(r,html_dom):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
+      with div(id="images"):
+        palp_image_gallery(r)
+        div(id = 'galleria-display', style="width:80%")
+
       with div(id="spatial_children"):
         span("Spaces (aka 'Rooms') Within: ")
         palp_spatial_children(r, images = False)
 
-
+    galleria_inline_script()
 
 
 def space_render(r,html_dom):
 
-    with html_dom:
-      with main(cls="container", role="main"):
+  with html_dom:
+    with main(cls="container", role="main"):
 
-        if r.geojson:
-          with div(id="geojson"):
-            palp_geojson(r)
+      if r.geojson:
+        with div(id="geojson"):
+          palp_geojson(r)
 
-        with div(id="spatial_hierarchy", style="margin-bottom:1em"):
-          palp_spatial_hierarchy(r)
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+        palp_spatial_hierarchy(r)
 
-        with div(id="depicts_concepts: "):
-          span("Depicts Concepts: ")
-          palp_depicts_concepts(r)
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
-        with div(id="spatial_children"):
-          span("Features Within: ")
-          palp_spatial_children(r, images = True)
+      with div(id="images"):
+        palp_image_gallery(r)
+        div(id = 'galleria-display', style="width:80%")
 
+      with div(id="spatial_children"):
+        span("Features Within: ")
+        palp_spatial_children(r, images = False)
 
+    galleria_inline_script()
 
 def feature_render(r,html_dom):
   
@@ -605,11 +627,10 @@ def feature_render(r,html_dom):
         palp_depicts_concepts(r)
 
       with div(id="images"):
-        #palp_depicted_by_images(r)
         palp_image_gallery(r)
-        div(id = 'galleria-display', style="background-color:black; width:80%")
+        div(id = 'galleria-display', style="width:80%")
       
-    galleria_inline_script()
+    #galleria_inline_script()
     
 
 def artwork_render(r,html_dom):
@@ -635,10 +656,10 @@ def concept_render(r,html_dom):
 
       with div(id="images"):
         palp_image_gallery(r)
-        div(id = 'galleria-display', style="background-color:black; width:80%; margin-top:2px")
+        div(id = 'galleria-display', style="width:80%; margin-top:2px")
 
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson", style="margin-top:3px"):
           palp_geojson(r)
 
 
