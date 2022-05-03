@@ -636,7 +636,7 @@ def feature_render(r,html_dom):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
       
-    #galleria_inline_script()
+    galleria_inline_script()
     
 
 def artwork_render(r,html_dom):
@@ -751,6 +751,10 @@ def palp_map():
 def palp_search():
     return """Super cool and useful search page. What should it do? <a href="/start">Start</a>."""
 
+@app.route('/compare/')
+def palp_compare():
+    return """Super cool and useful search page. What should it do? <a href="/start">Start</a>."""
+
 @app.route('/')
 def index():
     return redirect("/browse/pompeii", code=302)
@@ -761,49 +765,8 @@ def web_api_geojson(identifier):
 
 @app.route('/images/<path:identifier>')
 def web_api_images(identifier):
-  return plodlib.PLODResource(identifier).images_from_luna
+  return plodlib.PLODResource(identifier).gather_images()
 
-@app.route('/test/image-gallery/<path:identifier>')
-def test_image_gallery(identifier):
 
-  html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
-
-  r = plodlib.PLODResource(identifier)
-
-  r_images = json.loads(r.gather_images())
-
-  palp_html_head(r, html_dom)
-  html_dom.body
-
-  with html_dom:
-    with div( _class="galleria", style="width: 700px; height: 400px; background: #000"):
-      for i in r_images:
-        tilde_val = luna_tilde_val(i['urn'])
-        with div(_class="image"):
-          img(src = i['l_img_url'])
-          h2("", style="color:white")
-          with div(_class = "desc"):
-            span('[')
-            a("More...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
-            span('] ')
-            span(i['l_description'], style="color:white")
- 
-    s = script(type="text/javascript")
-    s += raw("""(function() {
-                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
-                Galleria.configure({lighgbox: true,
-                                    imageCrop: false , 
-                                    carousel: false,
-                                    dataConfig: function(img) {
-        return {
-            title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
-            description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
-        };
-    }})
-                Galleria.run('.galleria');
-            }());
-""")
-
-  return html_dom.render()
 
 
