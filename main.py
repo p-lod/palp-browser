@@ -45,6 +45,7 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
 
 app = Flask(__name__)
 
+
 # Connect to the remote triplestore with read-only connection
 store = rdf.plugin.get("SPARQLStore", rdf.store.Store)(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
                                                        context_aware = False,
