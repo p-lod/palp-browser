@@ -7,7 +7,7 @@ Jinja2==3.0.3
 Markdown==3.3.6
 MarkupSafe==2.1.1
 numpy
-pandas==1.4.1
+pandas
 rdflib==6.1.1
 requests-cache
 Shapely==1.8.1.post1
