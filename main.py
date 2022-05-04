@@ -76,13 +76,16 @@ def palp_page_navbar(r, html_dom):
       # feature request: suppress a link when displaying the page it links to.
       with header():
         with nav(cls="navbar navbar-expand-md navbar-dark fixed-top bg-dark"):
-           a("PALP", href="/browse/pompeii", cls="navbar-brand")
-           if r.label:
-            span(r.label, cls="navbar-brand")
-           elif r.identifier:
-            span(r.identifier, cls="navbar-brand")
-           else:
-            span("Default Page", cls="navbar-brand")
+          a("PALP", href="/browse/pompeii", cls="navbar-brand")
+          if r.label:
+           span(r.label, cls="navbar-brand")
+          elif r.identifier:
+           span(r.identifier, cls="navbar-brand")
+          else:
+           span("Default Page", cls="navbar-brand")
+
+          span(f" [{r.rdf_type}]", cls="navbar-brand")
+          
         
 
         
@@ -156,7 +159,8 @@ def galleria_inline_script():
   s = script(type="text/javascript")
   s += raw("""(function() {
                 Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
-                Galleria.configure({lighgbox: true,
+                Galleria.configure({debug: false,
+                                    lighgbox: true,
                                     imageCrop: false , 
                                     carousel: false,
                                     dataConfig: function(img) {
@@ -176,11 +180,16 @@ def galleria_inline_script():
   return s
  
 
-def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N  
+def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson .00003 to the N  
 
   # offsets
+
   xoff = -0.0000075
   yoff =  0.000037
+  if rdf_type == "region":
+    yoff = .00072
+    
+
 
   g = json.loads(geojson_str)
   if g['type'] == 'FeatureCollection':
@@ -199,7 +208,12 @@ def adjust_geojson(geojson_str): # working on shifting geojson .00003 to the N
 # palp page part renderers
 
 def palp_image_gallery(r):
-  r_images = json.loads(r.gather_images())
+  
+  try:
+    r_images = json.loads(r.gather_images())
+  except:
+    return
+  
   with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
     for i in r_images:
       if i['l_img_url']:
@@ -209,20 +223,20 @@ def palp_image_gallery(r):
           h2("", style="color:white")
           with div(_class = "desc"):
             with div():
-              if 'space' in i:
-                relative_url, label = urn_to_anchor(i['space'])
-                span(f"Image within ")
+              if 'feature' in i:
+                relative_url, label = urn_to_anchor(i['feature'])
+                span(f"Appears on feature: ")
                 a(label,href=relative_url)
-                span(".")
+                span(". ")
+                c_feature = i['feature'].replace("urn:p-lod:id:","")
+                span(f"Feature depicts: ")
+                palp_depicts_concepts(plodlib.PLODResource(c_feature))
               
             div(i['l_description'])
             with div():
               span('[')
               a("Image credits and additional info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
               span('] ')
-            
-
-
 
 
 def palp_geojson(r):
@@ -230,9 +244,15 @@ def palp_geojson(r):
   with mapdiv:
       innerdiv = div(id="minimap-geojson", style="display:none")
       if bool(r.geojson):
-        innerdiv += adjust_geojson(r.geojson)
+        innerdiv += adjust_geojson(r.geojson, rdf_type=r.rdf_type)
       elif bool(json.loads(r.spatially_within)):
-        innerdiv += adjust_geojson(json.loads(r.spatially_within)[0]['geojson'])
+        within_json = json.loads(r.spatially_within)[0]
+        print(within_json)
+        within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
+        within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
+        print(within_rdf_type)
+        innerdiv += adjust_geojson(within_json['geojson'],
+                                   rdf_type = within_rdf_type)
       else:
         innerdiv += ''
 
@@ -241,7 +261,12 @@ def palp_geojson(r):
 
       withindiv = div(id="within-geojson", style="display:none")
       if bool(json.loads(r.spatially_within)):
-        withindiv += adjust_geojson(json.loads(r.spatially_within)[0]['geojson'])
+        within_json = json.loads(r.spatially_within)[0]
+        within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
+        within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
+        print(within_rdf_type)
+        withindiv += adjust_geojson(within_json['geojson'],
+                                   rdf_type = within_rdf_type)
 
 
       div(id="minimapid", style=" width: 40%; height: 400px;display:none")
@@ -315,7 +340,7 @@ if ($('#minimap-geojson').html().trim()) {
 
 def palp_spatial_hierarchy(r):
 
-  element = div()
+  # element = div()
 
   hier_up = json.loads(r.spatial_hierarchy_up())
 
@@ -324,8 +349,10 @@ def palp_spatial_hierarchy(r):
 
     if i == 0:
       span(label)
-    else:
+    elif i < (len(hier_up)-1):
       a(label, href=relative_url)
+    else:
+      a(f"{label}.", href=relative_url)
 
     if i < (len(hier_up)-1):
       if i == 0:
@@ -333,45 +360,8 @@ def palp_spatial_hierarchy(r):
       else:
         span(" → ")
 
-  return element
+  # return element
 
-  with ditop:
-    di = div(id="jstree")
-    # with di:
-    #   ul(li("root"))
-    with di:
-      element = ul(cls="tree")
-      with element:
-        hier_up = r.spatial_hierarchy_up()
-        if len(hier_up) >= 1:
-          relative_url, label = urn_to_anchor(hier_up[-1][0])
-          li(a(label, href=relative_url))
-        if len(hier_up) >= 2:
-          wb = ul()
-          with wb:
-            relative_url, label = urn_to_anchor(hier_up[-2][0])
-            li(a(label, href=relative_url))
-            if len(hier_up) >= 3:
-              wc = ul()
-              with wc:
-                relative_url, label = urn_to_anchor(hier_up[-3][0])
-                li(a(label, href=relative_url))
-                if len(hier_up) >= 4:
-                  wd = ul()
-                  with wd:
-                    relative_url, label = urn_to_anchor(hier_up[-4][0])
-                    li(a(label, href=relative_url))
-                    if len(hier_up) >= 5:
-                      we = ul()
-                      with we:
-                        relative_url, label = urn_to_anchor(hier_up[-5][0])
-                        li(a(label, href=relative_url))
-            
-    # s = script(type='text/javascript')
-    # s += """$(function () {
-    #   // 6 create an instance when the DOM is ready
-    #   $('#jstree').jstree();
-    #   });"""
 
 def palp_spatial_children(r, images = False):
 
@@ -548,6 +538,10 @@ def insula_render(r,html_dom):
 
       with div(id="spatial_hierarchy", style="margin-bottom:1em"):
         palp_spatial_hierarchy(r)
+        
+      with div(id="depicts_concepts: "):
+        span("Depicts Concepts: ")
+        palp_depicts_concepts(r)
 
       with div(id="images"):
         palp_image_gallery(r)
@@ -557,9 +551,7 @@ def insula_render(r,html_dom):
         span("Properties Within: ")
         palp_spatial_children(r)
 
-      with div(id="depicts_concepts: "):
-        span("Depicts Concepts: ")
-        palp_depicts_concepts(r)
+      
     galleria_inline_script()
 
 
@@ -603,7 +595,7 @@ def space_render(r,html_dom):
         palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts: "):
-        span("It depicts Concepts: ")
+        span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
       with div(id="images", style="margin-top:6px"):
@@ -625,14 +617,14 @@ def feature_render(r,html_dom):
         palp_spatial_hierarchy(r)
 
       if r.geojson or json.loads(r.spatially_within):
-          with div(id="geojson"):
+          with div(id="geojson", style="margin-top:6px"):
             palp_geojson(r)
       
-      with div(id="depicts_concepts"):
+      with div(id="depicts_concepts", style="margin-top:6px"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="images"):
+      with div(id="images", style="margin-top:6px"):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
       
@@ -661,7 +653,8 @@ def concept_render(r,html_dom):
     with main(cls="container", role="main"):
 
       with div(id="depicted-where", style="margin-top:3px"):
-        span(f"{r.identifier} is depicted in the following rooms or spaces: ")
+        b(r.identifier)
+        span(" is depicted in the following rooms or spaces: ")
         palp_depicted_where(r, level_of_detail='space')
       
       with div(id="images", style="margin-top:5px"):
