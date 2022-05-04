@@ -248,10 +248,8 @@ def palp_geojson(r):
         innerdiv += adjust_geojson(r.geojson, rdf_type=r.rdf_type)
       elif bool(json.loads(r.spatially_within)):
         within_json = json.loads(r.spatially_within)[0]
-        print(within_json)
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
-        print(within_rdf_type)
         innerdiv += adjust_geojson(within_json['geojson'],
                                    rdf_type = within_rdf_type)
       else:
@@ -265,7 +263,6 @@ def palp_geojson(r):
         within_json = json.loads(r.spatially_within)[0]
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
-        print(within_rdf_type)
         withindiv += adjust_geojson(within_json['geojson'],
                                    rdf_type = within_rdf_type)
 
