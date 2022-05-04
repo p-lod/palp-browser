@@ -6,7 +6,7 @@ gunicorn==20.1.0
 Jinja2==3.0.3
 Markdown==3.3.6
 MarkupSafe==2.1.1
-numpy==1.22.3
+numpy
 pandas==1.4.1
 rdflib==6.1.1
 requests-cache
