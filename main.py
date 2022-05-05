@@ -77,6 +77,8 @@ def palp_page_navbar(r, html_dom):
       # feature request: suppress a link when displaying the page it links to.
       with header():
         with nav(cls="navbar navbar-expand-md navbar-dark fixed-top bg-dark"):
+          img(src="/static/images/under-construction.png", style="width:35px")
+          span(raw("&nbsp;"))
           a("PALP", href="/browse/pompeii", cls="navbar-brand")
           if r.label:
            span(r.label, cls="navbar-brand")
@@ -751,8 +753,17 @@ def palp_start():
     with main(cls="container", role="main"):
       with div(id="page-content-wrapper"):
         with div(id="container-fluid"):
-          p("""The Pompeii Artistic Landscape Project (PALP) is an online resource that supports sitewide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii.""")
+          p("""The Pompeii Artistic Landscape Project (PALP) is an online resource that supports sitewide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii.""", style="margin-top:1em")
           p(raw("""PALP is a collaborative initiative between Eric Poehler at the University of Massachusetts Amherst and Sebastian Heath at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>."""))
+          with p():
+            span("Start browsing at ")
+            a("http://palp.art/browse/pompeii",href="/browse/pompeii")
+            span(" .")
+          p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such '<a href="/browse/snake">snake</a>. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
+          # img(src="static/images/under-construction.png", style="width:150px")
+          img(src="static/images/umass-logo.png", style="max-width:200px")
+          img(src="static/images/getty-logo.jpg", style="max-width:220px")
+          img(src="static/images/nyu-logo.png", style="max-width:200px")
 
   palp_page_footer(r, html_dom)
   return html_dom.render()
