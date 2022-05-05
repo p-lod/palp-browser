@@ -753,6 +753,8 @@ def palp_start():
     with main(cls="container", role="main"):
       with div(id="page-content-wrapper"):
         with div(id="container-fluid"):
+          with p():
+            b("Please note that this website, its data, and interface are all under construction.")
           p("""The Pompeii Artistic Landscape Project (PALP) is an online resource that supports sitewide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii.""", style="margin-top:1em")
           p(raw("""PALP is a collaborative initiative between Eric Poehler at the University of Massachusetts Amherst and Sebastian Heath at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>."""))
           with p():
