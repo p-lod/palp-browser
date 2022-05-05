@@ -79,15 +79,16 @@ def palp_page_navbar(r, html_dom):
         with nav(cls="navbar navbar-expand-md navbar-dark fixed-top bg-dark"):
           img(src="/static/images/under-construction.png", style="width:35px")
           span(raw("&nbsp;"))
-          a("PALP", href="/browse/pompeii", cls="navbar-brand")
+          a("PALP", href="/start", cls="navbar-brand")
           if r.label:
            span(r.label, cls="navbar-brand")
           elif r.identifier:
            span(r.identifier, cls="navbar-brand")
           else:
-           span("Default Page", cls="navbar-brand")
+           span("", cls="navbar-brand")
 
-          span(f" [{r.rdf_type}]", cls="navbar-brand")
+          if r.rdf_type is not None:
+            span(f" [{r.rdf_type}]", cls="navbar-brand")
           
         
 
