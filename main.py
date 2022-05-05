@@ -65,12 +65,10 @@ def palp_html_head(r, html_dom):
     html_dom.head += script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js",integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx",crossorigin="anonymous")
     html_dom.head += link(rel="stylesheet", href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css", integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==", crossorigin="")
     html_dom.head += script(src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js", integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==", crossorigin="")
-    html_dom.head += script(src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js")
-    html_dom.head += link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css")
-    html_dom.head += link(rel="stylesheet", href="/static/css/tree_style.css")
     html_dom.head += link(rel="stylesheet", href="/static/css/sticky-footer-navbar.css")
     html_dom.head += meta(name="DC.title",lang="en",content=r.identifier )
     html_dom.head += meta(name="DC.identifier", content=f"urn:p-lod:id:{r.identifier}" )
+
 
 def palp_page_navbar(r, html_dom):
     with html_dom:
@@ -293,20 +291,21 @@ if ($('#minimap-geojson').html().trim()) {
 
    if ($('#within-geojson').html().trim()) { 
     var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
-       style: {"color":"yellow", "opacity": 0, "fillOpacity": .4},
-  onEachFeature: function (feature, layer) {
-    var id_no_urn = feature.id;
-    id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
-    layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
+       style: {"color":"yellow", "opacity": 0, "fillOpacity": .4}})
+  //onEachFeature: function (feature, layer) {
+    //var id_no_urn = feature.id;
+    //console.log('/browse/'+id_no_urn);
+    //id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
+    //layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
     
     //layer.on('click', function (e) {
         //console.log('/browse/'+id_no_urn);
         //window.open('/browse/'+id_no_urn,"_self");
     //});
     
-    layer.bindTooltip(id_no_urn);
-  }
-       });
+    //layer.bindTooltip(id_no_urn);
+  //}
+  //     });
     within_geojson.addTo(mymap);
     mymap.fitBounds(within_geojson.getBounds());
     fit_to_resource = false;
@@ -544,16 +543,16 @@ def insula_render(r,html_dom):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="images"):
-        palp_image_gallery(r)
-        div(id = 'galleria-display', style="width:80%")
+      # with div(id="images"):
+      #   palp_image_gallery(r)
+      #   div(id = 'galleria-display', style="width:80%")
 
       with div(id="spatial_children"):
         span("Properties Within: ")
         palp_spatial_children(r)
 
       
-    galleria_inline_script()
+    # galleria_inline_script()
 
 
 def property_render(r,html_dom):
