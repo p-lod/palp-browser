@@ -704,26 +704,6 @@ def palp_html_document(r,renderer):
 
 # The PALP Verbs that Enable Navigation
 
-@app.route('/start')
-def palp_start():
-  r = plodlib.PLODResource("Pompeii")
-  html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
-
-  palp_html_head(r, html_dom)
-  html_dom.body
-  palp_page_navbar(r,html_dom)
-
-  with html_dom:
-    with div(id="page-content-wrapper"):
-      with div(id="container-fluid"):
-        pi = p("""Useful, appealing, and explanatory start page that looks like a PALP page.
-    Eric Poehler (UMass), Director and Sebastian Heath (NYU/ISAW), Co-Director. Funded by Getty Foundation. Etc., etc., etc.
-    """)
-        pi.add(a("Pompeii", href="/browse/pompeii"))
-
-  palp_page_footer(r, html_dom)
-  return html_dom.render()
-
 @app.route('/browse/<path:identifier>')
 def palp_browse(identifier):
 
@@ -748,7 +728,7 @@ def palp_compare():
 
 @app.route('/')
 def index():
-    return redirect("/browse/pompeii", code=302)
+    return redirect("/start", code=302)
 
 @app.route('/geojson/<path:identifier>')
 def web_api_geojson(identifier):
@@ -758,6 +738,21 @@ def web_api_geojson(identifier):
 def web_api_images(identifier):
   return plodlib.PLODResource(identifier).gather_images()
 
+@app.route('/start')
+def palp_start():
+  r = plodlib.PLODResource("Pompeii")
+  html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
 
+  palp_html_head(r, html_dom)
+  html_dom.body
+  palp_page_navbar(r,html_dom)
 
+  with html_dom:
+    with main(cls="container", role="main"):
+      with div(id="page-content-wrapper"):
+        with div(id="container-fluid"):
+          p("""The Pompeii Artistic Landscape Project (PALP) is an online resource that supports sitewide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii.""")
+          p(raw("""PALP is a collaborative initiative between Eric Poehler at the University of Massachusetts Amherst and Sebastian Heath at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>."""))
 
+  palp_page_footer(r, html_dom)
+  return html_dom.render()
