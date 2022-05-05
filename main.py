@@ -173,7 +173,7 @@ def galleria_inline_script():
     }})
                 Galleria.on('image', function(e) {
                   $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
-                  Galleria.log($(e.currentTarget).find('.galleria-info-description').html())
+                  // Galleria.log($(e.currentTarget).find('.galleria-info-description').html())
                   });
 
                 Galleria.run('.galleria');
@@ -230,9 +230,17 @@ def palp_image_gallery(r):
                 span(f"Appears on feature: ")
                 a(label,href=relative_url)
                 span(". ")
+
                 c_feature = i['feature'].replace("urn:p-lod:id:","")
+                c_r = plodlib.PLODResource(c_feature)
+
+                span("Within ")
+                relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
+                a(label,href=relative_url)
+                span(".")
+                br()
                 span(f"Feature depicts: ")
-                palp_depicts_concepts(plodlib.PLODResource(c_feature))
+                palp_depicts_concepts(c_r)
               
             div(i['l_description'])
             with div():
@@ -624,7 +632,7 @@ def feature_render(r,html_dom):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="images", style="margin-top:6px"):
+      with div(id="images", style="margin-top:10px"):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
       
