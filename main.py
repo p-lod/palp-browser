@@ -769,7 +769,7 @@ def palp_start():
             span("Start browsing at ")
             a("http://palp.art/browse/pompeii",href="/browse/pompeii")
             span(" .")
-          p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such '<a href="/browse/snake">snake</a>. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
+          p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as '<a href="/browse/snake">snake</a>. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
           # img(src="static/images/under-construction.png", style="width:150px")
           img(src="static/images/umass-logo.png", style="max-width:200px")
           img(src="static/images/getty-logo.jpg", style="max-width:220px")
