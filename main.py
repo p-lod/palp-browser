@@ -664,14 +664,17 @@ def concept_render(r,html_dom):
         b(r.identifier)
         span(" is depicted in the following rooms or spaces: ")
         palp_depicted_where(r, level_of_detail='space')
+        hr()
       
       with div(id="images", style="margin-top:8px"):
-        div(f"For the time being, PALP may display detail or overview images of paintings and other artworks that do not directly illustrate '{r.identifier}'. The selection of images will become more selective as development and data-entry continue.", style="width:80%")
+        with div(style="width:80%"):
+          i(f"Note: For the time being, PALP may display detail or overview images of paintings and other artworks that do not directly illustrate '{r.identifier}'. The selection of images will become more limited and relevant as development and data-entry continue.", style="width:80%")
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
+        hr()
 
       if r.geojson:
-        with div(id="geojson", style="margin-top:8px"):
+        with div(id="geojson", style="margin-top:12px"):
           palp_geojson(r)
 
 
