@@ -1,2 +1,5 @@
 User-agent: * 
 Disallow: /
+
+Useragent: SemrushBot, SemrushBot/2, SemrushBot/3~bl
+Disallow: /
