@@ -671,7 +671,7 @@ def concept_render(r,html_dom):
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
 
       if r.geojson:
-        with div(id="geojson", style="margin-top:5px"):
+        with div(id="geojson", style="margin-top:8px"):
           palp_geojson(r)
 
 
@@ -773,12 +773,16 @@ def palp_start():
             span(".")
           p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ”<a href="/browse/dog">dog</a>”. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
           p(raw("""PALP is a collaborative initiative between <a href="https://www.umass.edu/classics/member/eric-poehler">Eric Poehler</a> at the University of Massachusetts Amherst and <a href="https://isaw.nyu.edu/people/faculty/sebastian-heath">Sebastian Heath</a> at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>. The <a href="https://palp.p-lod.umasscreate.net">project blog</a> has more information about PALP's scope and goals."""))
-          with a(href="https://www.umass.edu"):
-            img(src="static/images/umass-logo.png", style="max-width:200px")
-          with a(href="https://www.getty.edu/foundation/"):
-            img(src="static/images/getty-logo.jpg", style="max-width:220px")
-          with a(href="https://isaw.nyu.edu"):
-            img(src="static/images/nyu-logo.png", style="max-width:200px")
+          with div(style="text-align:center"):
+            with a(href="/browse/magpie"):
+              img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size2/umass~14~14/4219/image34143.jpg", style="width:125px")
+            with a(href="https://www.umass.edu"):
+              img(src="static/images/umass-logo.png", style="max-width:200px")
+            with a(href="https://www.getty.edu/foundation/"):
+              img(src="static/images/getty-logo.jpg", style="max-width:220px")
+            with a(href="https://isaw.nyu.edu"):
+              img(src="static/images/nyu-logo.png", style="max-width:200px")
+            
 
   palp_page_footer(r, html_dom)
   return html_dom.render()
