@@ -221,13 +221,14 @@ def palp_image_gallery(r):
       if i['l_img_url']:
         tilde_val = luna_tilde_val(i['urn'])
         with div(_class="image"):
-          img(src = i['l_img_url'])
+          img(src = i['l_img_url'], loading="lazy")
           h2("", style="color:white")
           with div(_class = "desc"):
             with div():
               if 'feature' in i:
+                b(r.identifier)
+                span(" appears on feature: ")
                 relative_url, label = urn_to_anchor(i['feature'])
-                span(f"Appears on feature: ")
                 a(label,href=relative_url)
                 span(". ")
 
@@ -660,7 +661,7 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="depicted-where", style="margin-top:3px"):
+      with div(id="depicted-where", style="margin-top:3px; width:80%"):
         b(r.identifier)
         span(" is depicted in the following rooms or spaces: ")
         palp_depicted_where(r, level_of_detail='space')
