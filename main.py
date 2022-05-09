@@ -739,7 +739,7 @@ def palp_search():
 
 @app.route('/compare/')
 def palp_compare():
-    return """Super cool and useful search page. What should it do? <a href="/start">Start</a>."""
+    return """Super cool and useful search page. What should it do? <a href="/start">Start</a>. """
 
 @app.route('/')
 def index():
