@@ -669,7 +669,7 @@ def concept_render(r,html_dom):
       
       with div(id="images", style="margin-top:8px"):
         with div(style="width:80%"):
-          i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more limited and relevant as development and data-entry continue.", style="width:80%")
+          i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more precise and relevant as development and data-entry continue.", style="width:80%")
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
         hr()
