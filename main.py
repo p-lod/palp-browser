@@ -225,7 +225,7 @@ def palp_image_gallery(r):
           h2("", style="color:white")
           with div(_class = "desc"):
             with div():
-              if 'feature' in i:
+              if ('feature' in i) and (r.rdf_type == 'concept'):
                 b(r.identifier)
                 span(" appears on feature: ")
                 relative_url, label = urn_to_anchor(i['feature'])
