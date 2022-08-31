@@ -8,7 +8,7 @@ Markdown
 MarkupSafe
 numpy
 pandas
-rdflib
+rdflib=5.0.0
 requests-cache
 Shapely
 urllib3
