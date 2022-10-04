@@ -234,14 +234,16 @@ def palp_image_gallery(r):
 
                 c_feature = i['feature'].replace("urn:p-lod:id:","")
                 c_r = plodlib.PLODResource(c_feature)
-
-                span("Within ")
-                relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
-                a(label,href=relative_url)
-                span(".")
-                br()
-                span(f"Feature depicts: ")
-                palp_depicts_concepts(c_r)
+                
+                if len(json.loads(c_r.spatially_within)) > 0:
+                  print(c_feature)
+                  span("Within ")
+                  relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
+                  a(label,href=relative_url)
+                  span(".")
+                  br()
+                  span(f"Feature depicts: ")
+                  palp_depicts_concepts(c_r)
               
             div(i['l_description'])
             with div():
