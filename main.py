@@ -236,7 +236,6 @@ def palp_image_gallery(r):
                 c_r = plodlib.PLODResource(c_feature)
                 
                 if len(json.loads(c_r.spatially_within)) > 0:
-                  print(c_feature)
                   span("Within ")
                   relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
                   a(label,href=relative_url)
@@ -244,6 +243,8 @@ def palp_image_gallery(r):
                   br()
                   span(f"Feature depicts: ")
                   palp_depicts_concepts(c_r)
+                else:
+                  print(f'Image gallery no spatially within: {c_feature}')
               
             div(i['l_description'])
             with div():
