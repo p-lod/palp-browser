@@ -304,9 +304,11 @@ if ($('#minimap-geojson').html().trim()) {
     tms: false
   }).addTo(mymap);
 
-  var pompeii_geojson = L.geoJSON(JSON.parse($('#pompeii-geojson').html()));
-  pompeii_geojson.addTo(mymap);
-  mymap.fitBounds(pompeii_geojson.getBounds());
+  // var pompeii_geojson = L.geoJSON(JSON.parse($('#pompeii-geojson').html()));
+  //pompeii_geojson.addTo(mymap);
+  //mymap.fitBounds(pompeii_geojson.getBounds());
+  mymap.fitBounds([[14.478462923715377,40.74778073661396],[14.496141013817796,40.754123872267314]])
+  //console.log(pompeii_geojson.getBounds().toBBoxString())
 
 
    if ($('#within-geojson').html().trim()) { 
