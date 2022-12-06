@@ -186,11 +186,17 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
 
   # offsets
 
-  xoff = -0.0000075
-  yoff =  0.000037
+  xoff = 0
+  yoff =  0
   if rdf_type == "region":
-    yoff = .00072
-    
+    yoff = 0 
+
+  # xoff = -0.0000075
+  # yoff =  0.000037
+  # if rdf_type == "region":
+  #   yoff = .00072
+
+
 
 
   g = json.loads(geojson_str)
@@ -290,10 +296,12 @@ if ($('#minimap-geojson').html().trim()) {
 
   var mymap = L.map('minimapid').setView([40.75, 14.485], 16);
 
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    id: 'mapbox.streets'
+  // L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    L.tileLayer('http://palp.art/xyz-tiles/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: 'Pompeii Bibliography and Mapping Project',
+    id: 'pbmp',
+    tms: false
   }).addTo(mymap);
 
   var pompeii_geojson = L.geoJSON(JSON.parse($('#pompeii-geojson').html()));
