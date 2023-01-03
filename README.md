@@ -1,1 +1,1 @@
-Code, etc. for the Heroku-based P-LOD browser and search tool.
+Code, etc. for the PALP browser. See http://palp.art .
