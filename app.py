@@ -538,11 +538,11 @@ def city_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="depicts_concepts"):
+      with div(id="depicts_concepts",style="width:80%"):
         span("Depicts the Concepts: ")
         palp_depicts_concepts(r)
       
-      with div(id="spatial_children"):
+      with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
         palp_spatial_children(r, images = False)
 
@@ -557,14 +557,14 @@ def region_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:.5em"):
+      with div(id="spatial_hierarchy", style="margin-bottom:.5em, width:80%"):
         palp_spatial_hierarchy(r)
 
-      with div(id="depicts_concepts: "):
+      with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="spatial_children"):
+      with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
         palp_spatial_children(r)
 
@@ -578,10 +578,10 @@ def insula_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
         palp_spatial_hierarchy(r)
         
-      with div(id="depicts_concepts: "):
+      with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
@@ -589,7 +589,7 @@ def insula_render(r,html_dom):
       #   palp_image_gallery(r)
       #   div(id = 'galleria-display', style="width:80%")
 
-      with div(id="spatial_children"):
+      with div(id="spatial_children", style="width:80%"):
         span("Properties Within: ")
         palp_spatial_children(r)
 
@@ -603,22 +603,22 @@ def property_render(r,html_dom):
     with main(cls="container", role="main"):
 
       eng_titles =  r.get_predicate_values('urn:p-lod:id:plod-english-title')
-      it_titles =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
+      it_titles  =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
 
       known_as = " / ".join(json.loads(eng_titles) + json.loads(it_titles))
 
       if known_as:
-        with div("Other name(s): ", style="margin-bottom:1em"):
+        with div("Other name(s): ", style="margin-bottom:1em, width:80%"):
           span(known_as)
 
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
         palp_spatial_hierarchy(r)
 
-      with div(id="depicts_concepts: "):
+      with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
@@ -626,7 +626,7 @@ def property_render(r,html_dom):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
 
-      with div(id="spatial_children"):
+      with div(id="spatial_children", style="width:80%"):
         span("Spaces (aka 'Rooms') Within: ")
         palp_spatial_children(r, images = False)
 
@@ -643,10 +643,10 @@ def space_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
         palp_spatial_hierarchy(r)
 
-      with div(id="depicts_concepts: "):
+      with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
@@ -654,7 +654,7 @@ def space_render(r,html_dom):
         palp_image_gallery(r)
         div(id = 'galleria-display', style="width:80%")
 
-      with div(id="spatial_children", style="margin-top:6px"):
+      with div(id="spatial_children", style="margin-top:6px, width:80%"):
         span("It contains features: ")
         palp_spatial_children(r, images = False)
 
@@ -673,7 +673,7 @@ def feature_render(r,html_dom):
         palp_spatial_hierarchy(r)
 
       
-      with div(id="depicts_concepts", style="margin-top:6px"):
+      with div(id="depicts_concepts", style="margin-top:6px, width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
