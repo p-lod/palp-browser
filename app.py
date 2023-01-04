@@ -81,12 +81,11 @@ def palp_page_navbar(r, html_dom):
           if r.label:
            span(r.label, cls="navbar-brand")
           elif r.identifier:
+           if r.rdf_type is not None:
+            span(f"{r.rdf_type} ", cls="navbar-brand")
            span(r.identifier, cls="navbar-brand")
           else:
            span("", cls="navbar-brand")
-
-          if r.rdf_type is not None:
-            span(f" [{r.rdf_type}]", cls="navbar-brand")
           
           p_in_p = json.loads(r.get_predicate_values('urn:p-lod:id:p-in-p-url'))
           if p_in_p:
@@ -106,9 +105,15 @@ def palp_page_navbar(r, html_dom):
           if wiki_it:
             with span(cls="navbar-brand"):
               span(" [")
-              a("Wikipedia (it)", href= wiki_it[0])
+              a("Wiki (it)", href= wiki_it[0])
               span("]")
           
+          pleiades = json.loads(r.get_predicate_values('urn:p-lod:id:pleiades-url'))
+          if pleiades:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a("Pleiades", href= pleiades[0])
+              span("]")
         
 
         
@@ -117,12 +122,6 @@ def palp_page_footer(r, doc):
       with footer(cls="footer"):
         with span():
           small("PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation. The site is very much in development and will change regularly.")
-          #if r.identifier:
-          #  a(f"[view {r.identifier} in p-lod]", href=f"http://p-lod.herokuapp.com/p-lod/id/{r.identifier}")
-          if r.p_in_p_url:
-              a(" [p-in-p]", href=r.p_in_p_url, target = "_new")
-          if r.wikidata_url:
-              a(" [wikidata]", href=r.wikidata_url, target = "_new")
 
 
 # convenience functions
