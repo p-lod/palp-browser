@@ -25,7 +25,7 @@ from flask import Flask, render_template, session, json, request, flash, redirec
 import markdown
 
 import rdflib as rdf
-from rdflib.plugins.stores import sparqlstore
+from rdflib.plugins.stores.sparqlstore import SPARQLStore
 
 from shapely.geometry import shape, mapping
 from shapely.affinity import translate
@@ -47,7 +47,7 @@ app = Flask(__name__)
 
 
 # Connect to the remote triplestore with read-only connection
-store = rdf.plugin.get("SPARQLStore", rdf.store.Store)(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
+store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
                                                        context_aware = False,
                                                        returnFormat = 'json')
 g = rdf.Graph(store)
@@ -87,6 +87,27 @@ def palp_page_navbar(r, html_dom):
 
           if r.rdf_type is not None:
             span(f" [{r.rdf_type}]", cls="navbar-brand")
+          
+          p_in_p = json.loads(r.get_predicate_values('urn:p-lod:id:p-in-p-url'))
+          if p_in_p:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a("Pompeii in Pictures", href= p_in_p[0])
+              span("]")
+
+          wiki_en = json.loads(r.get_predicate_values('urn:p-lod:id:wiki-en-url'))
+          if wiki_en:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a("Wiki (en)", href= wiki_en[0])
+              span("]")
+              
+          wiki_it = json.loads(r.get_predicate_values('urn:p-lod:id:wiki-it-url'))
+          if wiki_it:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a("Wikipedia (it)", href= wiki_it[0])
+              span("]")
           
         
 
@@ -609,6 +630,7 @@ def property_render(r,html_dom):
       with div(id="spatial_children"):
         span("Spaces (aka 'Rooms') Within: ")
         palp_spatial_children(r, images = False)
+
 
     galleria_inline_script()
 
