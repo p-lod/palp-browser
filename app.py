@@ -162,7 +162,7 @@ def galleria_inline_script():
   s += raw("""(function() {
                 Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
                 Galleria.configure({debug: false,
-                                    lighgbox: true,
+                                    lightbox: true,
                                     imageCrop: false , 
                                     carousel: false,
                                     dataConfig: function(img) {
@@ -581,6 +581,15 @@ def property_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
+
+      eng_titles =  r.get_predicate_values('urn:p-lod:id:plod-english-title')
+      it_titles =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
+
+      known_as = " / ".join(json.loads(eng_titles) + json.loads(it_titles))
+
+      if known_as:
+        with div("Other name(s): ", style="margin-bottom:1em"):
+          span(known_as)
 
       if r.geojson:
         with div(id="geojson"):
