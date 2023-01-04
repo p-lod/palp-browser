@@ -306,7 +306,7 @@ def palp_geojson(r):
                                    rdf_type = within_rdf_type)
 
 
-      div(id="minimapid", style=" width: 40%; height: 400px;display:none")
+      div(id="minimapid", style=" width: 80%; height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
