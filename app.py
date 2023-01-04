@@ -665,12 +665,13 @@ def feature_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
-        palp_spatial_hierarchy(r)
-
       if r.geojson or json.loads(r.spatially_within):
           with div(id="geojson", style="margin-top:6px"):
             palp_geojson(r)
+
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+        palp_spatial_hierarchy(r)
+
       
       with div(id="depicts_concepts", style="margin-top:6px"):
         span("Depicts Concepts: ")
@@ -703,12 +704,11 @@ def concept_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
+      if r.geojson:
+        with div(id="geojson", style="margin-top:12px"):
+          palp_geojson(r)
 
-      with div(id="depicted-where", style="margin-top:3px; width:80%"):
-        b(r.identifier)
-        span(" is depicted in the following rooms or spaces: ")
-        palp_depicted_where(r, level_of_detail='space')
-        hr()
+
       
       with div(id="images", style="margin-top:8px"):
         with div(style="width:80%"):
@@ -717,10 +717,11 @@ def concept_render(r,html_dom):
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
         hr()
 
-      if r.geojson:
-        with div(id="geojson", style="margin-top:12px"):
-          palp_geojson(r)
-
+      with div(id="depicted-where", style="margin-top:3px; width:80%"):
+        b(r.identifier)
+        span(" is depicted in the following rooms or spaces: ")
+        palp_depicted_where(r, level_of_detail='space')
+        hr()
 
     galleria_inline_script()
           
