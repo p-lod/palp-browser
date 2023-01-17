@@ -115,6 +115,9 @@ def palp_page_navbar(r, html_dom):
               a("Pleiades", href= pleiades[0])
               span("]")
         
+          with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
+                        with span(cls="form-group"):
+                            input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
 
         
 def palp_page_footer(r, doc):
@@ -739,6 +742,30 @@ def street_render(r,html_dom):
       palp_spatial_hierarchy(r)
 
 
+def luna_image_render(r,html_dom):
+  with html_dom:
+    with main(cls="container", role="main"):
+      span(r.identifier)
+    
+    try:
+      t_val = luna_tilde_val(f'urn:p-lod:id:{r.identifier}')
+      media_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-media-id'))[0]
+      record_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-record-id'))[0]
+      raw(r._sparql_results_as_html_table)
+      
+      raw(f'''
+      <iframe allowfullscreen="true" id="widgetPreview" frameBorder="0"  width="100%"  height="350px"  border="0px" style="border:0px solid white"  src="http://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}?widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
+      ''')
+    
+    except:
+      1
+
+
+    
+
+      
+
+
 def unknown_render(r,html_dom):
 
   with html_dom:
@@ -769,7 +796,7 @@ def palp_browse(identifier):
   r = plodlib.PLODResource(identifier)
 
   try:
-    return palp_html_document(r, globals()[f'{r.rdf_type}_render']).render() # call p_h_d with right render function if it exists
+    return palp_html_document(r, globals()[f'{r.rdf_type.replace("-","_")}_render']).render() # call p_h_d with right render function if it exists
   except KeyError as e:
     return palp_html_document(r,unknown_render).render()
 
@@ -834,3 +861,49 @@ def palp_start():
 
   palp_page_footer(r, html_dom)
   return html_dom.render()
+
+@app.route('/full-text-search')
+def fulltextsearch():
+    q = request.args.get('q')
+                   
+    if q != '' and q is not None:
+        qexists = True 
+    else:                  
+        qexists = False
+        
+    if qexists == True:
+
+      store = rdf.plugins.stores.sparqlstore.SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
+                                          context_aware = False,
+                                          returnFormat = 'json')
+      
+      g_ft = rdf.Graph(store)
+
+      ftquery = """PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX text:  <http://jena.apache.org/text#>
+PREFIX p-lod: <urn:p-lod:id:>
+
+SELECT DISTINCT ?s ?type ?slabel ?d
+WHERE { 
+
+ # ?s p-lod:description ?d .
+  ?s text:query (rdfs:label p-lod:description p-lod:x-luna-description '%s') ;
+       rdfs:label ?slabel ; 
+       a ?type .
+  OPTIONAL { ?s p-lod:description|p-lod:x-luna-description ?d }.
+}""" % (q)  
+
+
+      ftresults = g_ft.query(ftquery)
+
+      df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
+      df = df.applymap(str)
+      # df.set_index('s', inplace = True)
+      return df.to_html()
+
+
+      
+
+
+ 
