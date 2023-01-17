@@ -873,6 +873,8 @@ def fulltextsearch():
         
     if qexists == True:
 
+      q = q.lower()
+
       store = rdf.plugins.stores.sparqlstore.SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
                                           context_aware = False,
                                           returnFormat = 'json')
