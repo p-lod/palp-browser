@@ -726,6 +726,11 @@ def concept_render(r,html_dom):
         palp_depicted_where(r, level_of_detail='space')
         hr()
 
+      with div(id="full-text-search", style="margin-top:3px; width:80%"):
+        span("Keyword search for “")
+        a(r.identifier, href=f"/full-text-search?q={r.identifier}")
+        span("”.")
+
     galleria_inline_script()
           
 
@@ -902,7 +907,7 @@ WHERE {
       df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
       df = df.applymap(str)
       # df.set_index('s', inplace = True)
-      return df.to_html()
+      return f'<div>Formatting to improve...</div>{df.to_html()}'
 
 
       
