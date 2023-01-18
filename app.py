@@ -873,7 +873,7 @@ def fulltextsearch():
         
     if qexists == True:
 
-      q = q.lower().replace('and','AND')
+      q = q.lower().replace(' and ',' AND ')
 
       store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
                                           context_aware = False,
