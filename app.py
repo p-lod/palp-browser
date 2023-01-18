@@ -30,11 +30,6 @@ from rdflib.plugins.stores.sparqlstore import SPARQLStore
 from shapely.geometry import shape, mapping
 from shapely.affinity import translate
 
-
-#from google.oauth2 import service_account
-#from googleapiclient.discovery import build
-
-# install with python3 -m pip install git+https://github.com/p-lod/plodlib
 import plodlib
 
 ns = {"dcterms" : "http://purl.org/dc/terms/",
@@ -878,9 +873,9 @@ def fulltextsearch():
         
     if qexists == True:
 
-      q = q.lower()
+      q = q.lower().replace('and','AND')
 
-      store = rdf.plugins.stores.sparqlstore.SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
+      store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
                                           context_aware = False,
                                           returnFormat = 'json')
       
