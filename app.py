@@ -2,8 +2,8 @@ import html
 
 # https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/ is the theme this uses.
 
-# because dominate will stop on html
-pyhtml = html
+# because dominate will stomp on html
+py_html = html
 
 import json
 import os
@@ -29,6 +29,8 @@ from rdflib.plugins.stores.sparqlstore import SPARQLStore
 
 from shapely.geometry import shape, mapping
 from shapely.affinity import translate
+
+from string import Template
 
 import plodlib
 
@@ -273,7 +275,7 @@ def palp_image_gallery(r):
             div(i['l_description'])
             with div():
               span('[')
-              a("Image credits and additional info...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{i['l_record']}~{i['l_media']}", target="_new")
+              a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
               span('] ')
 
 
@@ -756,6 +758,10 @@ def luna_image_render(r,html_dom):
       raw(f'''
       <iframe allowfullscreen="true" id="widgetPreview" frameBorder="0"  width="100%"  height="350px"  border="0px" style="border:0px solid white"  src="http://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}?widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
       ''')
+
+      with div():
+        a("View in Luna (from UMass Amherst Library)",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}", target="_new")
+
     
     except:
       1
@@ -884,34 +890,38 @@ def fulltextsearch():
     
     g_ft = rdf.Graph(store)
 
-    ftquery = """PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX text:  <http://jena.apache.org/text#>
-PREFIX p-lod: <urn:p-lod:id:>
+    qt = Template("""
+    PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX text:  <http://jena.apache.org/text#>
+    PREFIX p-lod: <urn:p-lod:id:>
 
-SELECT DISTINCT ?s ?type ?slabel ?d
-WHERE { 
+    SELECT DISTINCT ?s ?type ?slabel ?d
+    WHERE { 
 
- # ?s p-lod:description ?d .
-  ?s text:query (rdfs:label p-lod:description p-lod:x-luna-description '%s') ;
-       rdfs:label ?slabel ; 
-       a ?type .
-  OPTIONAL { ?s p-lod:description|p-lod:x-luna-description ?d }.
-}""" % (q)  
+    # ?s p-lod:description ?d .
+      ?s text:query (rdfs:label p-lod:description p-lod:x-luna-description '$ft_query') ;
+          rdfs:label ?slabel ; 
+          a ?type .
+      OPTIONAL { ?s p-lod:description|p-lod:x-luna-description ?d }.
+    }
+    """)  
 
 
-    ftresults = g_ft.query(ftquery)
+    ftresults = g_ft.query(qt.substitute(ft_query = q))
 
     df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
     df = df.applymap(str)
     # df.set_index('s', inplace = True)
 
     df['s'] = df['s'].apply(lambda x: f'<a href="browse/{x.replace("urn:p-lod:id:","")}">Browse</a>')
-
+    df['type'] = df['type'].apply(lambda x: x.replace("urn:p-lod:id:",""))
     
     with html_dom:
       with main(cls="container", role="main"):
-        raw(df.to_html(escape=False))
+        div(f'Searched for: "{py_html.escape(q)}"', style='padding-bottom: .5em')
+        
+        raw(df.to_html(escape=False, header=False,index=False))
 
   palp_page_footer(POMPEII, html_dom)
 
