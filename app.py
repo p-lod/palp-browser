@@ -773,15 +773,17 @@ def unknown_render(r,html_dom):
 
 
 
-def palp_html_document(r,renderer):
+def palp_html_document(r = POMPEII,renderer = None):
 
+  
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project: {r.identifier}" )
 
   palp_html_head(r, html_dom)
   html_dom.body
   palp_page_navbar(r,html_dom)
 
-  renderer(r, html_dom)
+  if r:
+    renderer(r, html_dom)
 
   palp_page_footer(r, html_dom)
 
@@ -864,24 +866,25 @@ def palp_start():
 
 @app.route('/full-text-search')
 def fulltextsearch():
-    q = request.args.get('q')
-                   
-    if q != '' and q is not None:
-        qexists = True 
-    else:                  
-        qexists = False
-        
-    if qexists == True:
 
-      q = q.lower().replace(' and ',' AND ')
+  html_dom = dominate.document(title="Pompeii Artistic Landscape Project: Keyword Search" )
+  palp_html_head(POMPEII, html_dom)
+  html_dom.body
+  palp_page_navbar(POMPEII,html_dom)
 
-      store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
-                                          context_aware = False,
-                                          returnFormat = 'json')
-      
-      g_ft = rdf.Graph(store)
+  q = request.args.get('q')
 
-      ftquery = """PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  if q != '' and q is not None:
+
+    q = q.lower().replace(' and ',' AND ')
+
+    store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
+                                        context_aware = False,
+                                        returnFormat = 'json')
+    
+    g_ft = rdf.Graph(store)
+
+    ftquery = """PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX text:  <http://jena.apache.org/text#>
 PREFIX p-lod: <urn:p-lod:id:>
@@ -897,14 +900,22 @@ WHERE {
 }""" % (q)  
 
 
-      ftresults = g_ft.query(ftquery)
+    ftresults = g_ft.query(ftquery)
 
-      df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
-      df = df.applymap(str)
-      # df.set_index('s', inplace = True)
-      return f'<div>Formatting to improve...</div>{df.to_html()}'
+    df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
+    df = df.applymap(str)
+    # df.set_index('s', inplace = True)
 
+    df['s'] = df['s'].apply(lambda x: f'<a href="browse/{x.replace("urn:p-lod:id:","")}">{x}</a>')
 
+    
+    with html_dom:
+      with main(cls="container", role="main"):
+        raw(df.to_html(escape=False))
+
+  palp_page_footer(POMPEII, html_dom)
+
+  return html_dom.render()
       
 
 
