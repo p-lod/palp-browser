@@ -906,7 +906,7 @@ WHERE {
     df = df.applymap(str)
     # df.set_index('s', inplace = True)
 
-    df['s'] = df['s'].apply(lambda x: f'<a href="browse/{x.replace("urn:p-lod:id:","")}">{x}</a>')
+    df['s'] = df['s'].apply(lambda x: f'<a href="browse/{x.replace("urn:p-lod:id:","")}">Browse</a>')
 
     
     with html_dom:
