@@ -762,9 +762,7 @@ def luna_image_render(r,html_dom):
         r_depicted = plodlib.PLODResource(depicts_urn.replace('urn:p-lod:id:',''))
         r_depicted_is_within = plodlib.PLODResource(json.loads(r_depicted.spatially_within)[0]['urn'].replace('urn:p-lod:id:',''))
       
-        #html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r._id_df.loc["urn:p-lod:id:depicts","o"].replace("urn:p-lod:id:","")}">{r._id_df.loc["urn:p-lod:id:depicts","o"]}</a>'
-        #html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted}">{r_depicted}</a> within <a href="/browse/{r_depicted_within}">{r_depicted_within}"</a>'
-        html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a>'
+        html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a> (slow to load for now).'
       except:
         div("ERROR")
 
