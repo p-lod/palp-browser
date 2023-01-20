@@ -753,7 +753,23 @@ def luna_image_render(r,html_dom):
       t_val = luna_tilde_val(f'urn:p-lod:id:{r.identifier}')
       media_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-media-id'))[0]
       record_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-record-id'))[0]
-      raw(r._sparql_results_as_html_table)
+      
+      html_df = r._id_df.copy()
+      
+      try:
+        depicts_urn = html_df.loc['urn:p-lod:id:depicts','o']
+
+        r_depicted = plodlib.PLODResource(depicts_urn.replace('urn:p-lod:id:',''))
+        r_depicted_is_within = plodlib.PLODResource(json.loads(r_depicted.spatially_within)[0]['urn'].replace('urn:p-lod:id:',''))
+      
+        #html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r._id_df.loc["urn:p-lod:id:depicts","o"].replace("urn:p-lod:id:","")}">{r._id_df.loc["urn:p-lod:id:depicts","o"]}</a>'
+        #html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted}">{r_depicted}</a> within <a href="/browse/{r_depicted_within}">{r_depicted_within}"</a>'
+        html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a>'
+      except:
+        div("ERROR")
+
+
+      raw(html_df.to_html(escape = False, header = False))
       
       raw(f'''
       <iframe allowfullscreen="true" id="widgetPreview" frameBorder="0"  width="100%"  height="350px"  border="0px" style="border:0px solid white"  src="http://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}?widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
@@ -763,6 +779,8 @@ def luna_image_render(r,html_dom):
         a("View in Luna (from UMass Amherst Library)",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}", target="_new")
 
     
+
+
     except:
       1
 
@@ -916,12 +934,13 @@ def fulltextsearch():
 
     df['s'] = df['s'].apply(lambda x: f'<a href="browse/{x.replace("urn:p-lod:id:","")}">Browse</a>')
     df['type'] = df['type'].apply(lambda x: x.replace("urn:p-lod:id:",""))
-    
+    df.index += 1
+
     with html_dom:
       with main(cls="container", role="main"):
         div(f'Searched for: "{py_html.escape(q)}"', style='padding-bottom: .5em')
         
-        raw(df.to_html(escape=False, header=False,index=False))
+        raw(df.to_html(escape=False, header=False))
 
   palp_page_footer(POMPEII, html_dom)
 
