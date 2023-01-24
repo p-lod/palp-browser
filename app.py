@@ -22,8 +22,6 @@ from bs4 import BeautifulSoup
 
 from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request
 
-import markdown
-
 import rdflib as rdf
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
 
@@ -873,9 +871,9 @@ def palp_start():
             span(" or ")
             a("http://palp.art/browse/sphinx",href="/browse/sphinx")
             span(".")
-          p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
+          p(raw("""<b>Browsing</b> within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
           
-          p(raw("""PALP also support keyword searches. Use the text-entry box in the header at the top of every page, including this one. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’."""))
+          p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’."""))
           
           p(raw("""PALP is a collaborative initiative between <a href="https://www.umass.edu/classics/member/eric-poehler">Eric Poehler</a> at the University of Massachusetts Amherst and <a href="https://isaw.nyu.edu/people/faculty/sebastian-heath">Sebastian Heath</a> at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>. The <a href="https://palp.p-lod.umasscreate.net">project blog</a> has more information about PALP's scope and goals."""))
           with div(style="text-align:center"):
