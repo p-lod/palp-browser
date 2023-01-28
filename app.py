@@ -537,7 +537,7 @@ def city_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicts_concepts",style="width:80%"):
-        span("Depicts the Concepts: ")
+        span("Concepts depicted within: ")
         palp_depicts_concepts(r)
       
       with div(id="spatial_children", style="width:80%"):
@@ -551,15 +551,15 @@ def region_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
+      with div(id="spatial_hierarchy", style="margin-bottom:.5em, width:80%"):
+        palp_spatial_hierarchy(r)
+
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:.5em, width:80%"):
-        palp_spatial_hierarchy(r)
-
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Depicts Concepts: ")
+        span("Concepts depicted within: ")
         palp_depicts_concepts(r)
 
       with div(id="spatial_children", style="width:80%"):
@@ -572,15 +572,15 @@ def insula_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+        palp_spatial_hierarchy(r)
+
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
-
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
-        palp_spatial_hierarchy(r)
         
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Depicts Concepts: ")
+        span("Concepts depicted within: ")
         palp_depicts_concepts(r)
 
       # with div(id="images"):
@@ -599,6 +599,8 @@ def property_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+        palp_spatial_hierarchy(r)
 
       eng_titles =  r.get_predicate_values('urn:p-lod:id:plod-english-title')
       it_titles  =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
@@ -613,11 +615,8 @@ def property_render(r,html_dom):
         with div(id="geojson"):
           palp_geojson(r)
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
-        palp_spatial_hierarchy(r)
-
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Depicts Concepts: ")
+        span("Concepts depicted within: ")
         palp_depicts_concepts(r)
 
       with div(id="images"):
@@ -662,14 +661,13 @@ def feature_render(r,html_dom):
   
   with html_dom:
     with main(cls="container", role="main"):
+      
+      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+        palp_spatial_hierarchy(r)
 
       if r.geojson or json.loads(r.spatially_within):
           with div(id="geojson", style="margin-top:6px"):
             palp_geojson(r)
-
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
-        palp_spatial_hierarchy(r)
-
       
       with div(id="depicts_concepts", style="margin-top:6px, width:80%"):
         span("Depicts Concepts: ")
@@ -686,12 +684,12 @@ def artwork_render(r,html_dom):
 
   with html_dom:
 
+    with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      palp_spatial_hierarchy(r)
+
     if r.geojson:
       with div(id="geojson"):
         palp_geojson(r)
-
-    with div(id="spatial_hierarchy", style="margin-bottom:1em"):
-      palp_spatial_hierarchy(r)
 
     with div(id="depicts_concepts: "):
       span("Depicts Concepts: ")
