@@ -65,6 +65,41 @@ def palp_html_head(r, html_dom):
     html_dom.head += meta(name="DC.identifier", content=f"urn:p-lod:id:{r.identifier}" )
 
 
+def palp_count_concepts_between(lower = 10, upper = 50):
+    store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
+                                        context_aware = False,
+                                        returnFormat = 'json')
+    
+    g_count = rdf.Graph(store)
+
+    qt = Template("""
+SELECT ?concept (COUNT(?s) AS ?count) WHERE {
+?s <urn:p-lod:id:depicts> ?concept .
+?concept a <urn:p-lod:id:concept> }
+GROUP BY ?concept HAVING ((?count <= $upper) && (?count >= $lower ))
+ORDER BY DESC(?count)
+""")  
+
+
+    results = g_count.query(qt.substitute(ft_query = q, lower = lower, upper = upper))
+    g_count.close()
+    del(g_count)
+    store.close()
+    del(store)
+    
+    df = pd.DataFrame(results, columns = results.json['head']['vars'])
+    df = df.applymap(str)
+    
+    count_html_raw  = ''
+    for i,c in df.iterrows():
+      relative_url, label = urn_to_anchor(c['concept'])
+      count_html_raw =  count_html_raw + f'<a href="{relative_url}">{label}</a> <span style="color:LightGray">({c["count"]})</span>'
+      if i < len(df)-1:
+        count_html_raw =  count_html_raw + ', '
+
+    return count_html_raw
+
+
 def palp_page_navbar(r, html_dom):
     with html_dom:
       # feature request: suppress a link when displaying the page it links to.
@@ -640,12 +675,12 @@ def space_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
+      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+        palp_spatial_hierarchy(r)
+
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
-
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
-        palp_spatial_hierarchy(r)
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
@@ -870,9 +905,16 @@ def palp_start():
           with p():
             span("Start browsing at ")
             a("http://palp.art/browse/pompeii",href="/browse/pompeii")
-            span(" or ")
+            span(",  ")
             a("http://palp.art/browse/sphinx",href="/browse/sphinx")
+
+            # count
+            l = 8
+            u = 20
+            span(f", or from this list of concepts appearing between {l} and {u} times: ")
+            raw(palp_count_concepts_between(l,u))
             span(".")
+
           p(raw("""<b>Browsing</b> within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
           
           p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’."""))
@@ -931,6 +973,11 @@ def fulltextsearch():
 
 
     ftresults = g_ft.query(qt.substitute(ft_query = q))
+    g_ft.close()
+    del(g_ft)
+    store.close()
+    del(store)
+    
 
     df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
     df = df.applymap(str)
