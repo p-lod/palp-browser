@@ -528,7 +528,7 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
 
 
 # type renderers
-def city_render(r,html_dom):
+def city_as_physical_entity_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
@@ -594,7 +594,6 @@ def insula_render(r,html_dom):
       
     # galleria_inline_script()
 
-
 def property_render(r,html_dom):
 
   with html_dom:
@@ -630,6 +629,11 @@ def property_render(r,html_dom):
 
     galleria_inline_script()
 
+def house_render(r,html_dom):
+  property_render(r,html_dom)
+
+def commercial_property_render(r,html_dom):
+  property_render(r,html_dom)
 
 def space_render(r,html_dom):
 
