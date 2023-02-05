@@ -6,9 +6,10 @@ import html
 py_html = html
 
 import json
-import os
-import re
-import sys
+# import os
+# import re
+# import sys
+import time
 
 from urllib.request import urlopen
 
@@ -215,9 +216,10 @@ def galleria_inline_script():
   s += raw("""(function() {
                 Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
                 Galleria.configure({debug: false,
-                                    lightbox: true,
+                                    lightbox: false,
                                     imageCrop: false , 
                                     carousel: false,
+                                    thumbnails: false,
                                     dataConfig: function(img) {
         return {
             title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
@@ -269,18 +271,20 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
 # palp page part renderers
 
 def palp_image_gallery(r):
-  
+  # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
   try:
     r_images = json.loads(r.gather_images())
   except:
     return
   
   with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
+    
     for i in r_images:
-      if i['l_img_url']:
-        tilde_val = luna_tilde_val(i['urn'])
+      if 'http' in i['l_img_url']:
+        # tilde_val = luna_tilde_val(i['urn'])
         with div(_class="image"):
-          img(src = i['l_img_url'], loading="lazy")
+          img(src = i['l_img_url'], loading="lazy") # /static/images/under-construction.png (for testing)
+          
           h2("", style="color:white")
           with div(_class = "desc"):
             with div():
@@ -310,6 +314,8 @@ def palp_image_gallery(r):
               span('[')
               a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
               span('] ')
+  
+  # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
 
 
 def palp_geojson(r):
