@@ -235,6 +235,29 @@ def galleria_inline_script():
             }());
 """)
   return s
+
+def galleria_inline_script_json():
+  s = script(type="text/javascript")
+  s += raw("""(function() {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
+                Galleria.configure({debug: false,
+                                    lightbox: false,
+                                    imageCrop: false , 
+                                    carousel: false,
+                                    thumbnails: false,
+                                    })
+                Galleria.on('image', function(e) {
+                  $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
+                  console.log(e);
+                  
+                  });
+
+                Galleria.run('.galleria', {
+    dataSource: data
+});
+            }());
+""")
+  return s
  
 
 def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson .00003 to the N  
@@ -316,6 +339,55 @@ def palp_image_gallery(r):
               span('] ')
   
   # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
+
+
+def palp_image_gallery_json(r):
+  # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
+  try:
+    r_images = json.loads(r.gather_images())
+  except:
+    return
+  
+  with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
+    
+    data = []
+
+    for i in r_images:
+      if 'http' in i['l_img_url']:
+          
+        desc_div = div(_class = "desc")
+        with desc_div:
+          with div():
+            if ('feature' in i) and (r.rdf_type == 'concept'):
+              b(r.identifier)
+              span(" appears on feature: ")
+              relative_url, label = urn_to_anchor(i['feature'])
+              a(label,href=relative_url)
+              span(". ")
+
+              # c_feature = i['feature'].replace("urn:p-lod:id:","")
+              # c_r = plodlib.PLODResource(c_feature)
+              
+              # if len(json.loads(c_r.spatially_within)) > 0:
+              #   span("Within ")
+              #   relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
+              #   a(label,href=relative_url)
+              #   span(".")
+              #   br()
+              #   span(f"Feature depicts: ")
+              #   palp_depicts_concepts(c_r)
+              # else:
+              #   print(f'Image gallery no spatially within: {c_feature}')
+            
+          div(i['l_description'])
+          with div():
+            span('[')
+            a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
+            span('] ')
+
+        data.append({'image': i['l_img_url'], 'description': desc_div.render()}) # /static/images/under-construction.png (for testing)
+        script(raw(f'var data = {json.dumps(data)}'))
+
 
 
 def palp_geojson(r):
@@ -660,7 +732,7 @@ def property_render(r,html_dom):
         palp_depicts_concepts(r)
 
       with div(id="images"):
-        palp_image_gallery(r)
+        palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
 
       with div(id="spatial_children", style="width:80%"):
@@ -668,7 +740,7 @@ def property_render(r,html_dom):
         palp_spatial_children(r, images = False)
 
 
-    galleria_inline_script()
+    galleria_inline_script_json()
 
 def house_render(r,html_dom):
   property_render(r,html_dom)
@@ -755,7 +827,7 @@ def concept_render(r,html_dom):
       with div(id="images", style="margin-top:8px"):
         with div(style="width:80%"):
           i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more precise and relevant as development and data-entry continue.", style="width:80%")
-        palp_image_gallery(r)
+        palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%; margin-top:2px")
         hr()
 
@@ -770,7 +842,7 @@ def concept_render(r,html_dom):
         a(r.identifier, href=f"/full-text-search?q={r.identifier}")
         span("”.")
 
-    galleria_inline_script()
+    galleria_inline_script_json()
           
 
 
