@@ -988,7 +988,7 @@ def palp_start():
 
             # count
             l = 8
-            u = 20
+            u = 32
             span(f", or in this list of concepts appearing between {l} and {u} times: ")
             raw(palp_count_concepts_between(l,u))
             span(". The contents of this list will change as data entry continues.")
