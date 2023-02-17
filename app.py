@@ -696,16 +696,9 @@ def insula_render(r,html_dom):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r)
 
-      # with div(id="images"):
-      #   palp_image_gallery(r)
-      #   div(id = 'galleria-display', style="width:80%")
-
       with div(id="spatial_children", style="width:80%"):
         span("Properties Within: ")
         palp_spatial_children(r)
-
-      
-    # galleria_inline_script()
 
 def property_render(r,html_dom):
 
@@ -765,14 +758,14 @@ def space_render(r,html_dom):
         palp_depicts_concepts(r)
 
       with div(id="images", style="margin-top:6px"):
-        palp_image_gallery(r)
+        palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
 
       with div(id="spatial_children", style="margin-top:6px, width:80%"):
         span("It contains features: ")
         palp_spatial_children(r, images = False)
 
-    galleria_inline_script()
+    galleria_inline_script_json()
 
 def feature_render(r,html_dom):
   
@@ -791,10 +784,10 @@ def feature_render(r,html_dom):
         palp_depicts_concepts(r)
 
       with div(id="images", style="margin-top:10px"):
-        palp_image_gallery(r)
+        palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
       
-    galleria_inline_script()
+    galleria_inline_script_json()
     
 
 def artwork_render(r,html_dom):
@@ -983,7 +976,7 @@ def palp_start():
           with p():
             span("Start browsing by clicking on ")
             a(raw("<b>Pompeii</b>"),href="/browse/pompeii")
-            span(",  ")
+            span(" to see a list of all ,  ")
             a(raw("<b>sphinx</b>"),href="/browse/sphinx")
 
             # count
