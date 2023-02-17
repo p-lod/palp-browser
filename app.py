@@ -219,7 +219,7 @@ def galleria_inline_script():
                                     lightbox: false,
                                     imageCrop: false , 
                                     carousel: false,
-                                    thumbnails: false,
+                                    thumbnails: true,
                                     dataConfig: function(img) {
         return {
             title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
@@ -244,7 +244,7 @@ def galleria_inline_script_json():
                                     lightbox: false,
                                     imageCrop: false , 
                                     carousel: false,
-                                    thumbnails: false,
+                                    thumbnails: true,
                                     })
                 Galleria.on('image', function(e) {
                   $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
@@ -597,8 +597,6 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
       relative_url, label = urn_to_anchor(c['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
-
-
 
 
     # for i,row in pd.DataFrame(data = json.loads(r.depicted_where(level_of_detail=level_of_detail))).iterrows():
