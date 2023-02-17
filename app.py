@@ -587,7 +587,7 @@ def palp_depicts_concepts(r):
     for i in json.loads(r.depicts_concepts()):
       relative_url, label = urn_to_anchor(i['urn'])
       a(label, href=relative_url)
-      span(" /", style="color: LightGray")
+      span(f" ({i['count']}) /", style="color: LightGray")
   return element
 
 def palp_depicted_where(r, level_of_detail = 'feature'):
