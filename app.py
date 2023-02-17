@@ -972,19 +972,19 @@ def palp_start():
             b("Please note that this website, its data, and interface are all under construction.")
           p(raw("""The <b>Pompeii Artistic Landscape Project</b> (PALP) is an online resource that supports site-wide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii."""), style="margin-top:1em")
           with p():
-            span("Start browsing by clicking on ")
+            span(raw("Start <b>browsing</b> by clicking on "))
             a(raw("<b>Pompeii</b>"),href="/browse/pompeii")
-            span(" to see a list of all ,  ")
+            span(" to see a list of all ‘concepts’ recorded to date, on  ")
             a(raw("<b>sphinx</b>"),href="/browse/sphinx")
 
             # count
             l = 8
             u = 32
-            span(f", or in this list of concepts appearing between {l} and {u} times: ")
+            span(f" as an example, or on any item in this list of ‘concepts’ appearing between {l} and {u} times: ")
             raw(palp_count_concepts_between(l,u))
             span(". The contents of this list will change as data entry continues.")
 
-          p(raw("""<b>Browsing</b> within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
+          p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
           
           p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’. Combining more than two terms also works: ‘<a href="/full-text-search?q=horse+and+cassandra+and+laocoon">horse and cassandra and laocoon</a>’."""))
           
