@@ -580,14 +580,19 @@ def palp_depicted_by_images(r, first_only = False):
 
   return element
 
-def palp_depicts_concepts(r):
+def palp_depicts_concepts(r, show_counts = False):
 
   element = span()
   with element:
     for i in json.loads(r.depicts_concepts()):
       relative_url, label = urn_to_anchor(i['urn'])
       a(label, href=relative_url)
-      span(f" ({i['count']}) /", style="color: LightGray")
+      
+      count_str = ""
+      if show_counts:
+        count_str = f"({i['count']})"
+
+      span(f" {count_str} /", style="color: LightGray")
   return element
 
 def palp_depicted_where(r, level_of_detail = 'feature'):
@@ -649,7 +654,7 @@ def city_as_physical_entity_render(r,html_dom):
 
       with div(id="depicts_concepts",style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r)
+        palp_depicts_concepts(r, show_counts= True)
       
       with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
