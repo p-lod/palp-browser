@@ -762,18 +762,22 @@ def space_render(r,html_dom):
 
       with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
+        hr()
 
       if r.geojson:
         with div(id="geojson", style="width:80%"):
           palp_geojson(r)
+        hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+        hr()
 
       with div(id="images", style="margin-top:6px;width:80%"):
         palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
+        hr()
 
       with div(id="spatial_children", style="margin-top:6px; width:80%"):
         span("It contains features: ")
