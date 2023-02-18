@@ -691,7 +691,7 @@ def insula_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
         hr()
 
@@ -713,7 +713,7 @@ def property_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
         hr()
 
@@ -723,7 +723,7 @@ def property_render(r,html_dom):
       known_as = " / ".join(json.loads(eng_titles) + json.loads(it_titles))
 
       if known_as:
-        with div("Other name(s): ", style="margin-bottom:1em, width:80%"):
+        with div("Other name(s): ", style="margin-bottom:1em; width:80%"):
           span(known_as)
           hr()
 
@@ -760,7 +760,7 @@ def space_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
 
       if r.geojson:
@@ -795,7 +795,7 @@ def feature_render(r,html_dom):
             palp_geojson(r)
             hr()
       
-      with div(id="depicts_concepts", style="margin-top:6px, width:80%"):
+      with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
         hr()
