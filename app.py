@@ -728,7 +728,7 @@ def property_render(r,html_dom):
           hr()
 
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson", style="width:80%"):
           palp_geojson(r)
           hr()
 
@@ -737,9 +737,9 @@ def property_render(r,html_dom):
         palp_depicts_concepts(r)
         hr()
 
-      with div(id="images"):
+      with div(id="images", style="width:80%"):
         palp_image_gallery_json(r)
-        div(id = 'galleria-display', style="width:80%")
+        div(id = 'galleria-display')
         hr()
 
       with div(id="spatial_children", style="width:80%"):
