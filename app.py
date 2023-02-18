@@ -348,7 +348,7 @@ def palp_image_gallery_json(r):
   except:
     return
   
-  with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
+  with div( _class="galleria", style="height:400px; background: #000"):
     
     data = []
 
@@ -417,7 +417,7 @@ def palp_geojson(r):
                                    rdf_type = within_rdf_type)
 
 
-      div(id="minimapid", style=" width: 80%; height: 400px;display:none")
+      div(id="minimapid", style="height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
 if ($('#minimap-geojson').html().trim()) {
@@ -649,7 +649,7 @@ def city_as_physical_entity_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson",style="width:80%"):
           palp_geojson(r)
 
       with div(id="depicts_concepts",style="width:80%"):
@@ -667,16 +667,19 @@ def region_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
 
-      with div(id="spatial_hierarchy", style="margin-bottom:.5em, width:80%"):
+      with div(id="spatial_hierarchy", style="margin-bottom:.5em; width:80%"):
         palp_spatial_hierarchy(r)
+        hr()
 
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson", style="width:80%"):
           palp_geojson(r)
+          hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r)
+        hr()
 
       with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
@@ -690,14 +693,17 @@ def insula_render(r,html_dom):
 
       with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
         palp_spatial_hierarchy(r)
+        hr()
 
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson",style="width:80%"):
           palp_geojson(r)
+          hr()
         
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r)
+        hr()
 
       with div(id="spatial_children", style="width:80%"):
         span("Properties Within: ")
@@ -709,6 +715,7 @@ def property_render(r,html_dom):
     with main(cls="container", role="main"):
       with div(id="spatial_hierarchy", style="margin-bottom:1em, width:80%"):
         palp_spatial_hierarchy(r)
+        hr()
 
       eng_titles =  r.get_predicate_values('urn:p-lod:id:plod-english-title')
       it_titles  =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
@@ -718,18 +725,22 @@ def property_render(r,html_dom):
       if known_as:
         with div("Other name(s): ", style="margin-bottom:1em, width:80%"):
           span(known_as)
+          hr()
 
       if r.geojson:
         with div(id="geojson"):
           palp_geojson(r)
+          hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r)
+        hr()
 
       with div(id="images"):
         palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
+        hr()
 
       with div(id="spatial_children", style="width:80%"):
         span("Spaces (aka 'Rooms') Within: ")
@@ -753,18 +764,18 @@ def space_render(r,html_dom):
         palp_spatial_hierarchy(r)
 
       if r.geojson:
-        with div(id="geojson"):
+        with div(id="geojson", style="width:80%"):
           palp_geojson(r)
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
 
-      with div(id="images", style="margin-top:6px"):
+      with div(id="images", style="margin-top:6px;width:80%"):
         palp_image_gallery_json(r)
         div(id = 'galleria-display', style="width:80%")
 
-      with div(id="spatial_children", style="margin-top:6px, width:80%"):
+      with div(id="spatial_children", style="margin-top:6px; width:80%"):
         span("It contains features: ")
         palp_spatial_children(r, images = False)
 
@@ -775,20 +786,23 @@ def feature_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       
-      with div(id="spatial_hierarchy", style="margin-bottom:1em"):
+      with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
+        hr()
 
       if r.geojson or json.loads(r.spatially_within):
-          with div(id="geojson", style="margin-top:6px"):
+          with div(id="geojson", style="margin-top:6px; width:80%"):
             palp_geojson(r)
+            hr()
       
       with div(id="depicts_concepts", style="margin-top:6px, width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
+        hr()
 
-      with div(id="images", style="margin-top:10px"):
+      with div(id="images", style="margin-top:10px;width:80%"):
         palp_image_gallery_json(r)
-        div(id = 'galleria-display', style="width:80%")
+        div(id = 'galleria-display')
       
     galleria_inline_script_json()
     
@@ -814,26 +828,24 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       if r.geojson:
-        with div(id="geojson", style="margin-top:12px"):
+        with div(id="geojson", style="margin-top:12px;width:80%"):
           palp_geojson(r)
-        hr()
-
-
+          hr()
       
-      with div(id="images", style="margin-top:8px"):
-        with div(style="width:80%"):
+      with div(id="images", style="margin-top:8px;width:80%"):
+        with div():
           i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more precise and relevant as development and data-entry continue.", style="width:80%")
         palp_image_gallery_json(r)
-        div(id = 'galleria-display', style="width:80%; margin-top:2px")
+        div(id = 'galleria-display', style="margin-top:2px")
         hr()
 
-      with div(id="depicted-where", style="margin-top:3px; width:80%"):
+      with div(id="depicted-where", style="margin-top:3px;width:80%"):
         b(r.identifier)
         span(" is depicted in the following rooms or spaces: ")
         palp_depicted_where(r, level_of_detail='space')
         hr()
 
-      with div(id="full-text-search", style="margin-top:3px; width:80%"):
+      with div(id="full-text-search", style="margin-top:3px;width:80%"):
         span("Keyword search for “")
         a(r.identifier, href=f"/full-text-search?q={r.identifier}")
         span("”.")
@@ -876,7 +888,7 @@ def luna_image_render(r,html_dom):
         
           html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a> (slow to load for now).'
         except:
-          print("Formating links ERROR.")
+          print("Formatting links ERROR.")
 
 
       raw(html_df.to_html(escape = False, header = False))
