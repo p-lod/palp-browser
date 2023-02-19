@@ -211,30 +211,7 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
 
   return img_src, img_description
 
-def galleria_inline_script():
-  s = script(type="text/javascript")
-  s += raw("""(function() {
-                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
-                Galleria.configure({debug: false,
-                                    lightbox: false,
-                                    imageCrop: false , 
-                                    carousel: false,
-                                    thumbnails: true,
-                                    dataConfig: function(img) {
-        return {
-            title: $(img).next('h2').html(), // tell Galleria to use the h2 as title
-            description: $(img).siblings('.desc').html() // tell Galleria to grab the content from the .desc div as caption
-        };
-    }})
-                Galleria.on('image', function(e) {
-                  $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
-                  // Galleria.log($(e.currentTarget).find('.galleria-info-description').html())
-                  });
 
-                Galleria.run('.galleria');
-            }());
-""")
-  return s
 
 def galleria_inline_script_json():
   s = script(type="text/javascript")
@@ -248,7 +225,7 @@ def galleria_inline_script_json():
                                     })
                 Galleria.on('image', function(e) {
                   $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
-                  console.log(e);
+                  $(e.currentTarget).find('.galleria_on_show').html("HELLO")
                   
                   });
 
@@ -365,6 +342,8 @@ def palp_image_gallery_json(r):
               a(label,href=relative_url)
               span(". ")
 
+              div(_class = "galleria_on_show")
+
               # c_feature = i['feature'].replace("urn:p-lod:id:","")
               # c_r = plodlib.PLODResource(c_feature)
               
@@ -379,6 +358,7 @@ def palp_image_gallery_json(r):
               # else:
               #   print(f'Image gallery no spatially within: {c_feature}')
             
+          
           div(i['l_description'])
           with div():
             span('[')
@@ -386,7 +366,7 @@ def palp_image_gallery_json(r):
             span('] ')
 
         data.append({'image': i['l_img_url'], 'description': desc_div.render()}) # /static/images/under-construction.png (for testing)
-        script(raw(f'var data = {json.dumps(data)}'))
+    script(raw(f'var data = {json.dumps(data)}'))
 
 
 
@@ -524,18 +504,6 @@ def palp_spatial_children(r, images = False):
       relative_url, label = urn_to_anchor(c['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
-
-      # with table(style="border: 1px solid black;margin-top:5px"):
-      #   with tr():
-      #     with td(style="padding-top:5px"):
-      #       relative_url, label = urn_to_anchor(c['urn'])
-      #       a(label, href=relative_url)
-        
-      # if (images and (i < 10)):
-      #   with tr():
-      #     with td(colspan=3):
-      #       get_first_image_of = c['urn'].replace("urn:p-lod:id:","")
-      #       palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
   
   return element
 
