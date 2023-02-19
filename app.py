@@ -212,29 +212,6 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
   return img_src, img_description
 
 
-
-def galleria_inline_script_json():
-  s = script(type="text/javascript")
-  s += raw("""(function() {
-                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
-                Galleria.configure({debug: false,
-                                    lightbox: false,
-                                    imageCrop: false , 
-                                    carousel: false,
-                                    thumbnails: true,
-                                    })
-                Galleria.on('image', function(e) {
-                  $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
-                  $(e.currentTarget).find('.galleria_on_show').html("HELLO")
-                  
-                  });
-
-                Galleria.run('.galleria', {
-    dataSource: data
-});
-            }());
-""")
-  return s
  
 
 def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson .00003 to the N  
@@ -270,53 +247,29 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
 
 # palp page part renderers
 
-def palp_image_gallery(r):
-  # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
-  try:
-    r_images = json.loads(r.gather_images())
-  except:
-    return
-  
-  with div( _class="galleria", style="width: 80%; height:400px; background: #000"):
-    
-    for i in r_images:
-      if 'http' in i['l_img_url']:
-        # tilde_val = luna_tilde_val(i['urn'])
-        with div(_class="image"):
-          img(src = i['l_img_url'], loading="lazy") # /static/images/under-construction.png (for testing)
-          
-          h2("", style="color:white")
-          with div(_class = "desc"):
-            with div():
-              if ('feature' in i) and (r.rdf_type == 'concept'):
-                b(r.identifier)
-                span(" appears on feature: ")
-                relative_url, label = urn_to_anchor(i['feature'])
-                a(label,href=relative_url)
-                span(". ")
+def galleria_inline_script_json():
+  s = script(type="text/javascript")
+  s += raw("""(function() {
+                Galleria.loadTheme('https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/twelve/galleria.twelve.min.js');
+                Galleria.configure({debug: false,
+                                    lightbox: false,
+                                    imageCrop: false , 
+                                    carousel: false,
+                                    thumbnails: true,
+                                    })
+                Galleria.on('image', function(e) {
+                  $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
+                  $('#galleria-display').find('.feature_also_depicts').load('/snippets/palp_depicts_concepts/' + $('#galleria-display').find('.appears_on').html() );
+                  $('#galleria-display').find('.feature_spatial_hierarchy').load('/snippets/palp_spatial_hierarchy/' + $('#galleria-display').find('.appears_on').html() );
+                  
+                  });
 
-                c_feature = i['feature'].replace("urn:p-lod:id:","")
-                c_r = plodlib.PLODResource(c_feature)
-                
-                if len(json.loads(c_r.spatially_within)) > 0:
-                  span("Within ")
-                  relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
-                  a(label,href=relative_url)
-                  span(".")
-                  br()
-                  span(f"Feature depicts: ")
-                  palp_depicts_concepts(c_r)
-                else:
-                  print(f'Image gallery no spatially within: {c_feature}')
-              
-            div(i['l_description'])
-            with div():
-              span('[')
-              a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
-              span('] ')
-  
-  # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
-
+                Galleria.run('.galleria', {
+    dataSource: data
+});
+            }());
+""")
+  return s
 
 def palp_image_gallery_json(r):
   # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
@@ -335,14 +288,24 @@ def palp_image_gallery_json(r):
         desc_div = div(_class = "desc")
         with desc_div:
           with div():
-            if ('feature' in i) and (r.rdf_type == 'concept'):
-              b(r.identifier)
-              span(" appears on feature: ")
-              relative_url, label = urn_to_anchor(i['feature'])
-              a(label,href=relative_url)
-              span(". ")
+            with div():
+              span(i['l_description'])
+              span(' [')
+              a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
+              span('] ')
 
-              div(_class = "galleria_on_show")
+            if ('feature' in i) and (r.rdf_type != 'feature'):
+              with div():
+                span("This image shows all or part of feature ")
+                relative_url, label = urn_to_anchor(i['feature'])
+                a(label,href=relative_url, _class="appears_on")
+                span(", which depicts ")
+                span(_class = 'feature_also_depicts')
+                span(".")
+              if (r.rdf_type == 'concept'):
+                div(_class = 'feature_spatial_hierarchy')
+              
+              
 
               # c_feature = i['feature'].replace("urn:p-lod:id:","")
               # c_r = plodlib.PLODResource(c_feature)
@@ -357,15 +320,12 @@ def palp_image_gallery_json(r):
               #   palp_depicts_concepts(c_r)
               # else:
               #   print(f'Image gallery no spatially within: {c_feature}')
-            
           
-          div(i['l_description'])
-          with div():
-            span('[')
-            a("Image credits and additional info...",href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}")
-            span('] ')
+          
+          
 
         data.append({'image': i['l_img_url'], 'description': desc_div.render()}) # /static/images/under-construction.png (for testing)
+
     script(raw(f'var data = {json.dumps(data)}'))
 
 
@@ -462,38 +422,41 @@ if ($('#minimap-geojson').html().trim()) {
 })
        features.addTo(mymap);
        if (fit_to_resource) { mymap.fitBounds(features.getBounds()); }
-
-       
-
-       
-       
 }""")
 
   return mapdiv
 
 def palp_spatial_hierarchy(r):
 
-  # element = div()
+  element = div()
 
   hier_up = json.loads(r.spatial_hierarchy_up())
 
-  for i,h in enumerate(hier_up):
-    relative_url, label = urn_to_anchor(h['urn'])
+  with element:
+    for i,h in enumerate(hier_up):
+      relative_url, label = urn_to_anchor(h['urn'])
 
-    if i == 0:
-      span(label)
-    elif i < (len(hier_up)-1):
-      a(label, href=relative_url)
-    else:
-      a(f"{label}.", href=relative_url)
-
-    if i < (len(hier_up)-1):
       if i == 0:
-        span(" is within ")
+        span(label)
+      elif i < (len(hier_up)-1):
+        a(label, href=relative_url)
       else:
-        span(" → ")
+        a(f"{label}.", href=relative_url)
 
-  # return element
+      if i < (len(hier_up)-1):
+        if i == 0:
+          span(" is within ")
+        else:
+          span(" → ")
+
+  return element
+
+@app.route('/snippets/palp_spatial_hierarchy/<path:identifier>')
+def snippet_palp_spatial_hierarchy(identifier):
+  r = plodlib.PLODResource(identifier)
+  return palp_spatial_hierarchy(r).render()
+
+
 
 
 def palp_spatial_children(r, images = False):
@@ -548,6 +511,7 @@ def palp_depicted_by_images(r, first_only = False):
 
   return element
 
+
 def palp_depicts_concepts(r, show_counts = False):
 
   element = span()
@@ -562,6 +526,12 @@ def palp_depicts_concepts(r, show_counts = False):
 
       span(f" {count_str} /", style="color: LightGray")
   return element
+
+@app.route('/snippets/palp_depicts_concepts/<path:identifier>')
+def snippet_palp_depicts_concepts(identifier):
+  r = plodlib.PLODResource(identifier)
+  return palp_depicts_concepts(r).render()
+
 
 def palp_depicted_where(r, level_of_detail = 'feature'):
   element = span()
@@ -735,7 +705,7 @@ def space_render(r,html_dom):
       if r.geojson:
         with div(id="geojson", style="width:80%"):
           palp_geojson(r)
-        hr()
+          hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
@@ -811,11 +781,11 @@ def concept_render(r,html_dom):
         div(id = 'galleria-display', style="margin-top:2px")
         hr()
 
-      with div(id="depicted-where", style="margin-top:3px;width:80%"):
-        b(r.identifier)
-        span(" is depicted in the following rooms or spaces: ")
-        palp_depicted_where(r, level_of_detail='space')
-        hr()
+      # with div(id="depicted-where", style="margin-top:3px;width:80%"):
+      #   b(r.identifier)
+      #   span(" is depicted in the following rooms or spaces: ")
+      #   palp_depicted_where(r, level_of_detail='space')
+      #   hr()
 
       with div(id="full-text-search", style="margin-top:3px;width:80%"):
         span("Keyword search for “")
