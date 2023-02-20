@@ -21,7 +21,8 @@ from dominate.util import raw
 
 from bs4 import BeautifulSoup
 
-from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request
+from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request, Response
+Response
 
 import rdflib as rdf
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
@@ -906,11 +907,13 @@ def palp_compare():
 def index():
     return redirect("/start", code=302)
 
-@app.route('/geojson/<path:identifier>')
-def web_api_geojson(identifier):
-  return plodlib.PLODResource(identifier).geojson
+# API handlers
 
-@app.route('/images/<path:identifier>')
+@app.route('/api/geojson/<path:identifier>')
+def web_api_geojson(identifier):
+  return Response(plodlib.PLODResource(identifier).geojson, mimetype='application/json')
+
+@app.route('/api/images/<path:identifier>')
 def web_api_images(identifier):
   return plodlib.PLODResource(identifier).gather_images()
 
