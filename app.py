@@ -775,18 +775,18 @@ def concept_render(r,html_dom):
           palp_geojson(r)
           hr()
       
-      with div(id="images", style="margin-top:8px;width:80%"):
+      with div(id="images", style="margin-top:12px;width:80%"):
         with div():
           i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more precise and relevant as development and data-entry continue.", style="width:80%")
         palp_image_gallery_json(r)
         div(id = 'galleria-display', style="margin-top:2px")
         hr()
 
-      # with div(id="depicted-where", style="margin-top:3px;width:80%"):
-      #   b(r.identifier)
-      #   span(" is depicted in the following rooms or spaces: ")
-      #   palp_depicted_where(r, level_of_detail='space')
-      #   hr()
+      with div(id="depicted-where", style="margin-top:3px;width:80%"):
+        b(r.identifier)
+        span(" is depicted in the following rooms or spaces: ")
+        palp_depicted_where(r, level_of_detail='space')
+        hr()
 
       with div(id="full-text-search", style="margin-top:3px;width:80%"):
         span("Keyword search for “")
