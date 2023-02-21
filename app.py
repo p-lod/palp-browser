@@ -899,9 +899,9 @@ def web_api_compare(left,right):
 
 
   if (left_r.rdf_type in spatial_types) & (right_r.rdf_type in spatial_types):
-    return left_r.compare_depicts(right)
+    return Response(left_r.compare_depicts(right), mimetype='application/json')
   elif (left_r.rdf_type == 'concept') & (right_r.rdf_type == 'concept'):
-    return left_r.compare_depicted(right, level_of_detail=level_of_detail)
+    return Response(left_r.compare_depicted(right, level_of_detail=level_of_detail), mimetype='application/json')
   else:
     return "'Comparison not supported.'"
   
