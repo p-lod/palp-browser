@@ -884,8 +884,8 @@ def web_api_images(identifier):
 @app.route('/api/compare/<path:left>/<path:right>')
 def web_api_compare(left,right):
   
-  # spatial types
-  spatial_types = ['city','region', 'insula', 'property', 'space', 'feature']
+  # spatial types. Really should get these from triplestore
+  spatial_types = ['city_as_physical_entity','region', 'insula', 'property', 'space', 'feature']
   
   level_of_detail = 'space'
   if 'level_of_detail' in request.args:
