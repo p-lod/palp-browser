@@ -542,42 +542,6 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
 
-
-    # for i,row in pd.DataFrame(data = json.loads(r.depicted_where(level_of_detail=level_of_detail))).iterrows():
-    #   with table(style="border: 1px solid black;margin-top:5px"):
-    #     with tr():
-    #       with td(style="padding-top:5px"):
-    #         relative_url, label = urn_to_anchor(row['within'])
-    #         span("Within ")
-    #         a(label, href=relative_url)
-    #         span(" on wall or feature:")
-    #       with td(style="padding-top:5px"):
-    #         relative_url, label = urn_to_anchor(row['urn'])
-    #         a(label, href=relative_url)
-
-    #     with tr():
-    #       if row['best_image'] != 'None': # Has a best image
-    #         tilde_val = luna_tilde_val(row['best_image'])
-      
-    #         with td(colspan=2):
-              
-    #           img_src,img_description = img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
-    #                                              l_record = row['l_record'],
-    #                                              l_media  = row['l_media'])
-    #           img(src=img_src)
-
-    #           with div(style="width:500px"):
-    #             span(str(img_description))
-    #             span(' [')
-    #             a(f"about image {row['best_image']}...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{row['l_record']}~{row['l_media']}")
-    #             span("]")
-           
-    #       else: # No best image
-    #         with td(colspan=2):
-    #           get_first_image_of = row['urn'].replace("urn:p-lod:id:","")
-    #           palp_depicted_by_images(plodlib.PLODResource(get_first_image_of), first_only = True)
-
-
   return element
 
 
@@ -916,6 +880,23 @@ def web_api_geojson(identifier):
 @app.route('/api/images/<path:identifier>')
 def web_api_images(identifier):
   return plodlib.PLODResource(identifier).gather_images()
+
+@app.route('/api/compare/<path:left>/<path:right>')
+def web_api_compare(left,right):
+
+  left_r = plodlib.PLODResource(left)
+  right_r = plodlib.PLODResource(right)
+
+  # spatial types
+  spatial_types = ['city','region', 'insula', 'property', 'space', 'feature']
+
+  if (left_r.rdf_type in spatial_types) & (right_r.rdf_type in spatial_types):
+    return left_r.compare_depicts(right)
+  elif (left_r.rdf_type == 'concept') & (right_r.rdf_type == 'concept'):
+    return left_r.compare_depicted(right)
+  else:
+    return "'Comparison not supported.'"
+  
 
 @app.route('/start')
 def palp_start():
