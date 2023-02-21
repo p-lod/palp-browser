@@ -883,17 +883,25 @@ def web_api_images(identifier):
 
 @app.route('/api/compare/<path:left>/<path:right>')
 def web_api_compare(left,right):
+  
+  # spatial types
+  spatial_types = ['city','region', 'insula', 'property', 'space', 'feature']
+  
+  level_of_detail = 'space'
+  if 'level_of_detail' in request.args:
+   level_of_detail = request.args.get('level_of_detail')
+  
+  if level_of_detail not in spatial_types:
+    return 'Unknown level_of_detail'
 
   left_r = plodlib.PLODResource(left)
   right_r = plodlib.PLODResource(right)
 
-  # spatial types
-  spatial_types = ['city','region', 'insula', 'property', 'space', 'feature']
 
   if (left_r.rdf_type in spatial_types) & (right_r.rdf_type in spatial_types):
     return left_r.compare_depicts(right)
   elif (left_r.rdf_type == 'concept') & (right_r.rdf_type == 'concept'):
-    return left_r.compare_depicted(right)
+    return left_r.compare_depicted(right, level_of_detail=level_of_detail)
   else:
     return "'Comparison not supported.'"
   
