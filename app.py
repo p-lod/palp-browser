@@ -813,8 +813,8 @@ function get_compare() {
     $('#intersection_result').html('')
     $('#right_result').html('')
 
-  l = $('#left').val();
-  r = $('#right').val();
+  l = $('#left').val().toLowerCase();
+  r = $('#right').val().toLowerCase();
   lod = $('#level_of_detail').val();
 
   $.getJSON('/api/compare/'+l+'/'+r+'?level_of_detail='+lod, function(data) {
