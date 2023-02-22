@@ -807,38 +807,73 @@ def palp_compare():
     s += raw("""
 function get_compare() {
 
+    $('#left_header').html('left')
+    $('#right_header').html('right')
+    $('#left_result').html('')
+    $('#intersection_result').html('')
+    $('#right_result').html('')
+
   l = $('#left').val();
   r = $('#right').val();
   lod = $('#level_of_detail').val();
 
   $.getJSON('/api/compare/'+l+'/'+r+'?level_of_detail='+lod, function(data) {
+    
     $('#left_header').html(l)
     $('#right_header').html(r)
-    $('#left_result').html(data.difference_left)
-    $('#intersection_result').html(data.intersection)
-    $('#right_result').html(data.difference_right)
+
+    let left_result = data.difference_left
+    for (let urn of left_result) {
+      identifier = urn.replace('urn:p-lod:id:','')
+      $('#left_result').append('<a href="/browse/'+identifier+'">'+identifier+'</a><br>')
+    }
+
+    let intersection_result = data.intersection
+    for (let urn of intersection_result) {
+      identifier = urn.replace('urn:p-lod:id:','')
+      $('#intersection_result').append('<a href="/browse/'+identifier+'">'+identifier+'</a><br>')
+    }
+
+    let right_result = data.difference_right
+    for (let urn of right_result) {
+      identifier = urn.replace('urn:p-lod:id:','')
+      $('#right_result').append('<a href="/browse/'+identifier+'">'+identifier+'</a><br>')
+    }
 });
 
   return false
+
 }
 """)
     with main(cls="container", role="main"):
       with form():
+        span("Compare: ")
         input_("left", id="left")
+        span(" to: ")
         input_("right", id="right")
-        input_(id="level_of_detail")
+        span(" (Optional 'level of detail')")
+        with select(name="level_of_detail", id="level_of_detail"):
+          option("Any", value="")
+          option("Region", value="region")
+          option("Insula", value="insula")
+          option("Property (e.g. A Pompeian House)", value="property")
+          option("Feature (e.g. A Wall in a Room)", value="feature")
 
         button("Compare", onclick = "get_compare();return false")
 
-    with table():
-      with tr():
-        th('left', id="left_header")
-        th('both')
-        th('right', id="right_header")
-      with tr():
-        td(id="left_result")
-        td(id="intersection_result")
-        td(id="right_result")
+      with table(style="width:80%; margin-top:3em"):
+        with colgroup():
+          col(style="width:30%")
+          col(style="width:30%")
+          col(style="width:30%")
+        with tr():
+          th('left', id="left_header")
+          th('both')
+          th('right', id="right_header")
+        with tr():
+          td(id="left_result", style="vertical-align:top")
+          td(id="intersection_result", style="vertical-align:top")
+          td(id="right_result", style="vertical-align:top")
 
   palp_page_footer(POMPEII, html_dom)
 
@@ -861,15 +896,8 @@ def web_api_images(identifier):
 @app.route('/api/compare/<path:left>/<path:right>')
 def web_api_compare(left,right):
 
-  # spatial types. Really should get these from triplestore
+  # spatial types. Really should get these live from triplestore
   spatial_types = ['city_as_physical_entity','region', 'insula', 'property', 'space', 'feature']
-
-  level_of_detail = 'space'
-  if 'level_of_detail' in request.args:
-   level_of_detail = request.args.get('level_of_detail')
-
-  if level_of_detail not in spatial_types:
-    return 'Unknown level_of_detail'
 
   left_r = plodlib.PLODResource(left)
   right_r = plodlib.PLODResource(right)
@@ -877,7 +905,16 @@ def web_api_compare(left,right):
   if (left_r.rdf_type in spatial_types) & (right_r.rdf_type in spatial_types):
     return Response(left_r.compare_depicts(right), mimetype='application/json')
   elif (left_r.rdf_type == 'concept') & (right_r.rdf_type == 'concept'):
-    return Response(left_r.compare_depicted(right, level_of_detail=level_of_detail), mimetype='application/json')
+
+   level_of_detail = 'space'
+   if 'level_of_detail' in request.args:
+    level_of_detail = request.args.get('level_of_detail')
+    if level_of_detail == '':
+      level_of_detail = 'space'
+      if level_of_detail not in spatial_types:
+        return "unknown 'level_of_detail'"
+
+   return Response(left_r.compare_depicted(right, level_of_detail=level_of_detail), mimetype='application/json')
   else:
     return "'Comparison not supported.'"
 
