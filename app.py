@@ -42,7 +42,6 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
 
 app = Flask(__name__)
 
-
 # Connect to the remote triplestore with read-only connection
 store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
                                                        context_aware = False,
@@ -66,12 +65,11 @@ def palp_html_head(r, html_dom):
     html_dom.head += meta(name="DC.title",lang="en",content=r.identifier )
     html_dom.head += meta(name="DC.identifier", content=f"urn:p-lod:id:{r.identifier}" )
 
-
 def palp_count_concepts_between(lower = 10, upper = 50):
     store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
                                         context_aware = False,
                                         returnFormat = 'json')
-    
+
     g_count = rdf.Graph(store)
 
     qt = Template("""
@@ -82,16 +80,15 @@ GROUP BY ?concept HAVING ((?count <= $upper) && (?count >= $lower ))
 ORDER BY DESC(?count)
 """)  
 
-
     results = g_count.query(qt.substitute(ft_query = q, lower = lower, upper = upper))
     g_count.close()
     del(g_count)
     store.close()
     del(store)
-    
+
     df = pd.DataFrame(results, columns = results.json['head']['vars'])
     df = df.applymap(str)
-    
+
     count_html_raw  = ''
     for i,c in df.iterrows():
       relative_url, label = urn_to_anchor(c['concept'])
@@ -100,7 +97,6 @@ ORDER BY DESC(?count)
         count_html_raw =  count_html_raw + ', '
 
     return count_html_raw
-
 
 def palp_page_navbar(r, html_dom):
     with html_dom:
@@ -118,7 +114,7 @@ def palp_page_navbar(r, html_dom):
            span(r.identifier, cls="navbar-brand")
           else:
            span("", cls="navbar-brand")
-          
+
           p_in_p = json.loads(r.get_predicate_values('urn:p-lod:id:p-in-p-url'))
           if p_in_p:
             with span(cls="navbar-brand"):
@@ -132,32 +128,30 @@ def palp_page_navbar(r, html_dom):
               span(" [")
               a("Wiki (en)", href= wiki_en[0])
               span("]")
-              
+
           wiki_it = json.loads(r.get_predicate_values('urn:p-lod:id:wiki-it-url'))
           if wiki_it:
             with span(cls="navbar-brand"):
               span(" [")
               a("Wiki (it)", href= wiki_it[0])
               span("]")
-          
+
           pleiades = json.loads(r.get_predicate_values('urn:p-lod:id:pleiades-url'))
           if pleiades:
             with span(cls="navbar-brand"):
               span(" [")
               a("Pleiades", href= pleiades[0])
               span("]")
-        
+
           with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
                         with span(cls="form-group"):
                             input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
 
-        
 def palp_page_footer(r, doc):
     with doc:
       with footer(cls="footer"):
         with span():
           small("PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation. The site is very much in development and will change regularly.")
-
 
 # convenience functions
 def urn_to_anchor(urn):
@@ -177,12 +171,12 @@ def luna_tilde_val(luna_urn):
   return tilde_val
 
 def img_src_from_luna_info(l_collection_id, l_record, l_media):
-  
+
   img_src = None #default if no URLs present (probably means LUNA doesn't have image though triplestore thinks it does)
   img_description = None
-  
+
   luna_json = json.loads(urlopen(f'https://umassamherst.lunaimaging.com/luna/servlet/as/fetchMediaSearch?mid={l_collection_id}~{l_record}~{l_media}&fullData=true').read())
-  
+
   if len(luna_json):
 
     img_attributes = json.loads(luna_json[0]['attributes'])
@@ -199,7 +193,6 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
           img_description = f"unrecognized collection {l_collection_id}"
       except:
         img_description = "Trying to get description failed"
-    
 
     if 'urlSize4' in img_attributes.keys(): # use size 4, sure, but only if there's nothing else
       img_src = img_attributes['urlSize4']
@@ -211,9 +204,6 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
       img_src = img_attributes['urlSize1']
 
   return img_src, img_description
-
-
- 
 
 def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson .00003 to the N  
 
@@ -228,9 +218,6 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
   # yoff =  0.000037
   # if rdf_type == "region":
   #   yoff = .00072
-
-
-
 
   g = json.loads(geojson_str)
   if g['type'] == 'FeatureCollection':
@@ -262,7 +249,7 @@ def galleria_inline_script_json():
                   $('#galleria-display').html($(e.currentTarget).find('.galleria-info-description').html());
                   $('#galleria-display').find('.feature_also_depicts').load('/snippets/palp_depicts_concepts/' + $('#galleria-display').find('.appears_on').html() );
                   $('#galleria-display').find('.feature_spatial_hierarchy').load('/snippets/palp_spatial_hierarchy/' + $('#galleria-display').find('.appears_on').html() );
-                  
+
                   });
 
                 Galleria.run('.galleria', {
@@ -278,14 +265,14 @@ def palp_image_gallery_json(r):
     r_images = json.loads(r.gather_images())
   except:
     return
-  
+
   with div( _class="galleria", style="height:400px; background: #000"):
-    
+
     data = []
 
     for i in r_images:
       if 'http' in i['l_img_url']:
-          
+
         desc_div = div(_class = "desc")
         with desc_div:
           with div():
@@ -305,31 +292,10 @@ def palp_image_gallery_json(r):
                 span(".")
               if (r.rdf_type == 'concept'):
                 div(_class = 'feature_spatial_hierarchy')
-              
-              
-
-              # c_feature = i['feature'].replace("urn:p-lod:id:","")
-              # c_r = plodlib.PLODResource(c_feature)
-              
-              # if len(json.loads(c_r.spatially_within)) > 0:
-              #   span("Within ")
-              #   relative_url, label = urn_to_anchor(json.loads(c_r.spatially_within)[0]['urn'])
-              #   a(label,href=relative_url)
-              #   span(".")
-              #   br()
-              #   span(f"Feature depicts: ")
-              #   palp_depicts_concepts(c_r)
-              # else:
-              #   print(f'Image gallery no spatially within: {c_feature}')
-          
-          
-          
 
         data.append({'image': i['l_img_url'], 'description': desc_div.render()}) # /static/images/under-construction.png (for testing)
 
     script(raw(f'var data = {json.dumps(data)}'))
-
-
 
 def palp_geojson(r):
   mapdiv = div(id="minimap")
@@ -357,7 +323,6 @@ def palp_geojson(r):
         withindiv += adjust_geojson(within_json['geojson'],
                                    rdf_type = within_rdf_type)
 
-
       div(id="minimapid", style="height: 400px;display:none")
       s = script(type='text/javascript')
       s += raw("""// check if the item-geojson div has content and make a map if it does. 
@@ -382,7 +347,6 @@ if ($('#minimap-geojson').html().trim()) {
   mymap.fitBounds([[14.478462923715377,40.74778073661396],[14.496141013817796,40.754123872267314]])
   //console.log(pompeii_geojson.getBounds().toBBoxString())
 
-
    if ($('#within-geojson').html().trim()) { 
     var within_geojson = L.geoJSON(JSON.parse($('#within-geojson').html()), {
        style: {"color":"yellow", "opacity": 0, "fillOpacity": .4}})
@@ -391,12 +355,12 @@ if ($('#minimap-geojson').html().trim()) {
     //console.log('/browse/'+id_no_urn);
     //id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
     //layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
-    
+
     //layer.on('click', function (e) {
         //console.log('/browse/'+id_no_urn);
         //window.open('/browse/'+id_no_urn,"_self");
     //});
-    
+
     //layer.bindTooltip(id_no_urn);
   //}
   //     });
@@ -405,19 +369,18 @@ if ($('#minimap-geojson').html().trim()) {
     fit_to_resource = false;
     }
 
-
        features = L.geoJSON(JSON.parse($('#minimap-geojson').html()), {
        style: {"color":"red", "weight": 1, "fillOpacity":.5},
   onEachFeature: function (feature, layer) {
     var id_no_urn = feature.properties.title;
     id_no_urn = id_no_urn.replace("urn:p-lod:id:","");
     layer.bindPopup('<a href="/browse/'+id_no_urn+'">'+id_no_urn+'</a>');
-    
+
     //layer.on('click', function (e) {
         //console.log('/browse/'+id_no_urn);
         //window.open('/browse/'+id_no_urn,"_self");
     //});
-    
+
     //layer.bindTooltip(id_no_urn);
   }
 })
@@ -457,9 +420,6 @@ def snippet_palp_spatial_hierarchy(identifier):
   r = plodlib.PLODResource(identifier)
   return palp_spatial_hierarchy(r).render()
 
-
-
-
 def palp_spatial_children(r, images = False):
 
   element = span()
@@ -468,7 +428,7 @@ def palp_spatial_children(r, images = False):
       relative_url, label = urn_to_anchor(c['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
-  
+
   return element
 
 def palp_depicted_by_images(r, first_only = False):
@@ -491,18 +451,17 @@ def palp_depicted_by_images(r, first_only = False):
           span(' [')
           a("about image...",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{tilde_val}~{tilde_val}~{luna_images_j[0]['l_record']}~{luna_images_j[0]['l_media']}")
           span("]")
-          
-    
+
     else:
       for i in luna_images_j:
         tilde_val = luna_tilde_val(i['urn'])
-        
+
         img_src,img_description = img_src_from_luna_info(l_collection_id = f'umass~{tilde_val}~{tilde_val}',
                                                  l_record = i['l_record'],
                                                  l_media  = i['l_media'])
 
         img(src=img_src)
-        
+
         with div(style="width:500px; margin-bottom:5px"):
           span(str(img_description))
           span(' [')
@@ -512,7 +471,6 @@ def palp_depicted_by_images(r, first_only = False):
 
   return element
 
-
 def palp_depicts_concepts(r, show_counts = False):
 
   element = span()
@@ -520,7 +478,7 @@ def palp_depicts_concepts(r, show_counts = False):
     for i in json.loads(r.depicts_concepts()):
       relative_url, label = urn_to_anchor(i['urn'])
       a(label, href=relative_url)
-      
+
       count_str = ""
       if show_counts:
         count_str = f"({i['count']})"
@@ -533,7 +491,6 @@ def snippet_palp_depicts_concepts(identifier):
   r = plodlib.PLODResource(identifier)
   return palp_depicts_concepts(r).render()
 
-
 def palp_depicted_where(r, level_of_detail = 'feature'):
   element = span()
   with element:
@@ -543,8 +500,6 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
       span(" /", style="color: LightGray")
 
   return element
-
-
 
 # type renderers
 def city_as_physical_entity_render(r,html_dom):
@@ -558,12 +513,10 @@ def city_as_physical_entity_render(r,html_dom):
       with div(id="depicts_concepts",style="width:80%"):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r, show_counts= True)
-      
+
       with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
         palp_spatial_children(r, images = False)
-
-
 
 def region_render(r,html_dom):
 
@@ -588,7 +541,6 @@ def region_render(r,html_dom):
         span("Insula and Streets Within: ")
         palp_spatial_children(r)
 
-
 def insula_render(r,html_dom):
 
   with html_dom:
@@ -602,7 +554,7 @@ def insula_render(r,html_dom):
         with div(id="geojson",style="width:80%"):
           palp_geojson(r)
           hr()
-        
+
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
         palp_depicts_concepts(r)
@@ -649,7 +601,6 @@ def property_render(r,html_dom):
         span("Spaces (aka 'Rooms') Within: ")
         palp_spatial_children(r, images = False)
 
-
     galleria_inline_script_json()
 
 def house_render(r,html_dom):
@@ -689,10 +640,10 @@ def space_render(r,html_dom):
     galleria_inline_script_json()
 
 def feature_render(r,html_dom):
-  
+
   with html_dom:
     with main(cls="container", role="main"):
-      
+
       with div(id="spatial_hierarchy", style="margin-bottom:1em; width:80%"):
         palp_spatial_hierarchy(r)
         hr()
@@ -701,7 +652,7 @@ def feature_render(r,html_dom):
           with div(id="geojson", style="margin-top:6px; width:80%"):
             palp_geojson(r)
             hr()
-      
+
       with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
         span("Depicts Concepts: ")
         palp_depicts_concepts(r)
@@ -710,9 +661,8 @@ def feature_render(r,html_dom):
       with div(id="images", style="margin-top:10px;width:80%"):
         palp_image_gallery_json(r)
         div(id = 'galleria-display')
-      
+
     galleria_inline_script_json()
-    
 
 def artwork_render(r,html_dom):
 
@@ -729,7 +679,6 @@ def artwork_render(r,html_dom):
       span("Depicts Concepts: ")
       palp_depicts_concepts(r)
 
-
 def concept_render(r,html_dom):
 
   with html_dom:
@@ -738,7 +687,7 @@ def concept_render(r,html_dom):
         with div(id="geojson", style="margin-top:12px;width:80%"):
           palp_geojson(r)
           hr()
-      
+
       with div(id="images", style="margin-top:12px;width:80%"):
         with div():
           i(f"Note: For the time being, PALP may include images below that do not directly show '{r.identifier}'. This can be because those images show details or distant overviews of a wall-painting or other artwork that does. The selection of images will become more precise and relevant as development and data-entry continue.", style="width:80%")
@@ -758,8 +707,6 @@ def concept_render(r,html_dom):
         span("”.")
 
     galleria_inline_script_json()
-          
-
 
 def street_render(r,html_dom):
 
@@ -772,19 +719,18 @@ def street_render(r,html_dom):
     with div(id="spatial_hierarchy", style="margin-bottom:1em"):
       palp_spatial_hierarchy(r)
 
-
 def luna_image_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       span(r.identifier)
-    
+
     try:
       t_val = luna_tilde_val(f'urn:p-lod:id:{r.identifier}')
       media_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-media-id'))[0]
       record_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-record-id'))[0]
-      
+
       html_df = r._id_df.copy()
-      
+
       if 'urn:p-lod:id:depicts' in html_df.index:
         # instinct tells me to be super defensive here.
         try:
@@ -792,14 +738,13 @@ def luna_image_render(r,html_dom):
 
           r_depicted = plodlib.PLODResource(depicts_urn.replace('urn:p-lod:id:',''))
           r_depicted_is_within = plodlib.PLODResource(json.loads(r_depicted.spatially_within)[0]['urn'].replace('urn:p-lod:id:',''))
-        
+
           html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a> (slow to load for now).'
         except:
           print("Formatting links ERROR.")
 
-
       raw(html_df.to_html(escape = False, header = False))
-      
+
       raw(f'''
       <iframe allowfullscreen="true" id="widgetPreview" frameBorder="0"  width="100%"  height="350px"  border="0px" style="border:0px solid white"  src="http://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}?widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
       ''')
@@ -807,28 +752,16 @@ def luna_image_render(r,html_dom):
       with div():
         a("View in Luna (from UMass Amherst Library)",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}", target="_new")
 
-    
-
-
     except:
       1
-
-
-    
-
-      
-
 
 def unknown_render(r,html_dom):
 
   with html_dom:
     span(f"{r.identifier} Unknown type.")
 
-
-
 def palp_html_document(r = POMPEII,renderer = None):
 
-  
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project: {r.identifier}" )
 
   palp_html_head(r, html_dom)
@@ -841,7 +774,6 @@ def palp_html_document(r = POMPEII,renderer = None):
   palp_page_footer(r, html_dom)
 
   return html_dom
-
 
 # The PALP Verbs that Enable Navigation
 
@@ -863,9 +795,54 @@ def palp_map():
 def palp_search():
     return """Super cool and useful search page. What should it do? <a href="/start">Start</a>."""
 
-@app.route('/compare/')
+@app.route('/compare')
 def palp_compare():
-    return """Super cool and useful search page. What should it do? <a href="/start">Start</a>. """
+  html_dom = dominate.document(title="Pompeii Artistic Landscape Project: Keyword Search" )
+  palp_html_head(POMPEII, html_dom)
+  html_dom.body
+  palp_page_navbar(POMPEII,html_dom)
+
+  with html_dom:
+    s = script(type='text/javascript')
+    s += raw("""
+function get_compare() {
+
+  l = $('#left').val();
+  r = $('#right').val();
+  lod = $('#level_of_detail').val();
+
+  $.getJSON('/api/compare/'+l+'/'+r+'?level_of_detail='+lod, function(data) {
+    $('#left_header').html(l)
+    $('#right_header').html(r)
+    $('#left_result').html(data.difference_left)
+    $('#intersection_result').html(data.intersection)
+    $('#right_result').html(data.difference_right)
+});
+
+  return false
+}
+""")
+    with main(cls="container", role="main"):
+      with form():
+        input_("left", id="left")
+        input_("right", id="right")
+        input_(id="level_of_detail")
+
+        button("Compare", onclick = "get_compare();return false")
+
+    with table():
+      with tr():
+        th('left', id="left_header")
+        th('both')
+        th('right', id="right_header")
+      with tr():
+        td(id="left_result")
+        td(id="intersection_result")
+        td(id="right_result")
+
+  palp_page_footer(POMPEII, html_dom)
+
+  return html_dom.render()
 
 @app.route('/')
 def index():
@@ -883,20 +860,19 @@ def web_api_images(identifier):
 
 @app.route('/api/compare/<path:left>/<path:right>')
 def web_api_compare(left,right):
-  
+
   # spatial types. Really should get these from triplestore
   spatial_types = ['city_as_physical_entity','region', 'insula', 'property', 'space', 'feature']
-  
+
   level_of_detail = 'space'
   if 'level_of_detail' in request.args:
    level_of_detail = request.args.get('level_of_detail')
-  
+
   if level_of_detail not in spatial_types:
     return 'Unknown level_of_detail'
 
   left_r = plodlib.PLODResource(left)
   right_r = plodlib.PLODResource(right)
-
 
   if (left_r.rdf_type in spatial_types) & (right_r.rdf_type in spatial_types):
     return Response(left_r.compare_depicts(right), mimetype='application/json')
@@ -904,7 +880,6 @@ def web_api_compare(left,right):
     return Response(left_r.compare_depicted(right, level_of_detail=level_of_detail), mimetype='application/json')
   else:
     return "'Comparison not supported.'"
-  
 
 @app.route('/start')
 def palp_start():
@@ -936,9 +911,9 @@ def palp_start():
             span(". The contents of this list will change as data entry continues.")
 
           p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
-          
+
           p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’. Combining more than two terms also works: ‘<a href="/full-text-search?q=horse+and+cassandra+and+laocoon">horse and cassandra and laocoon</a>’."""))
-          
+
           p(raw("""PALP is a collaborative initiative between <a href="https://www.umass.edu/classics/member/eric-poehler">Eric Poehler</a> at the University of Massachusetts Amherst and <a href="https://isaw.nyu.edu/people/faculty/sebastian-heath">Sebastian Heath</a> at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>. The <a href="https://palp.p-lod.umasscreate.net">project blog</a> has more information about PALP's scope and goals."""))
           with div(style="text-align:center"):
             with a(href="/browse/magpie"):
@@ -949,7 +924,6 @@ def palp_start():
               img(src="static/images/getty-logo.jpg", style="max-width:220px")
             with a(href="https://isaw.nyu.edu"):
               img(src="static/images/nyu-logo.png", style="max-width:200px")
-            
 
   palp_page_footer(r, html_dom)
   return html_dom.render()
@@ -971,7 +945,7 @@ def fulltextsearch():
     store = SPARQLStore(query_endpoint = "http://52.170.134.25:3030/plod_endpoint/query",
                                         context_aware = False,
                                         returnFormat = 'json')
-    
+
     g_ft = rdf.Graph(store)
 
     qt = Template("""
@@ -991,13 +965,11 @@ def fulltextsearch():
     }
     """)  
 
-
     ftresults = g_ft.query(qt.substitute(ft_query = q))
     g_ft.close()
     del(g_ft)
     store.close()
     del(store)
-    
 
     df = pd.DataFrame(ftresults, columns = ftresults.json['head']['vars'])
     df = df.applymap(str)
@@ -1010,13 +982,10 @@ def fulltextsearch():
     with html_dom:
       with main(cls="container", role="main"):
         div(f'Searched for: "{py_html.escape(q)}"', style='padding-bottom: .5em')
-        
+
         raw(df.to_html(escape=False, header=False))
 
   palp_page_footer(POMPEII, html_dom)
 
   return html_dom.render()
-      
 
-
- 
