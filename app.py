@@ -797,6 +797,13 @@ def palp_search():
 
 @app.route('/compare')
 def palp_compare():
+
+  args = request.args
+  cgi_left = args.get("left", default="", type=str)
+  cgi_right = args.get("right", default="", type=str)
+  cgi_level_of_detail = args.get("level_of_detail", default="space", type=str)
+
+
   html_dom = dominate.document(title="Pompeii Artistic Landscape Project: Compare" )
   palp_html_head(POMPEII, html_dom)
   html_dom.body
@@ -848,9 +855,9 @@ function get_compare() {
     with main(cls="container", role="main"):
       with form():
         span("Compare: ")
-        input_("left", id="left")
+        input_(value=cgi_left, id="left")
         span(" to: ")
-        input_("right", id="right")
+        input_(value=cgi_right, id="right")
         span(" (Optional 'level of detail')")
         with select(name="level_of_detail", id="level_of_detail"):
           option("Any", value="")
@@ -875,8 +882,13 @@ function get_compare() {
           td(id="left_result", style="vertical-align:top")
           td(id="intersection_result", style="vertical-align:top")
           td(id="right_result", style="vertical-align:top")
+  
+    s_end = script(type='text/javascript')
+    s_end += raw("get_compare()")
 
   palp_page_footer(POMPEII, html_dom)
+
+
 
   return html_dom.render()
 
