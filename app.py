@@ -846,6 +846,8 @@ function get_compare() {
       identifier = urn.replace('urn:p-lod:id:','')
       $('#right_result').append('<a href="/browse/'+identifier+'">'+identifier+'</a><br>')
     }
+
+    $('#link_to_this').html(`Link: <a href="/compare?left=${l}&right=${r}&level_of_detail=${lod}">http://palp.art/compare?left=${l}&right=${r}&level_of_detail=${lod}</a>`)
 });
 
   return false
@@ -885,6 +887,8 @@ function get_compare() {
   
     s_end = script(type='text/javascript')
     s_end += raw(f"$('#level_of_detail').val('{cgi_level_of_detail}');get_compare()")
+
+    div(style="align:center", id="link_to_this")
 
   palp_page_footer(POMPEII, html_dom)
 
