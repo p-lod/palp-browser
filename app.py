@@ -797,7 +797,7 @@ def palp_search():
 
 @app.route('/compare')
 def palp_compare():
-  html_dom = dominate.document(title="Pompeii Artistic Landscape Project: Keyword Search" )
+  html_dom = dominate.document(title="Pompeii Artistic Landscape Project: Compare" )
   palp_html_head(POMPEII, html_dom)
   html_dom.body
   palp_page_navbar(POMPEII,html_dom)
