@@ -884,7 +884,7 @@ function get_compare() {
           td(id="right_result", style="vertical-align:top")
   
     s_end = script(type='text/javascript')
-    s_end += raw("get_compare()")
+    s_end += raw(f"$('#level_of_detail').val('{cgi_level_of_detail}');get_compare()")
 
   palp_page_footer(POMPEII, html_dom)
 
