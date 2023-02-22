@@ -857,6 +857,7 @@ function get_compare() {
           option("Region", value="region")
           option("Insula", value="insula")
           option("Property (e.g. A Pompeian House)", value="property")
+          option("Space (e.g. a Room or Atrium)", value="property")
           option("Feature (e.g. A Wall in a Room)", value="feature")
 
         button("Compare", onclick = "get_compare();return false")
