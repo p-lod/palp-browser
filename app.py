@@ -705,6 +705,21 @@ def concept_render(r,html_dom):
         span("Keyword search for “")
         a(r.identifier, href=f"/full-text-search?q={r.identifier}")
         span("”.")
+        hr()
+
+      with div(id="compare", style="margin-top:3px;width:80%"):
+        with form(action='/compare'):
+          input_(_type="hidden", id=r.identifier, name="left", value=r.identifier)
+          span(f"Compare the distribution of “{r.identifier}” to :")
+          r_concept = plodlib.PLODResource('concept')
+
+          with select(name = 'right'):
+            for c in list(pd.DataFrame(json.loads(r_concept.instances_of()))['urn']):
+              option(c.replace('urn:p-lod:id:',''),value = c.replace('urn:p-lod:id:',''))
+
+          button("Compare")
+        
+
 
     galleria_inline_script_json()
 
