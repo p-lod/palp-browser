@@ -841,8 +841,8 @@ function get_compare() {
 
   $.getJSON('/api/compare/'+l+'/'+r+'?level_of_detail='+lod, function(data) {
     
-    $('#left_header').html(l)
-    $('#right_header').html(r)
+    $('#left_header').html(`<a href="/browse/${l}">${l}</a>`)
+    $('#right_header').html(`<a href="/browse/${r}">${r}</a>`)
 
     let left_result = data.difference_left
     for (let urn of left_result) {
