@@ -716,9 +716,6 @@ def concept_render(r,html_dom):
           instances_of_df = pd.DataFrame(instances_of_json)
           
           with select(name = 'right'):
-            #for c in list(pd.DataFrame(json.loads(r_concept.instances_of()))['urn']):
-            #  option(c.replace('urn:p-lod:id:',''),value = c.replace('urn:p-lod:id:',''))
-
             for idx,c in instances_of_df.iterrows():
               option(f"{c['urn'].replace('urn:p-lod:id:','')} ({c['depiction_count']})",value = c['urn'].replace('urn:p-lod:id:',''))
 
@@ -875,9 +872,15 @@ function get_compare() {
 
 }
 """)
+             
+  # build pop ip
+
+    select_element = select()
+
     with main(cls="container", role="main"):
       with form():
         span("Compare: ")
+        
         input_(value=cgi_left, id="left")
         span(" to: ")
         input_(value=cgi_right, id="right")
@@ -910,6 +913,15 @@ function get_compare() {
     s_end += raw(f"$('#level_of_detail').val('{cgi_level_of_detail}');get_compare()")
 
     div(style="align:center", id="link_to_this")
+
+    hr()
+    with div():
+      h4("Example Comparisons")
+      with ul():
+        li(a("Ariadne to Theseus", href="/compare?left=ariadne&right=theseus"))
+        li(a("Paris to Hercules", href="/compare?left=paris&right=hercules"))
+        li(a("Altar to Snake", href="/compare?left=altar&right=snake"))
+        li(a("Insula I.4 to VI.8", href="/compare?left=r1-i4&right=r6-i8"))
 
   palp_page_footer(POMPEII, html_dom)
 
