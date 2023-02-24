@@ -712,10 +712,16 @@ def concept_render(r,html_dom):
           input_(_type="hidden", id=r.identifier, name="left", value=r.identifier)
           span(f"Compare the distribution of “{r.identifier}” to :")
           r_concept = plodlib.PLODResource('concept')
-
+          instances_of_json = json.loads(r_concept.instances_of())
+          instances_of_df = pd.DataFrame(instances_of_json)
+          
           with select(name = 'right'):
-            for c in list(pd.DataFrame(json.loads(r_concept.instances_of()))['urn']):
-              option(c.replace('urn:p-lod:id:',''),value = c.replace('urn:p-lod:id:',''))
+            #for c in list(pd.DataFrame(json.loads(r_concept.instances_of()))['urn']):
+            #  option(c.replace('urn:p-lod:id:',''),value = c.replace('urn:p-lod:id:',''))
+
+            for idx,c in instances_of_df.iterrows():
+              option(f"{c['urn'].replace('urn:p-lod:id:','')} ({c['depiction_count']})",value = c['urn'].replace('urn:p-lod:id:',''))
+
 
           button("Compare")
         
