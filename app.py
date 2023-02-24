@@ -710,6 +710,7 @@ def concept_render(r,html_dom):
       with div(id="compare", style="margin-top:3px;width:80%"):
         with form(action='/compare'):
           input_(_type="hidden", id=r.identifier, name="left", value=r.identifier)
+          input_(_type="hidden", name="level_of_detail", value="feature")
           span(f"Compare the distribution of “{r.identifier}” to :")
           r_concept = plodlib.PLODResource('concept')
           instances_of_json = json.loads(r_concept.instances_of())
