@@ -1004,10 +1004,10 @@ def palp_start():
                   span("Ariadne")
 
               with td(style="text-align:center"):
-                with a(href="http://palp.art/browse/r7-i4-p56"):
-                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~16~16/4277/PPM7_89.jpg")
+                with a(href="http://palp.art/browse/r1-i9-p5"):
+                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4219/image34152.jpg")
                   br()
-                  span("House of the Grand Duke")
+                  span("House of the Floral Cubicula")
                 
               with td(style="text-align:center"):
                 with a(href="http://palp.art/browse/r1-i10-p4-space-4"):
