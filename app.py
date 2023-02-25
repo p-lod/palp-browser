@@ -718,7 +718,8 @@ def concept_render(r,html_dom):
           
           with select(name = 'right'):
             for idx,c in instances_of_df.iterrows():
-              option(f"{c['urn'].replace('urn:p-lod:id:','')} ({c['depiction_count']})",value = c['urn'].replace('urn:p-lod:id:',''))
+              option(f"{c['urn'].replace('urn:p-lod:id:','')} ({c['depiction_count']})",
+                                              value = c['urn'].replace('urn:p-lod:id:',''))
 
 
           button("Compare")
@@ -985,8 +986,37 @@ def palp_start():
           with p():
             b("Please note that this website, its data, and interface are all under construction.")
           p(raw("""The <b>Pompeii Artistic Landscape Project</b> (PALP) is an online resource that supports site-wide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii."""), style="margin-top:1em")
+
+          with table(style="width:90%;margin-left: auto;margin-right: auto;margin-bottom:.5em"):
+            raw('<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>')
+            with tr():
+
+              with td(style="text-align:center"):
+                with a(href="http://palp.art/browse/snake"):
+                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4227/image41174.jpg")
+                  br()
+                  span("Snake")
+              
+              with td(style="text-align:center"):
+                with a(href="http://palp.art/browse/ariadne"):
+                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4236/image50065.jpg")
+                  br()
+                  span("Ariadne")
+
+              with td(style="text-align:center"):
+                with a(href="http://palp.art/browse/r7-i4-p56"):
+                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~16~16/4277/PPM7_89.jpg")
+                  br()
+                  span("House of the Grand Duke")
+                
+              with td(style="text-align:center"):
+                with a(href="http://palp.art/browse/r1-i10-p4-space-4"):
+                  img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4246/image58926.jpg")
+                  br()
+                  span("Room with scenes from Troy")
+              
           with p():
-            span(raw("Start <b>browsing</b> by clicking on "))
+            span(raw("Start <b>browsing</b> by clicking on an image above, on "))
             a(raw("<b>Pompeii</b>"),href="/browse/pompeii")
             span(" to see a list of all ‘concepts’ recorded to date, on  ")
             a(raw("<b>sphinx</b>"),href="/browse/sphinx")
