@@ -1011,7 +1011,7 @@ def palp_start():
               td(a("Snake", href="/browse/snake"), style="text-align:center")
               td(a("Ariadne", href="/browse/ariadne"), style="text-align:center")
               td(a("House of the Floral Cubicula", href="/browse/r1-i9-p5"), style="text-align:center")
-              td(a("Room with scenes from Troy", href="r1-i10-p4-space-4"), style="text-align:center")
+              td(a("Room with scenes from Troy", href="/browse/r1-i10-p4-space-4"), style="text-align:center")
               
           with p():
             span(raw("Start <b>browsing</b> by clicking on an image above, on "))
