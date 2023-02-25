@@ -987,33 +987,31 @@ def palp_start():
             b("Please note that this website, its data, and interface are all under construction.")
           p(raw("""The <b>Pompeii Artistic Landscape Project</b> (PALP) is an online resource that supports site-wide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii."""), style="margin-top:1em")
 
-          with table(style="width:90%;margin-left: auto;margin-right: auto;margin-bottom:.5em"):
+          with table(style="width:90%;margin-left: auto;margin-right: auto;margin-bottom:.5em;border-spacing: .2em"):
             raw('<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>')
             with tr():
 
               with td(style="text-align:center"):
-                with a(href="http://palp.art/browse/snake"):
+                with a(href="/browse/snake"):
                   img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4227/image41174.jpg")
-                  br()
-                  span("Snake")
               
               with td(style="text-align:center"):
-                with a(href="http://palp.art/browse/ariadne"):
+                with a(href="/browse/ariadne"):
                   img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4236/image50065.jpg")
-                  br()
-                  span("Ariadne")
 
               with td(style="text-align:center"):
-                with a(href="http://palp.art/browse/r1-i9-p5"):
+                with a(href="/browse/r1-i9-p5"):
                   img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4219/image34152.jpg")
-                  br()
-                  span("House of the Floral Cubicula")
                 
               with td(style="text-align:center"):
-                with a(href="http://palp.art/browse/r1-i10-p4-space-4"):
+                with a(href="/browse/r1-i10-p4-space-4"):
                   img(src="http://umassamherst.lunaimaging.com/MediaManager/srvr?mediafile=/Size1/umass~14~14/4246/image58926.jpg")
-                  br()
-                  span("Room with scenes from Troy")
+            
+            with tr():
+              td(a("Snake", href="/browse/snake"), style="text-align:center")
+              td(a("Ariadne", href="/browse/ariadne"), style="text-align:center")
+              td(a("House of the Floral Cubicula", href="/browse/r1-i9-p5"), style="text-align:center")
+              td(a("Room with scenes from Troy", href="r1-i10-p4-space-4"), style="text-align:center")
               
           with p():
             span(raw("Start <b>browsing</b> by clicking on an image above, on "))
