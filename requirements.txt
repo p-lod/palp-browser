@@ -2,8 +2,7 @@
 beautifulsoup4
 dominate
 Flask
-#gunicorn
-#Jinja2
+Flask-Caching
 Markdown
 MarkupSafe
 numpy
@@ -12,5 +11,4 @@ rdflib
 requests-cache
 Shapely
 urllib3
-#Werkzeug
 

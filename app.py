@@ -22,7 +22,8 @@ from dominate.util import raw
 from bs4 import BeautifulSoup
 
 from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request, Response
-Response
+# Response
+from flask_caching import Cache
 
 import rdflib as rdf
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
@@ -40,7 +41,10 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
       "rdfs"    : "http://www.w3.org/2000/01/rdf-schema#" ,
       "p-lod"   : "urn:p-lod:id:" }
 
+
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 app = Flask(__name__)
+cache.init_app(app)
 
 # Connect to the remote triplestore with read-only connection
 store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
@@ -810,6 +814,7 @@ def palp_html_document(r = POMPEII,renderer = None):
 # The PALP Verbs that Enable Navigation
 
 @app.route('/browse/<path:identifier>')
+@cache.cached(timeout=3600)
 def palp_browse(identifier):
 
   r = plodlib.PLODResource(identifier)
