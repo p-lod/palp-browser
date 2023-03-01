@@ -1,5 +1,5 @@
 # q and d
 passenger stop 
-rm plodlib_cache.sqlite
+rm cache/*
 passenger start
 passenger status

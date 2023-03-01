@@ -45,7 +45,7 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
 cache = Cache(config={
   'CACHE_TYPE': 'FileSystemCache',
   'CACHE_DIR': 'cache',
-  'CACHE_DEFAULT_TIMEOUT': 3600,
+  'CACHE_DEFAULT_TIMEOUT': 0,
   'CACHE_IGNORE_ERRORS': True,
   'CACHE_THRESHOLD': 1000
   })
@@ -820,7 +820,7 @@ def palp_html_document(r = POMPEII,renderer = None):
 # The PALP Verbs that Enable Navigation
 
 @app.route('/browse/<path:identifier>')
-@cache.cached(timeout=3600)
+@cache.cached(timeout=0)
 def palp_browse(identifier):
 
   r = plodlib.PLODResource(identifier)
