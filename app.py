@@ -471,19 +471,31 @@ def palp_depicted_by_images(r, first_only = False):
 
   return element
 
-def palp_depicts_concepts(r, show_counts = False):
+def palp_depicts_concepts(r, link_concepts = True, show_counts = False, show_within = False):
 
   element = span()
   with element:
     for i in json.loads(r.depicts_concepts()):
-      relative_url, label = urn_to_anchor(i['urn'])
-      a(label, href=relative_url)
+      if link_concepts:
+        relative_url, label = urn_to_anchor(i['urn'])
+        a(label, href=relative_url)
+      else:
+        span(i['urn'].replace('urn:p-lod:id:',''))
 
-      count_str = ""
       if show_counts:
-        count_str = f"({i['count']})"
+        span(f" ({i['count']}) ", style="color: LightGray")
 
-      span(f" {count_str} /", style="color: LightGray")
+      if show_within:
+        withins = i['within_spatial_units_depict'].split('||')
+        if withins[0]:
+          with span(style="color: LightGray"):
+            raw(": ")
+            for w in set(withins):
+              a("⧉", href=f"/browse/{w.replace('urn:p-lod:id:','')}", style="font-size:smaller", title=w.replace('urn:p-lod:id:',''))
+
+      span(" / ", style="color: LightGray")
+
+      
   return element
 
 @app.route('/snippets/palp_depicts_concepts/<path:identifier>')
@@ -589,7 +601,7 @@ def property_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r)
+        palp_depicts_concepts(r, link_concepts=False, show_within = True)
         hr()
 
       with div(id="images", style="width:80%"):
@@ -625,7 +637,7 @@ def space_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
-        palp_depicts_concepts(r)
+        palp_depicts_concepts(r, link_concepts = False, show_within=True)
         hr()
 
       with div(id="images", style="margin-top:6px;width:80%"):
