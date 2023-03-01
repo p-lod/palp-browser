@@ -11,4 +11,3 @@ rdflib
 requests-cache
 Shapely
 urllib3
-
