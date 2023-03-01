@@ -42,7 +42,13 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
       "p-lod"   : "urn:p-lod:id:" }
 
 
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache = Cache(config={
+  'CACHE_TYPE': 'FileSystemCache',
+  'CACHE_DIR': 'cache',
+  'CACHE_DEFAULT_TIMEOUT': 3600,
+  'CACHE_IGNORE_ERRORS': True,
+  'CACHE_THRESHOLD': 1000
+  })
 app = Flask(__name__)
 cache.init_app(app)
 
