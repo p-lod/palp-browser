@@ -495,7 +495,7 @@ def palp_depicts_concepts(r, link_concepts = True, show_counts = False, within_i
       if show_counts:
         span(f" ({i['count']}) ", style="color: LightGray")
 
-      if within_icon:
+      if bool(within_icon) & bool(i['within_spatial_units_depict']):
         withins = i['within_spatial_units_depict'].split('||')
         if withins[0]:
           with span(style="color: LightGray"):
