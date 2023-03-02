@@ -789,11 +789,13 @@ def luna_image_render(r,html_dom):
         except:
           print("Formatting links ERROR.")
 
-      raw(html_df.to_html(escape = False, header = False))
-
       raw(f'''
       <iframe allowfullscreen="true" id="widgetPreview" frameBorder="0"  width="100%"  height="350px"  border="0px" style="border:0px solid white"  src="http://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}?widgetFormat=javascript&widgetType=detail&controls=1&nsip=1" ></iframe>
       ''')
+
+      raw(html_df.to_html(escape = False, header = False))
+
+      
 
       with div():
         a("View in Luna (from UMass Amherst Library)",href=f"https://umassamherst.lunaimaging.com/luna/servlet/detail/umass~{t_val}~{t_val}~{record_id}~{media_id}", target="_new")
