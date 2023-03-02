@@ -481,7 +481,7 @@ def palp_depicted_by_images(r, first_only = False):
 
   return element
 
-def palp_depicts_concepts(r, link_concepts = True, show_counts = False, show_within = False):
+def palp_depicts_concepts(r, link_concepts = True, show_counts = False, within_icon = False, concept_icon = False):
 
   element = span()
   with element:
@@ -495,14 +495,18 @@ def palp_depicts_concepts(r, link_concepts = True, show_counts = False, show_wit
       if show_counts:
         span(f" ({i['count']}) ", style="color: LightGray")
 
-      if show_within:
+      if within_icon:
         withins = i['within_spatial_units_depict'].split('||')
         if withins[0]:
           with span(style="color: LightGray"):
             raw(": ")
             for w in set(withins):
-              a("⧉", href=f"/browse/{w.replace('urn:p-lod:id:','')}", style="font-size:smaller", title=w.replace('urn:p-lod:id:',''))
+              a(within_icon, href=f"/browse/{w.replace('urn:p-lod:id:','')}", style="font-size:smaller", title=w.replace('urn:p-lod:id:',''))
 
+      if concept_icon:
+        a("⬀", href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}", title=i['urn'].replace('urn:p-lod:id:',''))
+
+              
       span(" / ", style="color: LightGray")
 
       
@@ -611,7 +615,7 @@ def property_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r, link_concepts=False, show_within = True)
+        palp_depicts_concepts(r, link_concepts=False, within_icon = "⧉")
         hr()
 
       with div(id="images", style="width:80%"):
@@ -647,7 +651,7 @@ def space_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Depicts Concepts: ")
-        palp_depicts_concepts(r, link_concepts = False, show_within=True)
+        palp_depicts_concepts(r, link_concepts = False, within_icon="⧉", concept_icon=True)
         hr()
 
       with div(id="images", style="margin-top:6px;width:80%"):
@@ -677,7 +681,7 @@ def feature_render(r,html_dom):
 
       with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
         span("Depicts Concepts: ")
-        palp_depicts_concepts(r, show_within=True)
+        palp_depicts_concepts(r, within_icon="🔎")
         hr()
 
       with div(id="images", style="margin-top:10px;width:80%"):
