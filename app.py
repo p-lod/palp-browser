@@ -681,7 +681,7 @@ def feature_render(r,html_dom):
 
       with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
         span("Depicts Concepts: ")
-        palp_depicts_concepts(r, within_icon="🔎")
+        palp_depicts_concepts(r, link_concepts=False , within_icon="🔎", concept_icon=True)
         hr()
 
       with div(id="images", style="margin-top:10px;width:80%"):
