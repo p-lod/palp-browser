@@ -538,7 +538,7 @@ def city_as_physical_entity_render(r,html_dom):
 
       with div(id="depicts_concepts",style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r, show_counts= True)
+        palp_depicts_concepts(r, show_counts= True, link_concepts=False, concept_icon=True)
 
       with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
@@ -560,7 +560,7 @@ def region_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r)
+        palp_depicts_concepts(r, show_counts= True, link_concepts=True)
         hr()
 
       with div(id="spatial_children", style="width:80%"):
