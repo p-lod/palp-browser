@@ -629,8 +629,8 @@ def property_render(r,html_dom):
 
     galleria_inline_script_json()
 
-def house_render(r,html_dom):
-  property_render(r,html_dom)
+#def house_render(r,html_dom):
+#  property_render(r,html_dom)
 
 def commercial_property_render(r,html_dom):
   property_render(r,html_dom)
@@ -1018,6 +1018,17 @@ def palp_start():
 
           with table(style="width:90%;margin-left: auto;margin-right: auto;margin-bottom:.5em;border-spacing: .2em"):
             raw('<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>')
+            
+            with tr():
+              th("Click on Map or Image Below to Start Browsing", colspan = 4, style="text-align:center")
+
+            with tr():
+              td(raw("&nbsp;"))
+              with td(colspan = 2, style="width:50%;text-align:center"):
+                with a(href="/browse/pompeii"):
+                  img(src="/static/images/pompeii-geojson-map.jpg", style="width:100%")
+              td(raw("&nbsp;"))
+            
             with tr():
 
               with td(style="text-align:center"):
@@ -1041,9 +1052,10 @@ def palp_start():
               td(a("Ariadne", href="/browse/ariadne"), style="text-align:center")
               td(a("House of the Floral Cubicula", href="/browse/r1-i9-p5"), style="text-align:center")
               td(a("Room with scenes from Troy", href="/browse/r1-i10-p4-space-4"), style="text-align:center")
-              
+               
+          
           with p():
-            span(raw("Start <b>browsing</b> by clicking on an image above, on "))
+            span(raw("Or start <b>browsing</b> by clicking on an image above, on "))
             a(raw("<b>Pompeii</b>"),href="/browse/pompeii")
             span(" to see a list of all ‘concepts’ recorded to date, on  ")
             a(raw("<b>sphinx</b>"),href="/browse/sphinx")
