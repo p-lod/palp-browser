@@ -1030,6 +1030,15 @@ def palp_start():
               td(raw("&nbsp;"))
             
             with tr():
+              td(raw("&nbsp;"))
+              with td(colspan = 2, style="width:50%;text-align:center"):
+                a("Click  to see a list of all visual subjects identified by PALP to date.", href="/browse/pompeii")
+              td(raw("&nbsp;"))
+
+            with tr():
+              td(raw("&nbsp;"), colspan=4)
+
+            with tr():
 
               with td(style="text-align:center"):
                 with a(href="/browse/snake"):
