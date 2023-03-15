@@ -58,8 +58,11 @@ store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
                                                        returnFormat = 'json')
 g = rdf.Graph(store)
 
-# a 'global' available as a convenience
-POMPEII = plodlib.PLODResource('pompeii')
+# GLOBALS
+POMPEII = plodlib.PLODResource('pompeii') # useful to have it conveniently available
+browse_concept_icon = '⬀'
+browse_within_icon = '⧉'
+browse_image_icon = '🔎'
 
 def palp_html_head(r, html_dom):
     html_dom.head += meta(charset="utf-8")
@@ -504,7 +507,7 @@ def palp_depicts_concepts(r, link_concepts = True, show_counts = False, within_i
               a(within_icon, href=f"/browse/{w.replace('urn:p-lod:id:','')}", style="font-size:smaller", title=w.replace('urn:p-lod:id:',''))
 
       if concept_icon:
-        a("⬀", href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}", title=i['urn'].replace('urn:p-lod:id:',''))
+        a(browse_concept_icon, href=f"/browse/{i['urn'].replace('urn:p-lod:id:','')}", title=i['urn'].replace('urn:p-lod:id:',''))
 
               
       span(" / ", style="color: LightGray")
@@ -537,7 +540,7 @@ def city_as_physical_entity_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicts_concepts",style="width:80%"):
-        span("Concepts depicted within: ")
+        div(b(f"List of visual concepts depicted on wall paintings described to date. The numbers in parentheses show how many rooms or other spaces the concept appears in. Click on {browse_concept_icon} to see a map."), style='margin-top:1.5em; margin-bottom:.25em; text-align:center')
         palp_depicts_concepts(r, show_counts= True, link_concepts=False, concept_icon=True)
 
       with div(id="spatial_children", style="width:80%"):
@@ -615,7 +618,7 @@ def property_render(r,html_dom):
 
       with div(id="depicts_concepts: ", style="width:80%"):
         span("Concepts depicted within: ")
-        palp_depicts_concepts(r, link_concepts=False, within_icon = "⧉")
+        palp_depicts_concepts(r, link_concepts=False, within_icon = browse_within_icon)
         hr()
 
       with div(id="images", style="width:80%"):
@@ -681,7 +684,7 @@ def feature_render(r,html_dom):
 
       with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
         span("Depicts Concepts: ")
-        palp_depicts_concepts(r, link_concepts=False , within_icon="🔎", concept_icon=True)
+        palp_depicts_concepts(r, link_concepts=False , within_icon=browse_image_icon, concept_icon=True)
         hr()
 
       with div(id="images", style="margin-top:10px;width:80%"):
