@@ -540,7 +540,7 @@ def city_as_physical_entity_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicts_concepts",style="width:80%"):
-        div(b(f"List of visual concepts depicted on wall paintings described to date. The numbers in parentheses show how many rooms or other spaces the concept appears in. Click on {browse_concept_icon} to see a map."), style='margin-top:1.5em; margin-bottom:.25em; text-align:center')
+        div(b(f"List of visual concepts depicted on wall paintings described to date. The numbers in parentheses show how many times the concept is depicted. Click on {browse_concept_icon} to see a map of rooms and other spaces."), style='margin-top:1.5em; margin-bottom:.25em; text-align:center')
         palp_depicts_concepts(r, show_counts= True, link_concepts=False, concept_icon=True)
 
       with div(id="spatial_children", style="width:80%"):
