@@ -1,4 +1,4 @@
-import html 
+import html
 
 # https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/ is the theme this uses.
 
@@ -147,6 +147,13 @@ def palp_page_navbar(r, html_dom):
             with span(cls="navbar-brand"):
               span(" [")
               a("Wiki (it)", href= wiki_it[0])
+              span("]")
+
+          wikidata = json.loads(r.get_predicate_values('urn:p-lod:id:wikidata-url'))
+          if wikidata:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a("Wikidata", href= wikidata[0])
               span("]")
 
           pleiades = json.loads(r.get_predicate_values('urn:p-lod:id:pleiades-url'))
