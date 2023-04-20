@@ -443,7 +443,7 @@ def palp_narrower(r):
 
   with element:
     for i,n in enumerate(narrower):
-        if n['is_depicted']:
+        if n['is_depicted'] == 'true':
           a(f"{n['label']} ",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
       
   return element
