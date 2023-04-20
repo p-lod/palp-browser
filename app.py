@@ -435,6 +435,23 @@ def palp_spatial_hierarchy(r):
 
   return element
 
+def palp_narrower_depicted(r):
+
+  element = span()
+
+  narrower = json.loads(r.narrower_depicted)
+
+  with element:
+    for i,n in enumerate(narrower):
+      comma = ""
+      if i < len(narrower):
+        comma = ", "
+      a(f"{n['label']}{comma}",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
+      
+
+
+  return element
+
 @app.route('/snippets/palp_spatial_hierarchy/<path:identifier>')
 def snippet_palp_spatial_hierarchy(identifier):
   r = plodlib.PLODResource(identifier)
@@ -719,6 +736,12 @@ def concept_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
+      
+      if r.narrower_depicted:
+        with div(id="narrower_depicted", style="margin-bottom:1em"):
+          span("This page also shows locations and images for: ")
+          palp_narrower_depicted(r)
+      
       if r.geojson:
         with div(id="geojson", style="margin-top:12px;width:80%"):
           palp_geojson(r)
