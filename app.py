@@ -733,7 +733,7 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       
-      if r.narrower:
+      if r.narrower != '[]':
         with div(id="narrower_depicted", style="margin-bottom:1em; width:80%"):
           span("This page also shows locations and images for: ")
           palp_narrower(r)
