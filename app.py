@@ -435,21 +435,17 @@ def palp_spatial_hierarchy(r):
 
   return element
 
-def palp_narrower_depicted(r):
+def palp_narrower(r):
 
   element = span()
 
-  narrower = json.loads(r.narrower_depicted)
+  narrower = json.loads(r.narrower)
 
   with element:
     for i,n in enumerate(narrower):
-      comma = ""
-      if i < len(narrower):
-        comma = ", "
-      a(f"{n['label']}{comma}",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
+        if n['is_depicted']:
+          a(f"{n['label']} ",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
       
-
-
   return element
 
 @app.route('/snippets/palp_spatial_hierarchy/<path:identifier>')
@@ -737,10 +733,10 @@ def concept_render(r,html_dom):
   with html_dom:
     with main(cls="container", role="main"):
       
-      if r.narrower_depicted:
-        with div(id="narrower_depicted", style="margin-bottom:1em"):
+      if r.narrower:
+        with div(id="narrower_depicted", style="margin-bottom:1em; width:80%"):
           span("This page also shows locations and images for: ")
-          palp_narrower_depicted(r)
+          palp_narrower(r)
       
       if r.geojson:
         with div(id="geojson", style="margin-top:12px;width:80%"):
