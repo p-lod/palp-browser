@@ -128,6 +128,12 @@ def palp_page_navbar(r, html_dom):
           else:
            span("", cls="navbar-brand")
 
+          if r.broader:
+            with span(cls="navbar-brand"):
+              span("(")
+              a(r.broader.replace("urn:p-lod:id:",""), href=f"/browse/{r.broader.replace('urn:p-lod:id:','')}")
+              span(")")
+
           p_in_p = json.loads(r.get_predicate_values('urn:p-lod:id:p-in-p-url'))
           if p_in_p:
             with span(cls="navbar-brand"):
