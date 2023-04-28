@@ -19,9 +19,9 @@ import dominate
 from dominate.tags import *
 from dominate.util import raw
 
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 
-from flask import Flask, render_template, session, json, request, flash, redirect, url_for, after_this_request, Response
+from flask import Flask, json, request, redirect, Response
 # Response
 from flask_caching import Cache
 
