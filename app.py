@@ -1009,6 +1009,10 @@ def web_api_geojson(identifier):
 def web_api_images(identifier):
   return plodlib.PLODResource(identifier).gather_images()
 
+@app.route('/api/spatial_children/<path:identifier>')
+def web_api_spatial_childern(identifier):
+  return plodlib.PLODResource(identifier).spatial_children()
+
 @app.route('/api/compare/<path:left>/<path:right>')
 def web_api_compare(left,right):
 
