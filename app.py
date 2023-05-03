@@ -1010,7 +1010,7 @@ def web_api_images(identifier):
   return plodlib.PLODResource(identifier).gather_images()
 
 @app.route('/api/spatial_children/<path:identifier>')
-def web_api_spatial_childern(identifier):
+def web_api_spatial_children(identifier):
   return plodlib.PLODResource(identifier).spatial_children()
 
 @app.route('/api/compare/<path:left>/<path:right>')
