@@ -177,7 +177,10 @@ def palp_page_footer(r, doc):
     with doc:
       with footer(cls="footer"):
         with span():
-          small("PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation. The site is very much in development and will change regularly.")
+          with small():
+            raw(f"PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation. The site is very much in development and will change regularly.")
+            if r.identifier:
+               raw(f" View '{r.identifier}' on <a href='http://p-lod.org/urn/urn:p-lod:id:{r.identifier}'>P-LOD</a>")
 
 # convenience functions
 def urn_to_anchor(urn):
