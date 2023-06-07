@@ -24,6 +24,7 @@ from dominate.util import raw
 from flask import Flask, json, request, redirect, Response
 # Response
 from flask_caching import Cache
+from flask_cors import CORS
 
 import rdflib as rdf
 from rdflib.plugins.stores.sparqlstore import SPARQLStore
@@ -51,6 +52,7 @@ cache = Cache(config={
   })
 app = Flask(__name__)
 cache.init_app(app)
+CORS(app)
 
 # Connect to the remote triplestore with read-only connection
 store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
