@@ -52,7 +52,7 @@ cache = Cache(config={
   })
 app = Flask(__name__)
 cache.init_app(app)
-CORS(app)
+# CORS(app)
 
 # Connect to the remote triplestore with read-only connection
 store = SPARQLStore(endpoint="http://52.170.134.25:3030/plod_endpoint/query",
