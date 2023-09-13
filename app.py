@@ -331,6 +331,7 @@ def palp_image_gallery_json(r):
 def palp_geojson(r):
   mapdiv = div(id="minimap")
   with mapdiv:
+      comment("BEGIN GEOJSON")
       innerdiv = div(id="minimap-geojson", style="display:none")
       if bool(r.geojson):
         innerdiv += adjust_geojson(r.geojson, rdf_type=r.rdf_type)
@@ -428,6 +429,7 @@ def palp_spatial_hierarchy(r):
   hier_up = json.loads(r.spatial_hierarchy_up())
 
   with element:
+    comment("SPATIAL HIEARCHY")
     for i,h in enumerate(hier_up):
       relative_url, label = urn_to_anchor(h['urn'])
 
@@ -571,8 +573,9 @@ def city_as_physical_entity_render(r,html_dom):
           palp_geojson(r)
 
       with div(id="depicts_concepts",style="width:80%"):
-        div(b(f"List of visual concepts depicted on wall paintings described to date. The numbers in parentheses show how many times the concept is depicted. Click on {browse_concept_icon} to see a map of rooms and other spaces."), style='margin-top:1.5em; margin-bottom:.25em; text-align:center')
+        div(b(f"List of visual concepts depicted on wall paintings described to date. The numbers in parentheses show how many times the concept is depicted. Click on {browse_concept_icon} to see a map of rooms and other spaces that show the concept."), style='margin-top:1.5em; margin-bottom:.25em; text-align:center')
         palp_depicts_concepts(r, show_counts= True, link_concepts=False, concept_icon=True)
+        
 
       with div(id="spatial_children", style="width:80%"):
         span("Insula and Streets Within: ")
@@ -593,8 +596,8 @@ def region_render(r,html_dom):
           hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Concepts depicted within: ")
-        palp_depicts_concepts(r, show_counts= True, link_concepts=True)
+        span(f"Click on {browse_concept_icon} to see a map of rooms and other spaces that show the concept.")
+        palp_depicts_concepts(r, show_counts= True, link_concepts=False, concept_icon=True)
         hr()
 
       with div(id="spatial_children", style="width:80%"):
@@ -648,7 +651,7 @@ def property_render(r,html_dom):
           hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Concepts depicted within: ")
+        span(f"Concepts depicted within (click {browse_within_icon} to see specific spaces): ")
         palp_depicts_concepts(r, link_concepts=False, within_icon = browse_within_icon)
         hr()
 
@@ -684,8 +687,8 @@ def space_render(r,html_dom):
           hr()
 
       with div(id="depicts_concepts: ", style="width:80%"):
-        span("Depicts Concepts: ")
-        palp_depicts_concepts(r, link_concepts = False, within_icon="⧉", concept_icon=True)
+        span(f"Depicts Concepts (click {browse_within_icon} to see specific features): ")
+        palp_depicts_concepts(r, link_concepts = False, within_icon=browse_within_icon, concept_icon=True)
         hr()
 
       with div(id="images", style="margin-top:6px;width:80%"):
@@ -714,7 +717,7 @@ def feature_render(r,html_dom):
             hr()
 
       with div(id="depicts_concepts", style="margin-top:6px; width:80%"):
-        span("Depicts Concepts: ")
+        span(f"Depicts Concepts (if shown, click {browse_image_icon} to see a best image): ")
         palp_depicts_concepts(r, link_concepts=False , within_icon=browse_image_icon, concept_icon=True)
         hr()
 
