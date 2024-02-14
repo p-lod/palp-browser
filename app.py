@@ -564,7 +564,7 @@ def palp_depicted_where(r, level_of_detail = 'feature'):
   return element
 
 # type renderers
-def city_as_physical_entity_render(r,html_dom):
+def city_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
@@ -1025,7 +1025,7 @@ def web_api_spatial_children(identifier):
 def web_api_compare(left,right):
 
   # spatial types. Really should get these live from triplestore
-  spatial_types = ['city_as_physical_entity','region', 'insula', 'property', 'space', 'feature']
+  spatial_types = ['city','region', 'insula', 'property', 'space', 'feature']
 
   left_r = plodlib.PLODResource(left)
   right_r = plodlib.PLODResource(right)
