@@ -5,6 +5,7 @@ import html
 # because dominate will stomp on html
 py_html = html
 
+import ast
 import json
 # import os
 # import re
@@ -874,8 +875,20 @@ def palp_browse(identifier):
 
   r = plodlib.PLODResource(identifier)
 
-  try:
-    return palp_html_document(r, globals()[f'{r.rdf_type.replace("-","_")}_render']).render() # call p_h_d with right render function if it exists
+  rdf_type = r.rdf_type
+  if type(rdf_type) == list:
+    for rt in rdf_type:
+        if 'http' not in rt:
+          f = rt
+          break
+  else:
+    f = rdf_type
+  
+  print(f'###{f}####')
+  f = f.replace('-','_')
+  
+  try: 
+    return palp_html_document(r, globals()[f'{f}_render']).render() # call p_h_d with right render function if it exists
   except KeyError as e:
     return palp_html_document(r,unknown_render).render()
 
