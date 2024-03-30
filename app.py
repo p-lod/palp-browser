@@ -172,9 +172,9 @@ def palp_page_navbar(r, html_dom):
               a("Pleiades", href= pleiades[0])
               span("]")
 
-          with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
-                        with span(cls="form-group"):
-                            input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
+          # with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
+          #               with span(cls="form-group"):
+          #                   input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
 
 def palp_page_footer(r, doc):
     with doc:
@@ -183,7 +183,7 @@ def palp_page_footer(r, doc):
           with small():
             raw(f"PALP is hosted at the University of Massachusetts-Amherst and funded by the Getty Foundation. The site is very much in development and will change regularly.")
             if r.identifier:
-               raw(f" View '{r.identifier}' on <a href='http://p-lod.org/urn/urn:p-lod:id:{r.identifier}'>P-LOD</a>")
+               raw(f" View '{r.identifier}' on <a href='https://p-lod.org/urn/urn:p-lod:id:{r.identifier}'>P-LOD</a>")
 
 # convenience functions
 def urn_to_anchor(urn):
@@ -771,11 +771,11 @@ def concept_render(r,html_dom):
         palp_depicted_where(r, level_of_detail='space')
         hr()
 
-      with div(id="full-text-search", style="margin-top:3px;width:80%"):
-        span("Keyword search for “")
-        a(r.identifier, href=f"/full-text-search?q={r.identifier}")
-        span("”.")
-        hr()
+      # with div(id="full-text-search", style="margin-top:3px;width:80%"):
+      #   span("Keyword search for “")
+      #   a(r.identifier, href=f"/full-text-search?q={r.identifier}")
+      #   span("”.")
+      #   hr()
 
       with div(id="compare", style="margin-top:3px;width:80%"):
         with form(action='/compare'):
@@ -1138,7 +1138,7 @@ def palp_start():
 
           p(raw("""Browsing within PALP will usually show location(s) and images related to the identifier being viewed. PALP has assigned identifiers to thousands of images, rooms, and properties at Pompeii, as well as to regions, insulae, and the city itself. It has also assigned identifiers to concepts that appear in Pompeian wall paintings, such as ‘<a href="/browse/dog">dog</a>’. Browsing to ‘pompeii’ will show all concepts identified to date. In general, PALP uses short web-address (URLs) that are easy to remember and that can be easily shared."""))
 
-          p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’. Combining more than two terms also works: ‘<a href="/full-text-search?q=horse+and+cassandra+and+laocoon">horse and cassandra and laocoon</a>’."""))
+          # p(raw("""PALP also allows <b>keyword searches</b>. Use the text-entry box in the header at the top of most pages. Terms that work well are ‘<a href="/full-text-search?q=goat">goat</a>’ or ‘<a href="/full-text-search?q=trojan">trojan</a>’. (Leave out the single quote marks.) You can combine terms with the word ‘and’. Try ‘<a href="/full-text-search?q=basket+and+fish">basket and fish</a>’. Combining more than two terms also works: ‘<a href="/full-text-search?q=horse+and+cassandra+and+laocoon">horse and cassandra and laocoon</a>’."""))
 
           p(raw("""PALP is a collaborative initiative between <a href="https://www.umass.edu/classics/member/eric-poehler">Eric Poehler</a> at the University of Massachusetts Amherst and <a href="https://isaw.nyu.edu/people/faculty/sebastian-heath">Sebastian Heath</a> at the Institute for the Study of the Ancient World at New York University. It builds on data from the <a href="https://digitalhumanities.umass.edu/pbmp/">Pompeii Bibliography and Mapping Project</a> and uses other public resources such as <a href="http://pompeiiinpictures.com">Pompeii in Pictures</a>. It is developed using open source software and is informed by Linked Open Data approaches to sharing information. PALP is generously funded through a grant from the <a href="https://www.getty.edu/foundation/">Getty Foundation</a>, as part of its <a href="https://www.getty.edu/foundation/initiatives/current/dah/index.html">Digital Art History</a> initiative</a>. The <a href="https://palp.p-lod.umasscreate.net">project blog</a> has more information about PALP's scope and goals."""))
           with div(style="text-align:center"):
