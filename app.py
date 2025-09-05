@@ -137,35 +137,35 @@ def palp_page_navbar(r, html_dom):
               a(r.broader.replace("urn:p-lod:id:",""), href=f"/browse/{r.broader.replace('urn:p-lod:id:','')}")
               span(")")
 
-          p_in_p = json.loads(r.get_predicate_values('urn:p-lod:id:p-in-p-url'))
+          p_in_p = r.get_predicate_values('urn:p-lod:id:p-in-p-url')
           if p_in_p:
             with span(cls="navbar-brand"):
               span(" [")
               a("Pompeii in Pictures", href= p_in_p[0])
               span("]")
 
-          wiki_en = json.loads(r.get_predicate_values('urn:p-lod:id:wiki-en-url'))
+          wiki_en = r.get_predicate_values('urn:p-lod:id:wiki-en-url')
           if wiki_en:
             with span(cls="navbar-brand"):
               span(" [")
               a("Wiki (en)", href= wiki_en[0])
               span("]")
 
-          wiki_it = json.loads(r.get_predicate_values('urn:p-lod:id:wiki-it-url'))
+          wiki_it = r.get_predicate_values('urn:p-lod:id:wiki-it-url')
           if wiki_it:
             with span(cls="navbar-brand"):
               span(" [")
               a("Wiki (it)", href= wiki_it[0])
               span("]")
 
-          wikidata = json.loads(r.get_predicate_values('urn:p-lod:id:wikidata-url'))
+          wikidata = r.get_predicate_values('urn:p-lod:id:wikidata-url')
           if wikidata:
             with span(cls="navbar-brand"):
               span(" [")
               a("Wikidata", href= wikidata[0])
               span("]")
 
-          pleiades = json.loads(r.get_predicate_values('urn:p-lod:id:pleiades-url'))
+          pleiades = r.get_predicate_values('urn:p-lod:id:pleiades-url')
           if pleiades:
             with span(cls="navbar-brand"):
               span(" [")
@@ -251,7 +251,7 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
   # if rdf_type == "region":
   #   yoff = .00072
 
-  g = json.loads(geojson_str)
+  g = geojson_str
   if g['type'] == 'FeatureCollection':
     for f in g['features']:
       s =  shape(f['geometry'])
@@ -261,7 +261,7 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
   elif g['type'] == 'Feature':
     s =  shape(g['geometry'])
     g['geometry'] = mapping(translate(s, xoff=xoff, yoff=yoff, zoff=0.0))
-    return json.dumps(g)
+    return g
   else:
     return geojson_str
 
@@ -294,7 +294,7 @@ def galleria_inline_script_json():
 def palp_image_gallery_json(r):
   # span(f"{time.gmtime().tm_min}:{time.gmtime().tm_sec}")
   try:
-    r_images = json.loads(r.gather_images())
+    r_images = r.gather_images()
   except:
     return
 
@@ -336,8 +336,8 @@ def palp_geojson(r):
       innerdiv = div(id="minimap-geojson", style="display:none")
       if bool(r.geojson):
         innerdiv += adjust_geojson(r.geojson, rdf_type=r.rdf_type)
-      elif bool(json.loads(r.spatially_within)):
-        within_json = json.loads(r.spatially_within)[0]
+      elif bool(r.spatially_within):
+        within_json = r.spatially_within[0]
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
         innerdiv += adjust_geojson(within_json['geojson'],
@@ -349,8 +349,8 @@ def palp_geojson(r):
       pompeiidiv += POMPEII.geojson
 
       withindiv = div(id="within-geojson", style="display:none")
-      if bool(json.loads(r.spatially_within)):
-        within_json = json.loads(r.spatially_within)[0]
+      if bool(r.spatially_within):
+        within_json = r.spatially_within[0]
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
         withindiv += adjust_geojson(within_json['geojson'],
@@ -427,7 +427,7 @@ def palp_spatial_hierarchy(r):
 
   element = div()
 
-  hier_up = json.loads(r.spatial_hierarchy_up())
+  hier_up = r.spatial_hierarchy_up()
 
   with element:
     comment("SPATIAL HIEARCHY")
@@ -453,7 +453,7 @@ def palp_narrower(r):
 
   element = span()
 
-  narrower = json.loads(r.narrower)
+  narrower = r.narrower
 
   with element:
     for i,n in enumerate(narrower):
@@ -471,7 +471,7 @@ def palp_spatial_children(r, images = False):
 
   element = span()
   with element:
-    for i,c in enumerate(json.loads(r.spatial_children())):
+    for i,c in enumerate(r.spatial_children()):
       relative_url, label = urn_to_anchor(c['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
@@ -480,7 +480,7 @@ def palp_spatial_children(r, images = False):
 
 def palp_depicted_by_images(r, first_only = False):
 
-  luna_images_j = json.loads(r.images_from_luna)
+  luna_images_j = r.images_from_luna
 
   element = div()
   with element:
@@ -522,7 +522,7 @@ def palp_depicts_concepts(r, link_concepts = True, show_counts = False, within_i
 
   element = span()
   with element:
-    for i in json.loads(r.depicts_concepts()):
+    for i in r.depicts_concepts():
       if link_concepts:
         relative_url, label = urn_to_anchor(i['urn'])
         a(label, href=relative_url)
@@ -557,7 +557,7 @@ def snippet_palp_depicts_concepts(identifier):
 def palp_depicted_where(r, level_of_detail = 'feature'):
   element = span()
   with element:
-    for i,c in enumerate(json.loads(r.depicted_where(level_of_detail=level_of_detail))):
+    for i,c in enumerate(r.depicted_where(level_of_detail=level_of_detail)):
       relative_url, label = urn_to_anchor(c['urn'])
       a(label, href=relative_url)
       span(" /", style="color: LightGray")
@@ -639,7 +639,7 @@ def property_render(r,html_dom):
       eng_titles =  r.get_predicate_values('urn:p-lod:id:plod-english-title')
       it_titles  =  r.get_predicate_values('urn:p-lod:id:plod-italian-title')
 
-      known_as = " / ".join(json.loads(eng_titles) + json.loads(it_titles))
+      known_as = " / ".join(eng_titles + it_titles)
 
       if known_as:
         with div("Other name(s): ", style="margin-bottom:1em; width:80%"):
@@ -712,7 +712,7 @@ def feature_render(r,html_dom):
         palp_spatial_hierarchy(r)
         hr()
 
-      if r.geojson or json.loads(r.spatially_within):
+      if r.geojson or r.spatially_within:
           with div(id="geojson", style="margin-top:6px; width:80%"):
             palp_geojson(r)
             hr()
@@ -783,7 +783,7 @@ def concept_render(r,html_dom):
           input_(_type="hidden", name="level_of_detail", value="feature")
           span(f"Compare the distribution of “{r.identifier}” to :")
           r_concept = plodlib.PLODResource('concept')
-          instances_of_json = json.loads(r_concept.instances_of())
+          instances_of_json = r_concept.instances_of()
           instances_of_df = pd.DataFrame(instances_of_json)
           
           with select(name = 'right'):
@@ -816,8 +816,8 @@ def luna_image_render(r,html_dom):
 
     try:
       t_val = luna_tilde_val(f'urn:p-lod:id:{r.identifier}')
-      media_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-media-id'))[0]
-      record_id = json.loads(r.get_predicate_values('urn:p-lod:id:x-luna-record-id'))[0]
+      media_id = r.get_predicate_values('urn:p-lod:id:x-luna-media-id')[0]
+      record_id = r.get_predicate_values('urn:p-lod:id:x-luna-record-id')[0]
 
       html_df = r._id_df.copy()
 
@@ -827,7 +827,7 @@ def luna_image_render(r,html_dom):
           depicts_urn = html_df.loc['urn:p-lod:id:depicts','o']
 
           r_depicted = plodlib.PLODResource(depicts_urn.replace('urn:p-lod:id:',''))
-          r_depicted_is_within = plodlib.PLODResource(json.loads(r_depicted.spatially_within)[0]['urn'].replace('urn:p-lod:id:',''))
+          r_depicted_is_within = plodlib.PLODResource(r_depicted.spatially_within[0]['urn'].replace('urn:p-lod:id:',''))
 
           html_df.loc['urn:p-lod:id:depicts','o'] = f'<a href="/browse/{r_depicted.identifier}">{r_depicted.identifier}</a> within <a href="/browse/{r_depicted_is_within.identifier}">{r_depicted_is_within.identifier}</a> (slow to load for now).'
         except:
@@ -1061,7 +1061,7 @@ def web_api_compare(left,right):
 
 @app.route('/start')
 def palp_start():
-  r = plodlib.PLODResource("Pompeii")
+  r = plodlib.PLODResource("pompeii")
   html_dom = dominate.document(title=f"Pompeii Artistic Landscape Project" )
 
   palp_html_head(r, html_dom)
