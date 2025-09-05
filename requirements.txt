@@ -4,6 +4,7 @@ dominate
 Flask
 Flask-Caching
 flask-cors
+gunicorn
 Markdown
 MarkupSafe
 numpy
