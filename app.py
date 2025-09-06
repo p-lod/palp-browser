@@ -45,7 +45,7 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
 
 # FileSystemCache
 cache = Cache(config={
-  'CACHE_TYPE': 'NullCache',
+  'CACHE_TYPE': 'FileSystemCache',
   'CACHE_DIR': 'cache',
   'CACHE_DEFAULT_TIMEOUT': 600,
   'CACHE_IGNORE_ERRORS': True,
