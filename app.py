@@ -43,11 +43,11 @@ ns = {"dcterms" : "http://purl.org/dc/terms/",
       "rdfs"    : "http://www.w3.org/2000/01/rdf-schema#" ,
       "p-lod"   : "urn:p-lod:id:" }
 
-
+# FileSystemCache
 cache = Cache(config={
-  'CACHE_TYPE': 'FileSystemCache',
+  'CACHE_TYPE': 'NullCache',
   'CACHE_DIR': 'cache',
-  'CACHE_DEFAULT_TIMEOUT': 0,
+  'CACHE_DEFAULT_TIMEOUT': 600,
   'CACHE_IGNORE_ERRORS': True,
   'CACHE_THRESHOLD': 1000
   })
@@ -237,7 +237,7 @@ def img_src_from_luna_info(l_collection_id, l_record, l_media):
 
   return img_src, img_description
 
-def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson .00003 to the N  
+def adjust_geojson(geojson_dict, rdf_type = None): # working on shifting geojson .00003 to the N  
 
   # offsets
 
@@ -251,7 +251,7 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
   # if rdf_type == "region":
   #   yoff = .00072
 
-  g = geojson_str
+  g = geojson_dict
   if g['type'] == 'FeatureCollection':
     for f in g['features']:
       s =  shape(f['geometry'])
@@ -263,7 +263,7 @@ def adjust_geojson(geojson_str, rdf_type = None): # working on shifting geojson 
     g['geometry'] = mapping(translate(s, xoff=xoff, yoff=yoff, zoff=0.0))
     return g
   else:
-    return geojson_str
+    return geojson_dict
 
 # palp page part renderers
 
@@ -334,27 +334,31 @@ def palp_geojson(r):
   with mapdiv:
       comment("BEGIN GEOJSON")
       innerdiv = div(id="minimap-geojson", style="display:none")
-      if bool(r.geojson):
-        innerdiv += adjust_geojson(r.geojson, rdf_type=r.rdf_type)
+      if r.geojson:
+        comment("FOUND GEOJSON")
+        with innerdiv:
+          raw(json.dumps(r.geojson))
       elif bool(r.spatially_within):
+        comment("ELIF WITHIN")
         within_json = r.spatially_within[0]
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
-        innerdiv += adjust_geojson(within_json['geojson'],
-                                   rdf_type = within_rdf_type)
+        with innerdiv:
+          raw(within_json['geojson'])
       else:
         innerdiv += ''
 
       pompeiidiv = div(id="pompeii-geojson", style="display:none")
-      pompeiidiv += POMPEII.geojson
+      with pompeiidiv:
+        raw(json.dumps(POMPEII.geojson))
 
       withindiv = div(id="within-geojson", style="display:none")
       if bool(r.spatially_within):
         within_json = r.spatially_within[0]
         within_identifier = within_json['urn'].replace("urn:p-lod:id:","")
         within_rdf_type = plodlib.PLODResource(within_identifier).rdf_type
-        withindiv += adjust_geojson(within_json['geojson'],
-                                   rdf_type = within_rdf_type)
+        with withindiv:
+          raw(within_json['geojson'])
 
       div(id="minimapid", style="height: 400px;display:none")
       s = script(type='text/javascript')
@@ -427,7 +431,7 @@ def palp_spatial_hierarchy(r):
 
   element = div()
 
-  hier_up = r.spatial_hierarchy_up()
+  hier_up = r.spatial_ancestors()
 
   with element:
     comment("SPATIAL HIEARCHY")
@@ -591,7 +595,7 @@ def region_render(r,html_dom):
         palp_spatial_hierarchy(r)
         hr()
 
-      if r.geojson:
+      if bool(r.geojson):
         with div(id="geojson", style="width:80%"):
           palp_geojson(r)
           hr()
