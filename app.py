@@ -453,15 +453,19 @@ def palp_spatial_hierarchy(r):
 
   return element
 
-def palp_narrower(r):
+def palp_narrower(r, only_depicted = False):
 
   element = span()
 
   narrower = r.narrower
+  print(narrower)
 
   with element:
     for i,n in enumerate(narrower):
-        if n['is_depicted'] == 'true':
+        if only_depicted:
+          if n['is_depicted'] == 'true':
+            a(f"{n['label']} ",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
+        else:
           a(f"{n['label']} ",href=f"/browse/{n['urn'].replace('urn:p-lod:id:','')}")
       
   return element
@@ -747,12 +751,27 @@ def artwork_render(r,html_dom):
       span("Depicts Concepts: ")
       palp_depicts_concepts(r)
 
+def pompeian_wall_painting_style_render(r,html_dom):
+  with html_dom:
+    with main(cls="container", role="main"):
+      
+      if r.narrower != []:
+        with div(id="narrower_depicted", style="margin-bottom:1em; width:80%"):
+          span("This page also maps: ")
+          palp_narrower(r)
+      
+      if r.geojson:
+        with div(id="geojson", style="margin-top:12px;width:80%"):
+          palp_geojson(r)
+          hr()
+
+
 def concept_render(r,html_dom):
 
   with html_dom:
     with main(cls="container", role="main"):
       
-      if r.narrower != '[]':
+      if r.narrower != []:
         with div(id="narrower_depicted", style="margin-bottom:1em; width:80%"):
           span("This page also shows locations and images for: ")
           palp_narrower(r)
