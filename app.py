@@ -326,6 +326,16 @@ def palp_image_gallery_json(r):
                 span("This image shows all or part of feature ")
                 relative_url, label = urn_to_anchor(i['feature'])
                 a(label,href=relative_url, _class="appears_on")
+
+                try:
+                  style_urn = plodlib.PLODResource(i['feature'].replace('urn:p-lod:id:','')).get_predicate_values('urn:p-lod:id:has-pompeian-wall-painting-style')[0]
+                  print(style_urn)
+                  if style_urn:
+                    relative_url, label = urn_to_anchor(style_urn)
+                    a(f'({label})',href=relative_url, _class="appears_on")
+                except:
+                  print("Whoops")
+
                 span(", which depicts ")
                 span(_class = 'feature_also_depicts')
                 span(".")
