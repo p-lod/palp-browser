@@ -172,6 +172,13 @@ def palp_page_navbar(r, html_dom):
               a("Pleiades", href= pleiades[0])
               span("]")
 
+          style = r.get_predicate_values('urn:p-lod:id:has-pompeian-wall-painting-style')
+          if style:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a(style[0].replace("urn:p-lod:id:",""), href= f'/browse/{style[0].replace("urn:p-lod:id:","")}')
+              span("]")
+
           # with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
           #               with span(cls="form-group"):
           #                   input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
