@@ -179,6 +179,13 @@ def palp_page_navbar(r, html_dom):
               a(style[0].replace("urn:p-lod:id:",""), href= f'/browse/{style[0].replace("urn:p-lod:id:","")}')
               span("]")
 
+          space_char = r.get_predicate_values('urn:p-lod:id:has-space-characterization')
+          if space_char:
+            with span(cls="navbar-brand"):
+              span(" [")
+              a(space_char[0].replace("urn:p-lod:id:",""), href= f'/browse/{space_char[0].replace("urn:p-lod:id:","")}')
+              span("]")
+
           # with form(cls="navbar-form navbar-right", role="search", action="/full-text-search"):
           #               with span(cls="form-group"):
           #                   input_(id="q", name="q", type="text",cls="form-control",placeholder="Keyword Search...")
@@ -339,6 +346,7 @@ def palp_image_gallery_json(r):
                 span(", which depicts ")
                 span(_class = 'feature_also_depicts')
                 span(".")
+
               if (r.rdf_type == 'concept'):
                 div(_class = 'feature_spatial_hierarchy')
 
@@ -782,6 +790,16 @@ def pompeian_wall_painting_style_render(r,html_dom):
           palp_geojson(r)
           hr()
 
+
+def space_characterization_render(r,html_dom):
+  with html_dom:
+    with main(cls="container", role="main"):
+      
+      if r.geojson:
+        with div(id="geojson", style="margin-top:12px;width:80%"):
+          palp_geojson(r)
+          hr()
+    
 
 def concept_render(r,html_dom):
 
