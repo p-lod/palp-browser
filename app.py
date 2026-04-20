@@ -1131,7 +1131,8 @@ def palp_start():
       with div(id="page-content-wrapper"):
         with div(id="container-fluid"):
           with p():
-            b("Please note that this website, its data, and interface are all under construction.")
+            b(raw("Please note that this website, its data, and interface are all under construction. A new interface is available for <a href='http://p-lod.github.io/palp-client-side/browse/#pompeii'>testing</a>."))
+          
           p(raw("""The <b>Pompeii Artistic Landscape Project</b> (PALP) is an online resource that supports site-wide discovery, mapping, analysis, and sharing of information about Pompeian artworks in their architectural and urban contexts. The goal of PALP is to dramatically increase the number of researchers and members of the public who can access, analyze, interpret, and share the artworks of the most richly documented urban environment of the Roman world: Pompeii."""), style="margin-top:1em")
 
           with table(style="width:90%;margin-left: auto;margin-right: auto;margin-bottom:.5em;border-spacing: .2em"):
